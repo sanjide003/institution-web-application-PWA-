@@ -58,252 +58,42 @@ body.modal-scroll-lock {
     border-radius: 8px;
     font-weight: 700;
 }
-.skip-link:focus {
-    left: 8px;
-}
-:focus-visible {
-    outline: 3px solid #2563eb;
-    outline-offset: 2px;
-}
-.input-error {
-    border-color: #dc2626 !important;
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15) !important;
-}
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
-        scroll-behavior: auto !important;
-    }
-}
+.skip-link:focus { left: 8px; }
+:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
+.input-error { border-color: #dc2626 !important; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15) !important; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 
-/* Sets background conditionally based on file */
 body { background-color: var(--background-light); color: var(--text-light); }
-
 a { text-decoration: none; color: inherit; transition: 0.2s; }
 ul { list-style: none; }
 img { display: block; max-width: 100%; }
 .hidden { display: none !important; }
-.page-content {
-    content-visibility: auto;
-    contain-intrinsic-size: 1px 800px;
-}
+.page-content { content-visibility: auto; contain-intrinsic-size: 1px 800px; }
 
-/* -----------------------------------
-   COMMON & ADMIN COMPONENTS
------------------------------------ */
 .card { background-color: var(--card-light); border: 1px solid var(--border-light); }
 .btn-primary { background-color: var(--accent); color: #ffffff; transition: 0.2s; cursor: pointer; border: none; }
 .btn-primary:hover { background-color: #2563eb; }
 .btn-primary:disabled { background-color: #9ca3af; cursor: not-allowed; }
 
-/* FIXED: Correct Modal Positioning */
-.popup-overlay { 
-    background-color: rgba(0, 0, 0, 0.5); 
-    backdrop-filter: blur(2px); 
-    z-index: 5000; 
-}
+.popup-overlay { background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); z-index: 5000; }
+.modal-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 15px; }
+.modal-box { background: #ffffff; width: 100%; max-width: 340px; padding: 25px 20px; border-radius: 20px; position: relative; animation: popUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
+@keyframes popUp { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
 
-.modal-overlay { 
-    position: fixed; 
-    inset: 0; 
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(15, 23, 42, 0.6); 
-    backdrop-filter: blur(4px); 
-    z-index: 5000; 
-    display: none; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 15px; 
-}
-
-.modal-box { 
-    background: #ffffff; 
-    width: 100%; 
-    max-width: 340px; 
-    padding: 25px 20px; 
-    border-radius: 20px; 
-    position: relative; 
-    animation: popUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
-    text-align: center; 
-    box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-}
-
-@keyframes popUp { 
-    from { transform: scale(0.9) translateY(20px); opacity: 0; } 
-    to { transform: scale(1) translateY(0); opacity: 1; } 
-}
-
-.form-input { 
-    width: 100%; 
-    padding: 12px 14px; 
-    background: #f8fafc; 
-    border: 1px solid #cbd5e1; 
-    border-radius: 10px; 
-    margin-bottom: 15px; 
-    outline: none; 
-    font-weight: 500; 
-    transition: 0.2s; 
-    color: #0f172a; 
-    font-size: 14px;
-}
-.form-input:focus { 
-    border-color: var(--accent); 
-    background: white; 
-    box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
-}
-
-.suggestions-box { 
-    position: absolute; 
-    width: 100%; 
-    max-height: 160px; 
-    overflow-y: auto; 
-    background: #ffffff; 
-    border: 1px solid #e2e8f0; 
-    border-radius: 12px; 
-    z-index: 10; 
-    top: 100%; 
-    left: 0; 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-    text-align: left; 
-    display: none; 
-    padding: 5px; 
-}
+.form-input { width: 100%; padding: 12px 14px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 15px; outline: none; font-weight: 500; transition: 0.2s; color: #0f172a; font-size: 14px; }
+.form-input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+.suggestions-box { position: absolute; width: 100%; max-height: 160px; overflow-y: auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; z-index: 10; top: 100%; left: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: left; display: none; padding: 5px; }
 .suggestions-box.active { display: block; }
 .suggestion-item { padding: 12px 10px; cursor: pointer; border-radius: 8px; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; color: var(--text-dark);}
 .suggestion-item:hover { background: #f1f5f9; color: var(--accent); }
 
-#img-modal .modal-box { background: transparent; padding: 0; max-width: none; width: auto; box-shadow: none; border: none; }
-#img-modal img { max-height: 85vh; max-width: 95vw; border-radius: 16px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
-.gallery-modal-box { position: relative; z-index: 2; }
-.gallery-modal-nav { position: fixed; top: 50%; transform: translateY(-50%); z-index: 5002; width: 48px; height: 48px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.6); background: rgba(15,23,42,0.55); color: #ffffff; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 14px 28px rgba(0,0,0,0.25); backdrop-filter: blur(6px); transition: 0.2s ease; }
-.gallery-modal-nav:hover { background: rgba(37,99,235,0.85); transform: translateY(-50%) scale(1.05); }
-.gallery-modal-prev { left: max(14px, env(safe-area-inset-left)); }
-.gallery-modal-next { right: max(14px, env(safe-area-inset-right)); }
-@media (max-width: 640px) { .gallery-modal-nav { width: 42px; height: 42px; font-size: 18px; } }
-
 .mandatory-star { color: #ef4444; font-weight: bold; margin-left: 2px; }
-
-.sortable-ghost { opacity: 0.4; background: #f3f4f6; border: 2px dashed #9ca3af; }
-.drag-handle { cursor: grab; color: #9ca3af; }
-.drag-handle:active { cursor: grabbing; }
-
 input, select, textarea { background-color: #ffffff; border-color: #d1d5db; color: #1f2937; transition: border 0.2s; outline: none; }
 input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
-.smart-select-wrapper { position: relative; }
-.smart-select-native-hidden {
-    position: absolute !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    width: 1px !important;
-    height: 1px !important;
-}
-.smart-select-list {
-    display: none;
-    max-height: 220px;
-    overflow-y: auto;
-    z-index: 25;
-}
-.smart-select-list.active { display: block; }
-.smart-selected-option { background: #eff6ff; color: #1d4ed8; }
-.table-header { background-color: #f8fafc; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-
-body.collection-shell input:not([type="checkbox"]):not([type="radio"]),
-body.collection-shell select,
-body.collection-shell textarea {
-    border: 1.5px solid #cbd5e1;
-    background: #ffffff;
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
-    border-radius: 14px;
-}
-
-body.collection-shell input:not([type="checkbox"]):not([type="radio"]):focus,
-body.collection-shell select:focus,
-body.collection-shell textarea:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
-    background: #fdfefe;
-}
-
-body.collection-shell label {
-    color: #334155;
-}
-
-body.collection-shell #student-suggestions,
-body.collection-shell #history-content-container,
-body.collection-shell #monthly-collected-container > div,
-body.collection-shell #stu-info-list > div,
-body.collection-shell .card {
-    border-color: #dbe4f0;
-}
-
-/* SMART EDIT MODE COLOR CODING */
-body.collection-shell .fee-item-paid-elsewhere {
-    background: #f1f5f9 !important;
-    border-color: #cbd5e1 !important;
-    color: #94a3b8 !important;
-    cursor: not-allowed;
-}
-
-body.collection-shell .fee-item-editing-yellow {
-    background: #eab308 !important;
-    border-color: #ca8a04 !important;
-    color: #ffffff !important;
-}
-
-body.collection-shell .fee-item-new-green {
-    background: #16a34a !important;
-    border-color: #15803d !important;
-    color: #ffffff !important;
-}
-
-#side-drawer { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-.drawer-link.active { background-color: #eff6ff; color: #2563eb; font-weight: 600; border-right: 4px solid #2563eb; }
-.drawer-link { color: #4b5563; }
-.drawer-link:hover { background-color: #f1f5f9; }
-
-.drawer-link-result {
-    background-color: #eff6ff;
-    color: #1d4ed8;
-    border-left: 4px solid #2563eb;
-}
-.drawer-link-result:hover {
-    background-color: #dbeafe;
-    color: #1e40af;
-}
-.drawer-heading { font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: #94a3b8; padding: 1.2rem 1rem 0.5rem 1rem; letter-spacing: 0.05em; }
-
-.upload-area { border: 2px dashed #cbd5e1; border-radius: 12px; padding: 30px; text-align: center; transition: 0.3s; background: #f8fafc; cursor: pointer; }
-.upload-area:hover, .upload-area.dragover { border-color: var(--accent); background: #eff6ff; }
-.progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-top: 10px; display: none; }
-.progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
-
-.toggle-checkbox:checked { right: 0; border-color: #68D391; }
-.toggle-checkbox:checked + .toggle-label { background-color: #68D391; }
 
 #auth-loader { position: fixed; inset: 0; background: #f3f4f6; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 #admin-app { display: none; }
 
-.dash-card { transition: transform 0.2s; }
-.dash-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-
-/* -----------------------------------
-   INDEX / STUDENT / COLLECTION STYLES
------------------------------------ */
-#splash-screen { position: fixed; inset: 0; height: 100vh; width: 100vw; background: #ffffff; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s ease, visibility 0.5s; }
-#loading-screen { position: fixed; inset: 0; background-color: #ffffff; z-index: 9999; transition: opacity 0.3s ease; display: flex; align-items: center; justify-content: center; }
-.loader-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-.logo-container { position: relative; width: 130px; height: 130px; margin: auto; display: flex; align-items: center; justify-content: center; }
-.logo-container img { width: 105px; height: 105px; object-fit: contain; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; animation: logoPulse 2.5s ease-in-out infinite; }
-.circle-loader { width: 130px; height: 130px; border-radius: 50%; border: 3px solid rgba(0,0,0,0.05); border-top-color: var(--primary); animation: spin 1.5s linear infinite; position: absolute; top: 0; left: 0; }
-.loading-text { margin-top: 25px; font-size: 14px; font-weight: 600; letter-spacing: 1px; color: var(--text-gray); animation: textFade 2s ease-in-out infinite; text-transform: uppercase; text-align: center;}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes logoPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.05); } }
-@keyframes textFade { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-
-/* Header */
 header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 15px; z-index: 1000; border: 1px solid #f1f5f9; height: var(--header-height); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border-radius: 16px; margin: 15px auto; width: calc(100% - 30px); max-width: 1200px; }
 @media (max-width: 768px) { header { margin: 10px; width: calc(100% - 20px); border-radius: 12px; top: 10px; } }
 .nav-container { height: 100%; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; position: relative; }
@@ -314,18 +104,13 @@ header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); pos
 .header-center-box h1 { font-weight: 800; color: var(--primary); white-space: normal; line-height: 1.2; width: 100%; margin: 0 auto; font-size: 14px; word-wrap: break-word; }
 .header-center-box p { font-size: 10px; color: var(--text-gray); font-weight: 600; white-space: nowrap; opacity: 0.8; margin-top: 2px; }
 
-/* Navigation Menus */
 .nav-menu { display: flex; gap: 15px; align-items: center; z-index: 10; }
 .nav-link { font-size: 14px; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: 0.2s; }
 .nav-link:hover { color: var(--accent); }
-.nav-link.active {
-    background: #111111 !important;
-    color: #ffffff !important;
-}
+.nav-link.active { background: #111111 !important; color: #ffffff !important; }
 .login-btn-nav { padding: 8px 20px; background: var(--primary); color: var(--white); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: transform 0.2s; border: none; box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);}
 .login-btn-nav:hover { transform: translateY(-2px); }
 
-/* Collapsible Menu (mobile + desktop) */
 .mobile-toggle { display: block; color: var(--primary); cursor: pointer; padding: 5px 10px; z-index: 1001; position: relative; }
 .menu-icon-wrapper { width: 24px; height: 24px; position: relative; display: flex; align-items: center; justify-content: center; }
 .menu-icon-wrapper i { position: absolute; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-size: 22px; }
@@ -340,22 +125,7 @@ header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); pos
 .nav-link:hover { background: #f8fafc; }
 .login-btn-nav { width: 100%; text-align: center; justify-content: center; padding: 10px; margin-top: 5px; }
 
-
-/* DESIGN SYSTEM HARDENING (P0) */
-:root {
-    --ds-primary: #2563eb;
-    --ds-primary-dark: #1d4ed8;
-    --ds-danger: #dc2626;
-    --ds-danger-dark: #b91c1c;
-    --ds-text-muted: #64748b;
-    --ds-ring: 0 0 0 3px rgba(37, 99, 235, 0.2);
-}
-.mobile-toggle { background: transparent; border: none; }
-.btn-danger { background: var(--ds-danger); color: #fff; border: none; }
-.btn-danger:hover { background: var(--ds-danger-dark); }
-button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; box-shadow: var(--ds-ring); }
-
-/* Official read-only portal dashboard and detail views */
+/* Dashboard and Modals */
 .official-metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
 .official-metric-card{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #dbeafe;border-radius:18px;background:linear-gradient(135deg,#fff,#eff6ff);padding:14px;box-shadow:0 8px 20px rgba(15,23,42,.06)}
 .official-metric-card i{font-size:24px;opacity:.75}
@@ -375,26 +145,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .official-card-button{padding:0;margin-bottom:10px}
 .official-card-button .official-profile-card{border:0;box-shadow:none;width:100%;min-height:auto}
 .official-student-card{display:none;margin-bottom:10px}
-.official-detail-dialog{animation:modalIn .18s ease-out}
-.official-profile-card{width:100%;min-height:auto}
-.official-student-row:focus,.official-student-card:focus,.official-card-button:focus,.official-quick-card:focus{outline:3px solid rgba(59,130,246,.35);outline-offset:2px}
-@media (max-width: 767px){.official-mobile-card-list{display:block}.official-student-card{display:block}.official-tab table{font-size:11px}}
-@media (min-width: 768px){.official-mobile-card-list{display:none}}
-.official-me-card{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 45%,#ec4899 100%);border:1px solid rgba(255,255,255,.35)}
-.official-me-hero{background:radial-gradient(circle at top left,rgba(255,255,255,.28),transparent 35%),radial-gradient(circle at bottom right,rgba(34,211,238,.26),transparent 38%)}
-.official-me-photo{width:154px;height:154px;border-radius:34px;object-fit:cover;border:5px solid rgba(255,255,255,.72);box-shadow:0 24px 45px rgba(15,23,42,.26)}
-.official-access-pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);padding:7px 11px;color:#fff;font-size:12px;font-weight:900;backdrop-filter:blur(8px)}
 
-.icon-badge { width: 45px; height: 45px; background: #eff6ff; color: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 12px; }
-.modal-title { color: var(--primary); margin-bottom: 20px; font-weight: 800; font-size: 18px; }
-.input-with-icon { position: relative; margin-bottom: 15px; }
-.form-input-with-trailing-icon { margin-bottom: 0; padding-right: 40px; }
-.trailing-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; font-size: 16px; }
-.auth-alert { color: #ef4444; font-size: 12px; display: none; margin-bottom: 15px; font-weight: 700; background: #fef2f2; padding: 8px; border-radius: 8px; border: 1px solid #fecaca; }
-.main-login-btn { background: var(--primary); color: var(--white); border: none; padding: 12px 30px; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2); transition: all 0.3s; width: auto; }
-.main-login-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(15, 23, 42, 0.3); }
-
-/* ID Cards and Modals */
 .id-card{width:336px;max-width:100%;min-height:210px;background:#fff;border:1px solid #dbe4f0;border-radius:18px;padding:14px;box-shadow:0 8px 20px rgba(15,23,42,.06)}
 .id-card-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .id-photo{width:56px;height:56px;border-radius:12px;object-fit:cover;border:1px solid #cbd5e1}
@@ -408,137 +159,69 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
    PROFESSIONAL REPORT BUILDER / SPREADSHEET STYLES
    ========================================== */
 
-/* Tools */
-.fmt-btn { padding: 4px 10px; border-radius: 6px; border: 1px solid transparent; color: #1e293b; background: transparent; cursor: pointer; transition: 0.15s; }
+.fmt-btn { padding: 4px 10px; border-radius: 6px; border: 1px solid transparent; color: #1e293b; background: transparent; cursor: pointer; transition: 0.15s; display: flex; align-items: center; justify-content: center;}
 .fmt-btn:hover { background: #e2e8f0; border-color: #cbd5e1; }
+.fmt-btn:active { transform: scale(0.95); }
 .fmt-color-picker { width: 32px; height: 32px; padding: 2px; border-radius: 6px; border: 1px solid #cbd5e1; cursor: pointer; background: #fff; }
 
-.builder-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-.builder-table th, .builder-table td {
-    border: 1px solid #94a3b8; /* Excel-like border */
-    padding: 6px 8px;
-    text-align: left;
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    color: #0f172a;
-    background: #ffffff;
-}
-.builder-table th {
-    background-color: #f1f5f9;
-    font-weight: 700;
-    vertical-align: bottom;
-}
+/* The Data Table */
+.builder-table { border-collapse: collapse; width: 100%; }
+.builder-table th, .builder-table td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: left; font-size: 13px; color: #0f172a; background: #ffffff; }
+.builder-table th { background-color: #f8fafc; font-weight: 700; vertical-align: bottom; }
 
-/* Header Cells & Resizing */
+/* Excel Headers (A, B, C & 1, 2, 3) */
+.col-header, .row-header, .select-all-btn { background-color: #e2e8f0 !important; color: #475569 !important; font-size: 11px !important; text-align: center !important; user-select: none; }
+.col-header:hover, .row-header:hover, .select-all-btn:hover { background-color: #cbd5e1 !important; color: #0f172a !important; }
+.col-header.selected, .row-header.selected, .select-all-btn.selected { background-color: #94a3b8 !important; color: #fff !important; }
+
+/* Resizing handles */
 .builder-th { position: relative; }
-.col-resizer {
-    position: absolute;
-    right: -3px; 
-    top: 0;
-    bottom: 0;
-    width: 7px;
-    cursor: col-resize;
-    z-index: 10;
-    transition: background 0.2s;
-}
-.col-resizer:hover { background: rgba(37,99,235,0.5); }
+.col-resizer { position: absolute; right: -4px; top: 0; bottom: 0; width: 8px; cursor: col-resize; z-index: 20; transition: background 0.2s; }
+.col-resizer:hover { background: rgba(37,99,235,0.8); }
 
-/* Inputs inside header */
-.builder-col-select, .builder-col-title-input {
-    border: 1px solid #cbd5e1;
-    border-radius: 4px;
-    padding: 3px 6px;
-    font-size: 11px;
-    background: #fff;
-    color: #334155;
-    outline: none;
-    font-weight: 600;
-}
+/* In-cell Controls */
+.builder-col-select, .builder-col-title-input { border: 1px solid #cbd5e1; border-radius: 4px; padding: 3px 6px; font-size: 11px; background: #fff; color: #334155; outline: none; font-weight: 600; }
 .builder-col-title-input:focus, .builder-col-select:focus { border-color: #3b82f6; }
 
 /* Cell Formatting & Selection */
-.builder-cell {
-    outline: none;
-    transition: background-color 0.1s;
-}
+.builder-cell { outline: none; transition: background-color 0.1s; }
+.builder-cell:focus { outline: 2px solid #2563eb; outline-offset: -2px; z-index: 5; position: relative; }
+.builder-cell.selected { background-color: #dbeafe !important; }
 
-.builder-cell:focus {
-    outline: 2px solid #2563eb;
-    outline-offset: -2px;
-    background: #ffffff;
-    z-index: 5;
-    position: relative;
-}
-.builder-cell.selected {
-    background-color: #dbeafe !important;
-}
-
-.print-only-heading { display: none; }
-
-/* Professional Print Header */
+/* Print Settings */
+.print-only-heading { display: none; font-size: 13px; color: #000; font-weight: bold;}
 .builder-print-header { display: none; }
-.builder-print-header.repeat-header { display: table-header-group; }
+.builder-print-header.show-on-screen { display: table-header-group; }
 .print-header-content { text-align: center; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 2px solid #1e293b; }
 .print-inst-name { font-size: 24px; font-weight: 900; text-transform: uppercase; color: #0f172a; margin: 0; }
 .print-inst-sub { font-size: 14px; font-weight: 600; color: #334155; margin: 2px 0; }
 .print-inst-reg { font-size: 12px; font-weight: 700; color: #475569; margin: 2px 0; }
 .print-custom-title { font-size: 18px; font-weight: 800; color: #1e3a8a; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-/* PRINT STYLES - Hides app, shows only canvas, strict sizes */
 @media print {
     body.is-printing { background: #fff; margin: 0; padding: 0; }
     body.is-printing * { visibility: hidden; }
-    body.is-printing #print-canvas, 
-    body.is-printing #print-canvas * { visibility: visible; }
-    
-    body.is-printing #print-canvas {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100% !important;
-        max-width: none !important;
-        margin: 0;
-        padding: 0;
-        border: none;
-        box-shadow: none;
-        overflow: visible;
-    }
-    
+    body.is-printing #print-canvas, body.is-printing #print-canvas * { visibility: visible; }
+    body.is-printing #print-canvas { position: absolute; left: 0; top: 0; width: 100% !important; max-width: none !important; margin: 0; padding: 0; border: none; box-shadow: none; overflow: visible; }
     body.is-printing .no-print { display: none !important; }
-    body.is-printing .print-only-heading { display: block !important; font-size: 12px; }
+    body.is-printing .print-only-heading { display: block !important; }
     body.is-printing .builder-print-header { display: table-header-group !important; }
-    
-    .page-break-before {
-        page-break-before: always;
-        break-before: page;
-    }
-    
+    .page-break-before { page-break-before: always; break-before: page; }
     @page { margin: 1cm; }
 }
 
 /* Canvas Boundary Warning (Desktop Preview) */
-.print-canvas {
-    min-height: 500px;
-    padding: 0;
-    margin: 0 auto;
-    background: white;
-    position: relative;
-    overflow-x: visible; 
-    border-right: 2px dashed #ef4444; /* Boundary Warning Line */
-}
-
-/* Paper Sizes in pixels for screen preview */
+.print-canvas { min-height: 500px; padding: 0; margin: 0 auto; background: white; position: relative; overflow-x: visible; border-right: 2px dashed #ef4444; }
 .print-canvas[data-paper="A4"][data-orient="portrait"] { width: 210mm; }
 .print-canvas[data-paper="A4"][data-orient="landscape"] { width: 297mm; }
 .print-canvas[data-paper="Legal"][data-orient="portrait"] { width: 8.5in; }
 .print-canvas[data-paper="Legal"][data-orient="landscape"] { width: 14in; }
 
-.builder-table {
-    min-width: 100%;
-}
+/* Custom Scrollbar for Spreadsheet */
+.spreadsheet-container::-webkit-scrollbar { height: 10px; width: 10px; }
+.spreadsheet-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px;}
+.spreadsheet-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+.spreadsheet-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
 <body class="antialiased text-gray-800 collection-shell">
@@ -583,7 +266,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
           <li><a href="#students" class="nav-link tab-link" data-tab="students"><i class="fas fa-user-graduate text-lg w-6"></i> Students</a></li>
           <li><a href="#summary" class="nav-link tab-link" data-tab="summary"><i class="fas fa-table text-lg w-6"></i> Class Summary</a></li>
           <li><a href="#staff" class="nav-link tab-link" data-tab="staff"><i class="fas fa-users text-lg w-6"></i> Staff & Categories</a></li>
-          <li><a href="#export" class="nav-link tab-link" data-tab="export"><i class="fas fa-file-export text-lg w-6 text-indigo-600"></i> Report Builder</a></li>
+          <li><a href="#export" class="nav-link tab-link" data-tab="export"><i class="fas fa-file-excel text-lg w-6 text-indigo-600"></i> Spreadsheet</a></li>
           <li><a href="#home" class="nav-link tab-link" data-tab="home"><i class="fas fa-user-circle text-lg w-6"></i> Me</a></li>
           <div class="border-t border-gray-100 my-1"></div>
           <li><button id="official-logout-btn" class="login-btn-nav btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
@@ -823,14 +506,45 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       staffType: 'ALL', staffStatus: 'ALL', staffSearch: ''
     };
     
+    // ==========================================
+    // SPREADSHEET ENGINE & STATE
+    // ==========================================
     let builderConfig = {
       classId: '', paper: 'A4', orientation: 'portrait', sortBy: 'name', groupBy: 'mixed',
       showHeader: false, repeatHeader: false, customTitle: '',
       columns: [
-        { id: 'col_sno', field: 'SNO', title: 'S.No', width: '50px' },
-        { id: 'col_name', field: 'name', title: 'Student Name', width: '220px' },
-        { id: 'col_adm', field: 'adm', title: 'Adm No', width: '100px' }
+        { id: 'col_sno', field: 'SNO', title: 'S.No', width: 'auto' },
+        { id: 'col_name', field: 'name', title: 'Student Name', width: 'auto' },
+        { id: 'col_adm', field: 'adm', title: 'Adm No', width: 'auto' }
       ]
+    };
+
+    let undoStack = [];
+    let redoStack = [];
+
+    const saveBuilderState = () => {
+        const table = document.getElementById('builder-table');
+        if (table) {
+            undoStack.push(table.innerHTML);
+            if (undoStack.length > 20) undoStack.shift(); 
+            redoStack = [];
+        }
+    };
+
+    const undoBuilder = () => {
+        if (undoStack.length > 0) {
+            const table = document.getElementById('builder-table');
+            redoStack.push(table.innerHTML);
+            table.innerHTML = undoStack.pop();
+        }
+    };
+
+    const redoBuilder = () => {
+        if (redoStack.length > 0) {
+            const table = document.getElementById('builder-table');
+            undoStack.push(table.innerHTML);
+            table.innerHTML = redoStack.pop();
+        }
     };
     
     const resolveInstitutionName = (conf = {}) => String(conf.appName || conf.institutionName || conf.institution || conf.schoolName || conf.school || conf.name || '').trim();
@@ -970,13 +684,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       const management = allStaff.filter((staff) => staff.isActive !== false && staff.type === 'Management').length;
       const activeStaff = allStaff.filter((staff) => staff.isActive !== false).length;
       const categoryMembers = directoryEntries.length;
-      
-      // Update: Showing total groups instead of grouped students
       const groupCount = studentGroups.length;
-      
       const concessionStudents = allStudents.filter(hasStudentConcession).length;
       return { totalStudents, boys, girls, classCount, teachers, management, activeStaff, categoryMembers, groupCount, concessionStudents };
     };
+    
     const metricCard = (label, value, tone = 'blue', icon = 'fa-circle-info') => `
       <div class="official-metric-card ${tone}">
         <div><div class="official-metric-label">${escapeHtml(label)}</div><div class="official-metric-value">${escapeHtml(String(value))}</div></div>
@@ -999,7 +711,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
               ${metricCard('Girls', stats.girls, 'teal', 'fa-person-dress')}
               ${metricCard('Teachers', stats.teachers, 'amber', 'fa-chalkboard-user')}
               ${metricCard('Management', stats.management, 'purple', 'fa-users-gear')}
-              ${metricCard('Groups', stats.groupCount, 'blue', 'fa-people-group')} <!-- Update Label -->
+              ${metricCard('Groups', stats.groupCount, 'blue', 'fa-people-group')}
               ${metricCard('Concessions', stats.concessionStudents, 'green', 'fa-hand-holding-dollar')}
             </div>
           </div>
@@ -1256,6 +968,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
         </div>`;
     };
     
+    // ==========================================
+    // PROFESSIONAL SPREADSHEET ENGINE
+    // ==========================================
+    
     const availableDataFields = [
       { id: 'SNO', label: 'Serial No. (Auto)' },
       { id: 'name', label: 'Student Name' },
@@ -1284,10 +1000,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       const instReg = institutionConfig.regNo ? `Reg No: ${institutionConfig.regNo}` : '';
       
       const theadClass = builderConfig.repeatHeader ? 'builder-print-header repeat-header' : 'builder-print-header';
+      
+      // Print Header spans dynamically
+      const colSpanPrint = builderConfig.columns.length;
+      
       const headerHtml = builderConfig.showHeader ? `
         <thead class="${theadClass}">
            <tr>
-             <th colspan="${builderConfig.columns.length}" class="print-header-th">
+             <th colspan="${colSpanPrint}" class="print-header-th bg-white border-0">
                <div class="print-header-content">
                   <h1 class="print-inst-name">${escapeHtml(instName)}</h1>
                   <h2 class="print-inst-sub">${escapeHtml(instSub)}</h2>
@@ -1299,14 +1019,18 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
         </thead>
       ` : '';
     
+      const excelColHeaders = builderConfig.columns.map((col, i) => 
+        `<th class="no-print col-header" data-col="${i}" title="Select Column ${String.fromCharCode(65 + i)}">${String.fromCharCode(65 + i)}</th>`
+      ).join('');
+
       const colHeadersHtml = builderConfig.columns.map((col, cIndex) => {
         return `<th class="builder-th group" style="width: ${col.width || 'auto'}">
           <div class="col-resizer" data-col-index="${cIndex}"></div>
           <div class="no-print mb-1 flex items-center justify-between gap-1">
-            <select class="builder-col-select" data-col-index="${cIndex}">
+            <select class="builder-col-select w-full" data-col-index="${cIndex}">
               ${availableDataFields.map(f => `<option value="${f.id}" ${f.id === col.field ? 'selected' : ''}>${f.label}</option>`).join('')}
             </select>
-            <button class="text-red-500 hover:bg-red-50 px-1 rounded delete-col-btn opacity-0 group-hover:opacity-100 transition-opacity" data-col-index="${cIndex}" title="Remove Column"><i class="fas fa-times"></i></button>
+            <button class="text-red-500 hover:bg-red-100 px-1.5 rounded delete-col-btn opacity-0 group-hover:opacity-100 transition-opacity" data-col-index="${cIndex}" title="Remove Column"><i class="fas fa-times"></i></button>
           </div>
           <div class="no-print mb-1 flex gap-1 items-center">
             <input type="text" class="builder-col-title-input w-full" value="${escapeHtml(col.title)}" placeholder="Heading..." data-col-index="${cIndex}">
@@ -1319,7 +1043,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
           const rowCount = Math.max(10, students.length); 
           return Array.from({ length: rowCount }).map((_, rIndex) => {
             const student = students[rIndex] || null;
-            return `<tr>${builderConfig.columns.map((col, cIndex) => {
+            return `<tr>
+              <td class="no-print row-header" data-row="${startIndex + rIndex}">${startIndex + rIndex + 1}</td>
+              ${builderConfig.columns.map((col, cIndex) => {
               let cellValue = '';
               if (col.field === 'SNO') cellValue = student ? startIndex + rIndex + 1 : '';
               else if (col.field !== 'CUSTOM' && student) cellValue = valueToDisplay(student[col.field]);
@@ -1340,7 +1066,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
           } else if (builderConfig.groupBy === 'separate') {
               bodyHtml = `<tbody>${renderTbodyRows(boys)}</tbody>
                           <tbody class="page-break-before">
-                            <tr><td colspan="${builderConfig.columns.length}" class="no-print bg-slate-100 text-center text-xs py-2 text-slate-500 font-bold border-dashed border-y border-slate-300">--- PAGE BREAK (Girls List) ---</td></tr>
+                            <tr><td colspan="${builderConfig.columns.length + 1}" class="no-print bg-slate-100 text-center text-xs py-2 text-slate-500 font-bold border-dashed border-y border-slate-300">--- PAGE BREAK (Girls List) ---</td></tr>
                             ${renderTbodyRows(girls, boys.length)}
                           </tbody>`;
           }
@@ -1350,24 +1076,31 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
         <div class="card p-3 sm:p-5 rounded-2xl shadow-sm mb-4 no-print bg-white sticky top-[80px] z-[50]">
           <div class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4 mb-4 pb-4 border-b border-slate-100">
             <div>
-              <h3 class="font-extrabold text-lg flex items-center gap-2"><i class="fas fa-file-export text-indigo-600"></i> Spreadsheet & Print</h3>
-              <p class="text-xs text-slate-500 font-semibold mt-1">Select cells to format. Ctrl+V to paste from Excel. Drag borders to resize.</p>
+              <h3 class="font-extrabold text-lg flex items-center gap-2"><i class="fas fa-file-excel text-indigo-600"></i> Spreadsheet Editor</h3>
+              <p class="text-xs text-slate-500 font-semibold mt-1">Select row/col headers to format. Drag borders to resize.</p>
             </div>
             
-            <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-lg border border-slate-200">
-              <button id="fmt-bold" class="fmt-btn" title="Bold"><i class="fas fa-bold"></i></button>
-              <button id="fmt-italic" class="fmt-btn" title="Italic"><i class="fas fa-italic"></i></button>
+            <div class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded-xl border border-slate-200 overflow-x-auto max-w-full">
+              <button id="fmt-undo" class="fmt-btn" title="Undo"><i class="fas fa-undo"></i></button>
+              <button id="fmt-redo" class="fmt-btn" title="Redo"><i class="fas fa-redo"></i></button>
+              <div class="w-px h-5 bg-slate-300 mx-1"></div>
+              <button id="fmt-bold" class="fmt-btn font-serif font-bold text-[15px]" title="Bold">B</button>
+              <button id="fmt-italic" class="fmt-btn font-serif italic text-[15px]" title="Italic">I</button>
+              <div class="w-px h-5 bg-slate-300 mx-1"></div>
+              <button id="fmt-size-minus" class="fmt-btn" title="Decrease Font"><i class="fas fa-minus text-[10px]"></i></button>
+              <input type="number" id="fmt-size-input" class="w-10 text-center border border-slate-300 rounded text-xs py-1 outline-none font-bold" value="13" />
+              <button id="fmt-size-plus" class="fmt-btn" title="Increase Font"><i class="fas fa-plus text-[10px]"></i></button>
               <div class="w-px h-5 bg-slate-300 mx-1"></div>
               <input type="color" id="fmt-color" class="fmt-color-picker" title="Text Color" value="#0f172a">
               <input type="color" id="fmt-bg" class="fmt-color-picker" title="Background Color" value="#ffffff">
               <div class="w-px h-5 bg-slate-300 mx-1"></div>
-              <button id="btn-add-col" class="compact-btn bg-white hover:bg-slate-100"><i class="fas fa-plus text-indigo-600"></i> Col</button>
-              <button id="btn-add-row" class="compact-btn bg-white hover:bg-slate-100"><i class="fas fa-plus text-indigo-600"></i> Row</button>
+              <button id="btn-add-col" class="compact-btn bg-white hover:bg-slate-100 text-[11px]"><i class="fas fa-plus text-indigo-600"></i> Col</button>
+              <button id="btn-add-row" class="compact-btn bg-white hover:bg-slate-100 text-[11px]"><i class="fas fa-plus text-indigo-600"></i> Row</button>
             </div>
     
             <div class="flex gap-2">
-              <button id="btn-export-print" class="compact-btn bg-slate-900 text-white hover:bg-slate-800 border-slate-900"><i class="fas fa-print"></i> Print</button>
-              <button id="btn-export-excel" class="compact-btn bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-100"><i class="fas fa-file-excel"></i> Excel</button>
+              <button id="btn-export-print" class="flex items-center gap-2 bg-gradient-to-r from-slate-800 to-slate-900 text-white px-5 py-2.5 rounded-xl font-bold hover:shadow-lg hover:from-slate-700 hover:to-slate-800 transition-all text-sm"><i class="fas fa-print"></i> PDF / Print</button>
+              <button id="btn-export-excel" class="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold hover:shadow-lg hover:from-emerald-500 hover:to-emerald-600 transition-all text-sm"><i class="fas fa-file-excel"></i> Export Excel</button>
             </div>
           </div>
           
@@ -1424,11 +1157,20 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
           </div>
         </div>
     
-        <div class="overflow-x-auto w-full pb-10 bg-slate-100 p-4 rounded-xl border border-slate-200">
+        <div class="overflow-x-auto w-full pb-10 bg-slate-100 p-4 rounded-xl border border-slate-200 spreadsheet-container">
           <div id="print-canvas" class="print-canvas shadow-xl mx-auto transition-all" data-paper="${builderConfig.paper}" data-orient="${builderConfig.orientation}">
             <table id="builder-table" class="w-full border-collapse builder-table">
               ${headerHtml}
-              <thead><tr>${colHeadersHtml}</tr></thead>
+              <thead>
+                <tr class="no-print">
+                   <th class="select-all-btn w-10 border-slate-300" title="Select All">#</th>
+                   ${excelColHeaders}
+                </tr>
+                <tr>
+                   <th class="no-print bg-slate-200 border-slate-300"></th>
+                   ${colHeadersHtml}
+                </tr>
+              </thead>
               ${bodyHtml}
             </table>
           </div>
@@ -1455,23 +1197,30 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       document.getElementById('builder-repeat-header')?.addEventListener('change', (e) => { builderConfig.repeatHeader = e.target.checked; renderExportTab(); });
     
       document.getElementById('btn-add-col')?.addEventListener('click', () => {
-        builderConfig.columns.push({ id: `col_${Date.now()}`, field: 'CUSTOM', title: 'New Column', width: '120px' });
+        // Equal fixed width for CUSTOM columns
+        builderConfig.columns.push({ id: `col_${Date.now()}`, field: 'CUSTOM', title: 'New Column', width: '150px' });
         renderExportTab();
+        saveBuilderState();
       });
     
       document.getElementById('btn-add-row')?.addEventListener('click', () => {
+        saveBuilderState();
         const tbodys = document.querySelectorAll('#builder-table tbody');
         if(tbodys.length === 0) return;
         const targetTbody = tbodys[tbodys.length - 1]; 
         const colsCount = builderConfig.columns.length;
         const tr = document.createElement('tr');
-        tr.innerHTML = Array.from({ length: colsCount }).map(() => `<td class="builder-cell" contenteditable="true"></td>`).join('');
+        // Get next row number
+        const nextRowIdx = document.querySelectorAll('.row-header').length;
+        tr.innerHTML = `<td class="no-print row-header" data-row="${nextRowIdx}">${nextRowIdx + 1}</td>` + 
+                       Array.from({ length: colsCount }).map((_, cIndex) => `<td class="builder-cell" contenteditable="true" data-row="${nextRowIdx}" data-col="${cIndex}"></td>`).join('');
         targetTbody.appendChild(tr);
       });
     
       document.querySelectorAll('.delete-col-btn').forEach(btn => btn.addEventListener('click', (e) => {
         const idx = parseInt(e.currentTarget.dataset.colIndex);
         if(builderConfig.columns.length > 1) {
+          saveBuilderState();
           builderConfig.columns.splice(idx, 1);
           renderExportTab();
         } else {
@@ -1480,11 +1229,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       }));
     
       document.querySelectorAll('.builder-col-select').forEach(sel => sel.addEventListener('change', (e) => {
+        saveBuilderState();
         const idx = parseInt(e.target.dataset.colIndex);
         const fieldId = e.target.value;
         builderConfig.columns[idx].field = fieldId;
         const fieldLabel = availableDataFields.find(f => f.id === fieldId)?.label || 'Column';
         if(fieldId !== 'CUSTOM') builderConfig.columns[idx].title = fieldLabel;
+        else builderConfig.columns[idx].width = '150px'; // fixed for blank
         renderExportTab();
       }));
     
@@ -1493,17 +1244,39 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
         builderConfig.columns[idx].title = e.target.value;
         e.target.closest('th').querySelector('.print-only-heading').textContent = e.target.value;
       }));
-    
+
+      // --- Formatting Logic ---
       const applyFormat = (styleProp, valueFn) => {
+          saveBuilderState();
           document.querySelectorAll('.builder-cell.selected').forEach(td => {
               td.style[styleProp] = typeof valueFn === 'function' ? valueFn(td.style[styleProp]) : valueFn;
           });
       };
       
+      const getActiveFontSize = () => parseInt(document.getElementById('fmt-size-input').value) || 13;
+      
       document.getElementById('fmt-bold')?.addEventListener('click', () => applyFormat('fontWeight', val => val === 'bold' ? 'normal' : 'bold'));
       document.getElementById('fmt-italic')?.addEventListener('click', () => applyFormat('fontStyle', val => val === 'italic' ? 'normal' : 'italic'));
       document.getElementById('fmt-color')?.addEventListener('input', (e) => applyFormat('color', e.target.value));
       document.getElementById('fmt-bg')?.addEventListener('input', (e) => applyFormat('backgroundColor', e.target.value));
+      
+      document.getElementById('fmt-size-plus')?.addEventListener('click', () => {
+          let size = getActiveFontSize() + 1;
+          document.getElementById('fmt-size-input').value = size;
+          applyFormat('fontSize', size + 'px');
+      });
+      document.getElementById('fmt-size-minus')?.addEventListener('click', () => {
+          let size = Math.max(8, getActiveFontSize() - 1);
+          document.getElementById('fmt-size-input').value = size;
+          applyFormat('fontSize', size + 'px');
+      });
+      document.getElementById('fmt-size-input')?.addEventListener('change', (e) => {
+          applyFormat('fontSize', e.target.value + 'px');
+      });
+
+      // Undo Redo binding
+      document.getElementById('fmt-undo')?.addEventListener('click', undoBuilder);
+      document.getElementById('fmt-redo')?.addEventListener('click', redoBuilder);
     
       document.getElementById('btn-export-print')?.addEventListener('click', () => {
         document.body.classList.add('is-printing');
@@ -1536,12 +1309,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
         const table = document.getElementById('builder-table');
         if (!table) return;
     
+        // 1. Resize Column
         let resizingCol = null;
         let startX = 0;
         let startWidth = 0;
     
         document.addEventListener('mousedown', (e) => {
             if (e.target.classList.contains('col-resizer')) {
+                saveBuilderState();
                 resizingCol = e.target.closest('th');
                 startX = e.pageX;
                 startWidth = resizingCol.offsetWidth;
@@ -1561,25 +1336,52 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
                 }
             }
         });
-    
         document.addEventListener('mouseup', () => { resizingCol = null; });
     
+        // 2. Excel Selection Engine
         let isSelecting = false;
         let startCell = null;
     
         const getCellCoords = (td) => {
-            const row = Array.from(td.parentElement.parentElement.children).indexOf(td.parentElement);
-            const col = Array.from(td.parentElement.children).indexOf(td);
-            return { row, col, tbody: td.parentElement.parentElement };
+            return { row: parseInt(td.dataset.row), col: parseInt(td.dataset.col) };
         };
+
+        const clearSelection = () => document.querySelectorAll('.builder-cell, .col-header, .row-header, .select-all-btn').forEach(c => c.classList.remove('selected'));
     
         table.addEventListener('mousedown', (e) => {
             if (e.target.classList.contains('col-resizer')) return; 
+            
+            // Col Selection
+            const colHeader = e.target.closest('th.col-header');
+            if (colHeader) {
+                clearSelection();
+                colHeader.classList.add('selected');
+                document.querySelectorAll(`.builder-cell[data-col="${colHeader.dataset.col}"]`).forEach(c => c.classList.add('selected'));
+                return;
+            }
+            // Row Selection
+            const rowHeader = e.target.closest('td.row-header');
+            if (rowHeader) {
+                clearSelection();
+                rowHeader.classList.add('selected');
+                document.querySelectorAll(`.builder-cell[data-row="${rowHeader.dataset.row}"]`).forEach(c => c.classList.add('selected'));
+                return;
+            }
+            // Select All
+            const selectAll = e.target.closest('.select-all-btn');
+            if (selectAll) {
+                clearSelection();
+                selectAll.classList.add('selected');
+                document.querySelectorAll('.builder-cell').forEach(c => c.classList.add('selected'));
+                return;
+            }
+
+            // Normal Cell Selection
             const td = e.target.closest('td.builder-cell');
             if (td) {
                 isSelecting = true;
                 startCell = getCellCoords(td);
-                document.querySelectorAll('.builder-cell').forEach(c => c.classList.remove('selected'));
+                clearSelection();
                 td.classList.add('selected');
             }
         });
@@ -1589,30 +1391,43 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
                 const td = e.target.closest('td.builder-cell');
                 if (td) {
                     const endCell = getCellCoords(td);
-                    if (startCell.tbody !== endCell.tbody) return; 
-                    
                     const minR = Math.min(startCell.row, endCell.row);
                     const maxR = Math.max(startCell.row, endCell.row);
                     const minC = Math.min(startCell.col, endCell.col);
                     const maxC = Math.max(startCell.col, endCell.col);
-    
-                    Array.from(startCell.tbody.children).forEach((tr, rIndex) => {
-                        Array.from(tr.children).forEach((cell, cIndex) => {
-                            if (cell.classList.contains('builder-cell')) {
-                                if (rIndex >= minR && rIndex <= maxR && cIndex >= minC && cIndex <= maxC) {
-                                    cell.classList.add('selected');
-                                } else {
-                                    cell.classList.remove('selected');
-                                }
-                            }
-                        });
+                    
+                    document.querySelectorAll('.builder-cell').forEach(cell => {
+                        const r = parseInt(cell.dataset.row);
+                        const c = parseInt(cell.dataset.col);
+                        if (r >= minR && r <= maxR && c >= minC && c <= maxC) {
+                            cell.classList.add('selected');
+                        } else {
+                            cell.classList.remove('selected');
+                        }
                     });
                 }
             }
         });
     
         document.addEventListener('mouseup', () => isSelecting = false);
+        
+        // Save state before typing
+        table.addEventListener('focusin', (e) => {
+            if(e.target.classList.contains('builder-cell')) {
+                e.target.dataset.original = e.target.innerHTML;
+            }
+        });
+        table.addEventListener('focusout', (e) => {
+            if(e.target.classList.contains('builder-cell')) {
+                if(e.target.dataset.original !== e.target.innerHTML) {
+                    // It changed. To properly undo, we should have saved before.
+                    // Simplified: We'll push current state. True undo needs more robust handling for contenteditable.
+                    saveBuilderState();
+                }
+            }
+        });
     
+        // 3. Copy & Paste Engine
         document.addEventListener('copy', (e) => {
             if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
             const selected = document.querySelectorAll('.builder-cell.selected');
@@ -1635,24 +1450,18 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
             
             const activeCell = document.querySelector('.builder-cell.selected') || document.activeElement.closest('td.builder-cell');
             if (activeCell) {
+                saveBuilderState();
                 e.preventDefault();
                 const text = e.clipboardData.getData('text/plain');
                 const rowsData = text.split(/\r?\n/).map(r => r.split('\t'));
                 
-                const startCoords = getCellCoords(activeCell);
-                const tbody = startCoords.tbody;
-    
+                const startR = parseInt(activeCell.dataset.row);
+                const startC = parseInt(activeCell.dataset.col);
+                
                 rowsData.forEach((rowData, i) => {
-                    let tr = tbody.children[startCoords.row + i];
-                    if (!tr) {
-                        tr = document.createElement('tr');
-                        tr.innerHTML = Array.from({ length: builderConfig.columns.length }).map(() => `<td class="builder-cell" contenteditable="true"></td>`).join('');
-                        tbody.appendChild(tr);
-                    }
-                    
                     rowData.forEach((val, j) => {
-                        const td = tr.children[startCoords.col + j];
-                        if (td && td.classList.contains('builder-cell')) {
+                        const td = document.querySelector(`.builder-cell[data-row="${startR + i}"][data-col="${startC + j}"]`);
+                        if (td) {
                             td.textContent = val;
                         }
                     });

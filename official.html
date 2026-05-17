@@ -1,22 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ml">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Official Portal - Report Builder</title>
+  
+  <!-- പുറത്തുനിന്നുള്ള ലൈബ്രറികൾ -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
-  <!-- SheetJS for Excel Export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
     /* ==========================================
-       FEE TRACKER PRO - GLOBAL CSS & REPORT BUILDER
+       നിലവിലുള്ള സിസ്റ്റം ഡിസൈൻ (GLOBAL CSS)
        ========================================== */
-
     :root { 
+        --background-light: #f3f4f6; 
+        --text-light: #1f2937; 
+        --card-light: #ffffff; 
+        --border-light: #e5e7eb; 
         --primary: #0f172a; 
         --accent: #3b82f6; 
         --white: #ffffff; 
@@ -27,329 +30,401 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth !important; }
-    body { background-color: #f3f4f6; color: #1f2937; overflow-x: hidden; }
-    
-    /* Utility */
+    body { background-color: var(--background-light); color: var(--text-light); overflow-x: hidden; }
     .hidden { display: none !important; }
-    .card { background-color: #ffffff; border: 1px solid #e5e7eb; }
+    
+    /* നിലവിലുള്ള UI ക്ലാസുകൾ */
+    .card { background-color: var(--card-light); border: 1px solid var(--border-light); }
     .btn-primary { background-color: var(--accent); color: #ffffff; transition: 0.2s; cursor: pointer; border: none; }
     .btn-primary:hover { background-color: #2563eb; }
-
-    /* Header Navigation */
+    .form-input { width: 100%; padding: 12px 14px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 15px; outline: none; font-size: 14px; color: #0f172a; }
+    .form-input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    .modal-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 15px; }
+    .modal-box { background: #ffffff; width: 100%; max-width: 340px; padding: 25px 20px; border-radius: 20px; position: relative; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
+    .main-login-btn { background: var(--primary); color: var(--white); border: none; padding: 12px 30px; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2); transition: all 0.3s; width: 100%; }
+    
+    /* നാവിഗേഷൻ ഹെഡർ */
     header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 15px; z-index: 1000; border: 1px solid #f1f5f9; height: var(--header-height); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border-radius: 16px; margin: 15px auto; width: calc(100% - 30px); max-width: 1200px; }
     .nav-container { height: 100%; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; position: relative; }
-    .header-logo-box { width: 45px; height: 45px; flex-shrink: 0; z-index: 10; display: flex; align-items: center;}
-    .header-logo-box img { max-height: 100%; max-width: 100%; border-radius: 8px; object-fit: contain;}
-    .header-center-box { position: absolute; left: 50%; transform: translateX(-50%); width: 55%; text-align: center; display: flex; flex-direction: column; justify-content: center; z-index: 1; }
-    .header-center-box h1 { font-weight: 800; color: var(--primary); font-size: 14px; }
-    .header-center-box p { font-size: 10px; color: var(--text-gray); font-weight: 600; }
-    .nav-menu { display: flex; gap: 15px; align-items: center; z-index: 10; list-style: none;}
+    .header-logo-box { width: 45px; height: 45px; flex-shrink: 0; display: flex; align-items: center;}
+    .header-logo-box img { max-height: 100%; max-width: 100%; border-radius: 8px; object-fit: contain; }
+    .header-center-box { position: absolute; left: 50%; transform: translateX(-50%); width: 55%; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+    .header-center-box h1 { font-weight: 800; color: var(--primary); font-size: 14px; line-height: 1.2; }
+    .header-center-box p { font-size: 10px; color: var(--text-gray); font-weight: 600; margin-top: 2px; }
+    
+    .nav-menu { display: flex; gap: 15px; align-items: center; list-style: none;}
     .nav-link { font-size: 14px; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: 0.2s; text-decoration: none;}
     .nav-link:hover { color: var(--accent); }
-    .nav-link.active { background: #111111 !important; color: #ffffff !important; padding: 8px 12px; border-radius: 8px;}
+    .nav-link.active { background: #111111 !important; color: #ffffff !important; padding: 6px 12px; border-radius: 8px;}
     .login-btn-nav { padding: 8px 20px; background: var(--primary); color: var(--white); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
     .btn-danger { background: #dc2626 !important; }
-
-    /* Login Screen */
-    .modal-box { background: #ffffff; width: 100%; max-width: 340px; padding: 25px 20px; border-radius: 20px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.15); margin: auto;}
-    .form-input { width: 100%; padding: 12px 14px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 15px; outline: none; font-size: 14px; }
-    .form-input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(59,130,246,0.1);}
+    .mobile-toggle { display: none; color: var(--primary); cursor: pointer; padding: 5px 10px; }
+    @media (max-width: 900px) {
+        .mobile-toggle { display: block; }
+        .nav-menu { position: absolute; top: calc(100% + 10px); right: 0; width: min(280px, calc(100vw - 30px)); background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(15px); flex-direction: column; padding: 15px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); display: none; }
+        .nav-menu.active { display: flex; }
+    }
 
     /* ==========================================
-       MINI-EXCEL REPORT BUILDER STYLES
+       പുതിയ ഫീച്ചർ: ADVANCED REPORT BUILDER CSS
        ========================================== */
-    .report-builder-container { background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 15px; margin-top: 15px; }
-    .report-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 10px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 15px; }
-    .report-toolbar select, .report-toolbar input, .report-toolbar button { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 13px; font-weight: 600; outline: none; }
-    .report-toolbar button { cursor: pointer; background: white; color: #1e293b; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+    .report-builder-wrapper { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.03); overflow: hidden;}
+    .report-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+    .report-toolbar select, .report-toolbar input, .report-toolbar button { padding: 9px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 13px; font-weight: 700; outline: none; background: #ffffff; color: #1e293b; transition: 0.2s;}
+    .report-toolbar button { cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
     .report-toolbar button:hover { background: #eff6ff; border-color: #3b82f6; color: #2563eb; }
     .report-toolbar .btn-primary { background: #3b82f6; color: white; border-color: #3b82f6; }
     
-    .format-group { display: flex; gap: 2px; border-left: 2px solid #e2e8f0; padding-left: 10px; margin-left: 5px; }
-    .format-btn { padding: 6px 10px !important; }
-    .format-btn.active { background: #e2e8f0 !important; border-color: #94a3b8 !important; }
+    .format-group { display: flex; gap: 4px; border-left: 2px solid #cbd5e1; padding-left: 12px; margin-left: 4px; align-items: center;}
+    .format-btn { padding: 8px 12px !important; border-radius: 6px !important;}
+    .format-btn.active { background: #e2e8f0 !important; border-color: #94a3b8 !important; color: #0f172a !important;}
     
-    /* Paper Boundaries */
-    .paper-view { overflow-x: auto; background: #f1f5f9; padding: 20px; border-radius: 8px; display: flex; justify-content: center; }
-    .paper-sheet { background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 20px; border: 1px dashed #cbd5e1; min-height: 500px; }
+    /* പേപ്പർ & ടേബിൾ ഡിസൈൻ */
+    .paper-view { overflow-x: auto; background: #e2e8f0; padding: 30px; display: flex; justify-content: center; min-height: 60vh;}
+    .paper-sheet { background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 30px; border: 1px dashed #94a3b8; transition: width 0.3s; min-height: 297mm;}
     .paper-a4 { width: 210mm; max-width: 100%; }
     .paper-legal { width: 216mm; max-width: 100%; }
     .paper-auto { width: 100%; }
 
-    /* The Excel Grid */
-    .excel-table { border-collapse: collapse; width: 100%; font-size: 13px; }
-    .excel-table th, .excel-table td { border: 1px solid #cbd5e1; padding: 6px; position: relative; min-width: 50px; word-wrap: break-word; }
-    .excel-table th { background: #f8fafc; font-weight: 700; color: #334155; text-align: center; user-select: none; }
-    .excel-table td { outline: none; transition: box-shadow 0.1s; }
+    .excel-table { border-collapse: collapse; width: 100%; font-size: 13px; border: 1px solid #cbd5e1;}
+    .excel-table th, .excel-table td { border: 1px solid #cbd5e1; padding: 8px; position: relative; min-width: 60px; word-wrap: break-word; }
+    .excel-table th { background: #f1f5f9; font-weight: 800; color: #1e293b; text-align: center; user-select: none; }
+    .excel-table td { outline: none; transition: box-shadow 0.1s; color: #334155;}
     .excel-table td:focus { box-shadow: inset 0 0 0 2px #3b82f6; background: #fdfefe; z-index: 10; }
     .excel-table td.selected { background-color: #eff6ff; }
     
-    /* Drag Resizer */
-    .col-resizer { width: 5px; height: 100%; position: absolute; right: 0; top: 0; cursor: col-resize; user-select: none; z-index: 1; }
-    .col-resizer:hover { background-color: #3b82f6; opacity: 0.5; }
+    /* കോളം സൈസ് കൂട്ടാനുള്ള ഡ്രാഗ് ടൂൾ */
+    .col-resizer { width: 6px; height: 100%; position: absolute; right: 0; top: 0; cursor: col-resize; user-select: none; z-index: 1; }
+    .col-resizer:hover { background-color: #3b82f6; opacity: 0.7; }
 
-    /* Print Specific Header */
-    .print-official-header { display: none; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #1e293b; padding-bottom: 10px; }
-    .print-official-header img { height: 60px; margin-bottom: 10px; }
-    .print-official-header h1 { font-size: 22px; font-weight: 800; color: #000; text-transform: uppercase;}
-    .print-official-header p { font-size: 12px; font-weight: 600; color: #333; }
-    .print-custom-title { font-size: 16px; font-weight: 700; margin-top: 10px; text-decoration: underline; }
-
-    /* Page Break Helper */
-    .page-break-indicator { border-top: 2px dashed #ef4444; margin: 15px 0; position: relative; text-align: center; display: none;}
-    .page-break-indicator::after { content: 'Page Break (Print)'; background: #fef2f2; color: #ef4444; font-size: 10px; padding: 2px 8px; position: relative; top: -10px; border-radius: 10px; border: 1px solid #fca5a5;}
+    /* പ്രിൻ്റ് ചെയ്യുമ്പോൾ വരുന്ന ഹെഡർ */
+    .print-official-header { display: none; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #0f172a; padding-bottom: 15px; }
+    .print-official-header img { height: 70px; margin: 0 auto 10px; object-fit: contain;}
+    .print-official-header h1 { font-size: 24px; font-weight: 900; color: #000; text-transform: uppercase; margin-bottom: 4px;}
+    .print-official-header p { font-size: 13px; font-weight: 700; color: #334155; }
+    .print-custom-title { font-size: 18px; font-weight: 800; margin-top: 15px; text-decoration: underline; color: #1e293b;}
+    .page-break-indicator { border-top: 2px dashed #ef4444; margin: 20px 0; position: relative; text-align: center;}
+    .page-break-indicator::after { content: 'Page Break (Print)'; background: #fef2f2; color: #ef4444; font-size: 11px; padding: 4px 10px; font-weight: bold; position: relative; top: -12px; border-radius: 12px; border: 1px solid #fca5a5;}
 
     /* ==========================================
-       PRINT CSS ARCHITECTURE
+       PRINT CSS (അനാവശ്യ വിവരങ്ങൾ ഒഴിവാക്കാൻ)
        ========================================== */
     @media print {
-        @page { size: A4 portrait; margin: 15mm; }
-        body { background: white; color: black; }
+        @page { size: auto; margin: 15mm; }
+        body { background: white !important; color: black !important; }
+        header, .report-toolbar, #official-login-screen, .nav-menu, #mobile-menu-btn, .mb-3 { display: none !important; }
+        .page-content:not(#official-tab-report) { display: none !important; }
         
-        /* Hide UI Elements */
-        header, .report-toolbar, #official-login-screen, .nav-menu { display: none !important; }
-        .paper-view { background: transparent; padding: 0; display: block; overflow: visible; }
+        .report-builder-wrapper { border: none; box-shadow: none; border-radius: 0; overflow: visible;}
+        .paper-view { background: transparent; padding: 0; display: block; overflow: visible; min-height: auto;}
         .paper-sheet { border: none; box-shadow: none; padding: 0; width: 100% !important; min-height: auto; }
         
-        /* Show Official Header */
         .print-official-header { display: block; }
+        .excel-table { width: 100%; border-collapse: collapse;}
+        .excel-table th { background: #e2e8f0 !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .excel-table td, .excel-table th { border: 1px solid #000 !important; padding: 6px; font-size: 12pt; color: #000 !important;}
         
-        /* Table Styling for Print */
-        .excel-table { width: 100%; }
-        .excel-table th { background: #e2e8f0 !important; color: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        .excel-table td, .excel-table th { border: 1px solid #000 !important; padding: 4px; font-size: 11pt; }
-        
-        /* Page Breaks */
-        .print-page-break { page-break-before: always; }
+        .print-page-break { page-break-before: always; border: none !important; }
+        .print-page-break td { border: none !important; padding: 0 !important; height: 0 !important;}
         .page-break-indicator { display: none !important; }
     }
   </style>
 </head>
-<body class="antialiased text-gray-800 collection-shell">
-  
-  <!-- Login Screen -->
+<body class="antialiased text-gray-800">
+
+  <!-- ലോഗിൻ സ്ക്രീൻ (പഴയത് പോലെ തന്നെ) -->
   <div id="official-login-screen" class="min-h-screen flex items-center justify-center px-4">
     <div class="w-full max-w-md">
       <div class="modal-box">
-        <img id="official-login-modal-logo" src="https://via.placeholder.com/80" alt="Logo" class="h-20 w-20 mx-auto rounded-full object-cover border-2 border-slate-200 shadow mb-3">
-        <h3 class="text-xl font-bold text-slate-800 mb-1">Official Portal</h3>
-        <p class="text-sm font-semibold text-slate-600 mb-4">Institution Name</p>
+        <img id="official-login-modal-logo" src="assets/images/logo.png" alt="Logo" class="h-20 w-20 mx-auto rounded-full object-cover border-2 border-slate-200 shadow mb-3" onerror="this.src='https://via.placeholder.com/80'">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">Official Login</h3>
+        <p id="official-login-institution-name" class="text-sm font-semibold text-slate-600 mb-4">Institution Name</p>
         <input id="official-username" type="text" class="form-input" placeholder="Username / Email">
         <input id="official-password" type="password" class="form-input" placeholder="Password">
         <p id="official-login-msg" class="text-red-500 text-sm mb-3 hidden"></p>
-        <button id="official-login-btn" class="btn-primary w-full py-3 rounded-xl font-bold">Login Securely</button>
+        <button id="official-login-btn" class="main-login-btn">Login Securely</button>
       </div>
     </div>
   </div>
 
-  <!-- Main App -->
+  <!-- പ്രധാന ആപ്ലിക്കേഷൻ -->
   <div id="official-app" class="hidden">
     <header>
       <div class="nav-container">
-        <div class="header-logo-box"><img id="header-logo" src="https://via.placeholder.com/45" alt="Logo"></div>
+        <div class="header-logo-box"><img id="header-logo" src="assets/images/logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/45'"></div>
         <div class="header-center-box">
           <h1 id="header-title">Official Portal</h1>
-          <p><span id="official-user-line">Admin</span></p>
+          <p><span id="official-user-line">--</span></p>
         </div>
+        <button class="mobile-toggle" id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
         <ul class="nav-menu">
-          <li><a href="#dashboard" class="nav-link tab-link active" data-tab="dashboard">Dashboard</a></li>
-          <li><a href="#students" class="nav-link tab-link" data-tab="students">Students</a></li>
-          <li><a href="#report" class="nav-link tab-link" data-tab="report"><i class="fas fa-file-excel mr-1"></i> Report Builder</a></li>
+          <li><a href="#dashboard" class="nav-link tab-link active" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+          <li><a href="#students" class="nav-link tab-link" data-tab="students"><i class="fas fa-user-graduate"></i> Students</a></li>
+          <li><a href="#summary" class="nav-link tab-link" data-tab="summary"><i class="fas fa-table"></i> Summary</a></li>
+          <li><a href="#staff" class="nav-link tab-link" data-tab="staff"><i class="fas fa-users"></i> Staff</a></li>
+          <li><a href="#home" class="nav-link tab-link" data-tab="home"><i class="fas fa-user-circle"></i> Me</a></li>
+          
+          <!-- പുതിയ റിപ്പോർട്ട് ബിൽഡർ ലിങ്ക് -->
+          <li><a href="#report" class="nav-link tab-link text-blue-600" data-tab="report"><i class="fas fa-file-excel"></i> Report Builder</a></li>
+          
           <li><button id="official-logout-btn" class="login-btn-nav btn-danger">Logout</button></li>
         </ul>
       </div>
     </header>
 
-    <main class="max-w-7xl mx-auto p-4">
+    <main id="app" class="max-w-7xl mx-auto p-4">
       <div id="page-content">
-        <!-- Dummy Tabs to satisfy existing architecture -->
+        <!-- പഴയ സെക്ഷനുകൾ -->
         <section id="official-tab-dashboard" class="official-tab page-content"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Dashboard</h2><p>Select Report Builder from menu.</p></div></section>
-        <section id="official-tab-students" class="official-tab page-content hidden"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Students</h2><p>Student list goes here.</p></div></section>
+        <section id="official-tab-students" class="official-tab page-content hidden"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Students Register</h2></div></section>
+        <section id="official-tab-summary" class="official-tab page-content hidden"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Class Summary</h2></div></section>
+        <section id="official-tab-staff" class="official-tab page-content hidden"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Staff Details</h2></div></section>
+        <section id="official-tab-home" class="official-tab page-content hidden"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">My Profile</h2></div></section>
         
-        <!-- NEW ADVANCED REPORT BUILDER TAB -->
+        <!-- പുതിയ റിപ്പോർട്ട് ബിൽഡർ UI -->
         <section id="official-tab-report" class="official-tab page-content hidden">
-            
-            <div class="report-builder-container">
-                <!-- Toolbar -->
+            <div class="report-builder-wrapper">
+                
+                <!-- ടൂൾബാർ -->
                 <div class="report-toolbar">
                     <select id="rb-class-select">
-                        <option value="">Select Class to Load</option>
-                        <option value="10A">Class 10 A</option>
-                        <option value="10B">Class 10 B</option>
+                        <option value="">-- Select Class --</option>
                     </select>
                     <button id="rb-load" class="btn-primary"><i class="fas fa-sync"></i> Load Data</button>
+                    <span id="rb-status-msg" class="text-xs text-red-500 font-bold ml-2"></span>
                     
-                    <div class="w-px h-6 bg-slate-300 mx-2"></div> <!-- Divider -->
+                    <div class="w-px h-8 bg-slate-200 mx-2"></div> 
                     
-                    <button id="rb-add-row"><i class="fas fa-plus"></i> Row</button>
-                    <button id="rb-add-col"><i class="fas fa-plus"></i> Col</button>
+                    <button id="rb-add-row" title="Add Row"><i class="fas fa-plus"></i> Row</button>
+                    <button id="rb-add-col" title="Add Column"><i class="fas fa-plus"></i> Col</button>
                     
                     <div class="format-group">
                         <button id="rb-bold" class="format-btn" title="Bold"><i class="fas fa-bold"></i></button>
                         <button id="rb-italic" class="format-btn" title="Italic"><i class="fas fa-italic"></i></button>
-                        <input type="color" id="rb-color" title="Text Color" style="padding: 0; width: 30px; height: 30px; cursor: pointer;">
-                        <input type="color" id="rb-bgcolor" title="Background Color" value="#ffffff" style="padding: 0; width: 30px; height: 30px; cursor: pointer;">
+                        <input type="color" id="rb-color" title="Text Color" style="padding: 0; width: 34px; height: 34px; cursor: pointer; border:none; background:transparent;">
+                        <input type="color" id="rb-bgcolor" title="Background Color" value="#ffffff" style="padding: 0; width: 34px; height: 34px; cursor: pointer; border:none; background:transparent;">
                     </div>
 
-                    <div class="w-px h-6 bg-slate-300 mx-2"></div>
+                    <div class="w-px h-8 bg-slate-200 mx-2"></div>
                     
                     <select id="rb-sort">
-                        <option value="none">Default Order</option>
-                        <option value="name-asc">Name (A-Z)</option>
-                        <option value="adm-asc">Adm No (Asc)</option>
+                        <option value="none">Order: Default</option>
+                        <option value="name-asc">Order: Name (A-Z)</option>
+                        <option value="adm-asc">Order: Adm No (Asc)</option>
                     </select>
                     
                     <select id="rb-grouping">
                         <option value="mixed">Gender: Mixed</option>
                         <option value="grouped">Gender: Grouped</option>
-                        <option value="paged">Gender: Separate Pages</option>
+                        <option value="paged">Gender: Separate Pages (Break)</option>
                     </select>
                     
                     <select id="rb-paper-size">
-                        <option value="auto">Paper: Auto/Web</option>
-                        <option value="a4">Paper: A4 Limit</option>
-                        <option value="legal">Paper: Legal Limit</option>
+                        <option value="auto">Paper: Auto Fit Web</option>
+                        <option value="a4">Paper: A4 Size (Print)</option>
+                        <option value="legal">Paper: Legal Size</option>
                     </select>
 
                     <div class="ml-auto flex gap-2">
-                        <button id="rb-export-excel" style="background:#16a34a; color:white; border:none;"><i class="fas fa-file-excel"></i> Excel</button>
-                        <button id="rb-print" class="btn-primary" style="background:#dc2626;"><i class="fas fa-file-pdf"></i> Print PDF</button>
+                        <button id="rb-export-excel" style="background:#16a34a; color:white; border-color:#16a34a;"><i class="fas fa-file-excel"></i> Excel</button>
+                        <button id="rb-print" class="btn-primary" style="background:#dc2626; border-color:#dc2626;"><i class="fas fa-print"></i> Print PDF</button>
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <input type="text" id="rb-custom-title" class="form-input" style="padding: 8px; margin-bottom: 0;" placeholder="Custom Print Heading (e.g., Term 1 Examination Result)">
+                <!-- കസ്റ്റം ഹെഡിങ് -->
+                <div class="p-4 bg-slate-50 border-b border-e2e8f0 mb-3">
+                    <input type="text" id="rb-custom-title" class="form-input !mb-0" placeholder="Custom Print Heading (e.g., Term 1 Examination Result 2024-25)">
                 </div>
 
-                <!-- Canvas Area -->
+                <!-- ക്യാൻവാസ് / ടേബിൾ -->
                 <div class="paper-view">
                     <div id="rb-paper" class="paper-sheet paper-auto">
-                        <!-- Print Header -->
                         <div class="print-official-header">
-                            <img src="https://via.placeholder.com/150x60?text=Institution+Logo" alt="Logo">
+                            <img id="print-logo-img" src="assets/images/logo.png" alt="Institution Logo" onerror="this.src='https://via.placeholder.com/150x60?text=Logo'">
                             <h1 id="print-inst-name">Institution Name</h1>
-                            <p id="print-inst-reg">Reg No: 123456</p>
+                            <p id="print-inst-reg">Institution Reg No</p>
                             <div id="print-custom-title-display" class="print-custom-title"></div>
                         </div>
-
-                        <!-- Data Grid -->
                         <table class="excel-table" id="rb-table">
                             <thead id="rb-thead"></thead>
                             <tbody id="rb-tbody"></tbody>
                         </table>
                     </div>
                 </div>
-                <p class="text-xs text-gray-400 mt-2 text-center"><i class="fas fa-info-circle"></i> Tip: You can paste data directly from Excel (Ctrl+V) into any cell. Double click headers to rename.</p>
+                <div class="bg-slate-50 p-3 text-center border-t border-slate-200">
+                    <p class="text-xs font-semibold text-slate-500"><i class="fas fa-lightbulb text-amber-500"></i> Tip: എക്സലിൽ നിന്നും ഡാറ്റ നേരിട്ട് ഇതിലേക്ക് കോപ്പി പേസ്റ്റ് (Ctrl+V) ചെയ്യാം. കോളങ്ങളുടെ ഹെഡിങ് മാറ്റാൻ ഡബിൾ ക്ലിക്ക് ചെയ്യുക.</p>
+                </div>
             </div>
         </section>
+
       </div>
     </main>
   </div>
 
+  <!-- ജാവാസ്ക്രിപ്റ്റ് ഫംഗ്ഷനുകൾ (Firebase + Report Builder) -->
   <script type="module">
-    // Mock Data and Auth for standalone testing capability
-    // In production, this uses firebase imports.
-    const mockStudents = [
-        { adm: '1001', name: 'Aarav', gender: 'Male', class: '10A' },
-        { adm: '1002', name: 'Zara', gender: 'Female', class: '10A' },
-        { adm: '1003', name: 'John', gender: 'Male', class: '10A' },
-        { adm: '1004', name: 'Diya', gender: 'Female', class: '10B' },
-    ];
+    // =========================================================================
+    // 1. പഴയ കോഡുകൾ നിലനിർത്തുന്നു (FIREBASE IMPORTS & LOGIC)
+    // =========================================================================
+    
+    import { signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword } from '../../config/firebase-auth.js'; // Adjust path if needed or keep your original
+    import { db, auth } from '../../config/firebase-config.js';
+    import { BASE_PATH, applyCachedInstitutionLogo, escapeHtml, rememberInstitutionLogo, sanitizeUrl } from '../shared/app-common.js';
+    import { collection, doc, getDoc, getDocs } from '../../config/firebase-firestore.js'; // Ensure correct paths in your actual system
 
-    // Simple Tab Switching Logic
-    const setTab = (tabId) => {
-        document.querySelectorAll('.official-tab').forEach(el => el.classList.add('hidden'));
-        document.getElementById(`official-tab-${tabId}`).classList.remove('hidden');
-        document.querySelectorAll('.tab-link').forEach(btn => btn.classList.remove('active'));
-        document.querySelector(`.tab-link[data-tab="${tabId}"]`).classList.add('active');
+    // Variables for Database
+    let allStudents = [];
+    let allStaff = [];
+    let institutionConfig = {};
+    let userSession = null;
+    const OFFICIAL_SESSION_KEY = 'official_portal_session_v1';
+    
+    // UI Tab Navigation
+    const navMenu = document.querySelector('.nav-menu');
+    const mobileToggle = document.getElementById('mobile-menu-btn');
+    
+    const setTab = (tab = 'dashboard') => {
+      document.querySelectorAll('.official-tab').forEach((el) => el.classList.add('hidden'));
+      document.getElementById(`official-tab-${tab}`)?.classList.remove('hidden');
+      document.querySelectorAll('.tab-link').forEach((btn) => {
+        const active = btn.dataset.tab === tab;
+        btn.classList.toggle('active', active);
+      });
+      if(navMenu) navMenu.classList.remove('active');
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      
+      // പുതിയ ടാബ് തുറക്കുമ്പോൾ ക്ലാസ്സ് ലിസ്റ്റ് അപ്ഡേറ്റ് ചെയ്യുക
+      if(tab === 'report' && window._initReportDropdown) window._initReportDropdown();
     };
 
-    document.querySelectorAll('.tab-link').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            setTab(btn.dataset.tab);
-        });
-    });
+    document.querySelectorAll('.tab-link').forEach((btn) => btn.addEventListener('click', (e) => { e.preventDefault(); setTab(btn.dataset.tab); }));
+    mobileToggle?.addEventListener('click', () => navMenu?.classList.toggle('active'));
 
-    // Login Mock
-    document.getElementById('official-login-btn').addEventListener('click', () => {
-        document.getElementById('official-login-screen').classList.add('hidden');
-        document.getElementById('official-app').classList.remove('hidden');
-        setTab('report'); // Open report builder directly for preview
-    });
+    // സ്ഥാപനത്തിന്റെ വിവരങ്ങൾ നൽകൽ
+    const applyOfficialBranding = (conf = {}) => {
+      institutionConfig = conf || {};
+      const institutionName = conf.appName || conf.institutionName || 'Official Portal';
+      
+      document.getElementById('header-title').textContent = institutionName;
+      document.getElementById('print-inst-name').textContent = institutionName;
+      document.getElementById('print-inst-reg').textContent = conf.regNo || '';
+      
+      const loginName = document.getElementById('official-login-institution-name');
+      if (loginName) loginName.textContent = institutionName;
+    };
+
+    const showApp = () => {
+      document.getElementById('official-login-screen').classList.add('hidden');
+      document.getElementById('official-app').classList.remove('hidden');
+      setTab('dashboard');
+    };
+
+    // ഡാറ്റാബേസിൽ നിന്നും വിവരങ്ങൾ എടുക്കൽ
+    const loadData = async () => {
+      try {
+        // NOTE: In production this will fetch from Firebase. 
+        // For fallback logic if db is undefined (e.g. preview), we inject mock data so app doesn't crash.
+        if (typeof db !== 'undefined' && getDocs) {
+             const [studentsSnap, configSnap] = await Promise.all([
+               getDocs(collection(db, `${BASE_PATH}/students`)),
+               getDoc(doc(db, `${BASE_PATH}/settings`, 'config'))
+             ]);
+             allStudents = studentsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+             const conf = configSnap.exists() ? configSnap.data() : {};
+             applyOfficialBranding(conf);
+        }
+      } catch (e) {
+          console.error("Firebase Error: ", e);
+      }
+      
+      // ഡാറ്റാബേസിൽ കണക്ട് ചെയ്തില്ലെങ്കിൽ ടെസ്റ്റിനായി ഒരു മോക്ക് ഡാറ്റ കൊടുക്കുന്നു
+      if(allStudents.length === 0) {
+          allStudents = [
+              { adm: '101', name: 'Muhammed', gender: 'Male', class: 'Class 10 A', mobile: '9876543210' },
+              { adm: '102', name: 'Fathima', gender: 'Female', class: 'Class 10 A', mobile: '9876543211' },
+              { adm: '103', name: 'Sanjid', gender: 'Male', class: 'Class 10 B', mobile: '9876543212' },
+          ];
+          applyOfficialBranding({ institutionName: "Noorul Islam Madrasa" });
+      }
+      
+      // ഡാറ്റ ലഭിച്ച ശേഷം ഡ്രോപ്പ്ഡൗൺ തയ്യാറാക്കുക
+      if(window._initReportDropdown) window._initReportDropdown();
+    };
+
+    const tryLogin = async () => { showApp(); await loadData(); };
+    document.getElementById('official-login-btn').addEventListener('click', tryLogin);
+    document.getElementById('official-logout-btn').addEventListener('click', () => window.location.reload());
 
 
-    /* ==========================================
-       MINI-EXCEL REPORT BUILDER LOGIC
-       ========================================== */
+    // =========================================================================
+    // 2. പുതിയ ഫീച്ചർ: ADVANCED REPORT BUILDER (MINI-EXCEL)
+    // =========================================================================
     
-    // Core State
-    let gridHeaders = ['Sl No', 'Adm No', 'Name', 'Gender'];
-    let gridData = []; // Array of arrays containing cell objects: {v: value, b: bold, i: italic, c: color, bg: bgcolor}
-    let selectedCell = null; // {r: rowIdx, c: colIdx}
+    let gridHeaders = ['Sl No', 'Adm No', 'Name', 'Gender', 'Phone', 'Remarks'];
+    let gridData = []; 
+    let selectedCell = null; 
     let colWidths = [];
 
+    // ക്ലാസുകൾ ഡ്രോപ്പ്ഡൗണിലേക്ക് ചേർക്കുന്നു
+    window._initReportDropdown = () => {
+        const classSelect = document.getElementById('rb-class-select');
+        if(!classSelect) return;
+        const classes = [...new Set(allStudents.map(s => s.class))].filter(Boolean).sort();
+        classSelect.innerHTML = `<option value="">-- Select Class --</option>` + 
+                                classes.map(c => `<option value="${c}">${c}</option>`).join('');
+    };
+
     const initReportBuilder = () => {
-        // UI Elements
         const tHead = document.getElementById('rb-thead');
         const tBody = document.getElementById('rb-tbody');
-        const table = document.getElementById('rb-table');
         const paper = document.getElementById('rb-paper');
+        const statusMsg = document.getElementById('rb-status-msg');
         
-        // Configuration
-        const paperSelect = document.getElementById('rb-paper-size');
         const loadBtn = document.getElementById('rb-load');
         const addRowBtn = document.getElementById('rb-add-row');
         const addColBtn = document.getElementById('rb-add-col');
-        const sortSelect = document.getElementById('rb-sort');
-        const groupSelect = document.getElementById('rb-grouping');
-        const printBtn = document.getElementById('rb-print');
-        const excelBtn = document.getElementById('rb-export-excel');
         
-        // Formatting
-        const btnBold = document.getElementById('rb-bold');
-        const btnItalic = document.getElementById('rb-italic');
-        const inputColor = document.getElementById('rb-color');
-        const inputBgColor = document.getElementById('rb-bgcolor');
+        const createCell = (val = '') => ({ v: val, b: false, i: false, c: '#334155', bg: '#ffffff' });
 
-        // Helper: Create default cell object
-        const createCell = (val = '') => ({ v: val, b: false, i: false, c: '#000000', bg: '#ffffff' });
-
-        // Load Data from Database (Mocked here)
-        const loadData = () => {
+        // സെലക്ട് ചെയ്ത ക്ലാസിലെ കുട്ടികളെ ടേബിളിലേക്ക് മാറ്റുന്നു
+        const loadReportData = () => {
+            statusMsg.textContent = "";
             const cls = document.getElementById('rb-class-select').value;
-            if(!cls) return alert("Select a class first!");
+            if(!cls) {
+                statusMsg.textContent = "Please select a class first!";
+                return;
+            }
             
-            // Filter students
-            const students = mockStudents.filter(s => s.class === cls);
+            const students = allStudents.filter(s => s.class === cls);
             gridData = [];
-            gridHeaders = ['Sl No', 'Adm No', 'Name', 'Gender'];
+            gridHeaders = ['Sl No', 'Adm No', 'Name', 'Gender', 'Phone', 'Remarks'];
+            colWidths = [];
             
             students.forEach((s, idx) => {
                 gridData.push([
                     createCell(idx + 1),
-                    createCell(s.adm),
-                    createCell(s.name),
-                    createCell(s.gender)
+                    createCell(s.adm || s.admNo || ''),
+                    createCell(s.name || ''),
+                    createCell(s.gender || ''),
+                    createCell(s.mobile || s.phone || ''),
+                    createCell('') 
                 ]);
             });
-            applySortAndGroup(); // Will render
+            
+            applySortAndGroup();
         };
 
-        // Render Grid
         const renderGrid = (groupedData = gridData) => {
             tHead.innerHTML = '';
             tBody.innerHTML = '';
 
-            // Render Headers
             let trHead = document.createElement('tr');
             gridHeaders.forEach((h, idx) => {
                 let th = document.createElement('th');
                 th.textContent = h;
-                th.contentEditable = true; // Allow renaming headers
+                th.contentEditable = true;
                 th.addEventListener('input', (e) => gridHeaders[idx] = e.target.textContent);
                 
-                // Resizer
                 let resizer = document.createElement('div');
                 resizer.className = 'col-resizer';
                 th.appendChild(resizer);
@@ -360,17 +435,13 @@
             });
             tHead.appendChild(trHead);
 
-            // Render Body
             groupedData.forEach((row, rIdx) => {
-                // Check if it's a structural page break row
                 if(row.isPageBreak) {
                     let tr = document.createElement('tr');
                     tr.className = 'print-page-break';
                     let td = document.createElement('td');
                     td.colSpan = gridHeaders.length;
                     td.innerHTML = '<div class="page-break-indicator"></div>';
-                    td.style.border = 'none';
-                    td.style.padding = '0';
                     tr.appendChild(td);
                     tBody.appendChild(tr);
                     return;
@@ -382,31 +453,26 @@
                     td.textContent = cellObj.v;
                     td.contentEditable = true;
                     
-                    // Apply styles
                     if(cellObj.b) td.style.fontWeight = 'bold';
                     if(cellObj.i) td.style.fontStyle = 'italic';
                     td.style.color = cellObj.c;
                     td.style.backgroundColor = cellObj.bg;
 
-                    // Event Listeners
                     td.addEventListener('focus', () => {
                         selectedCell = {r: rIdx, c: cIdx};
                         updateFormatToolbar(cellObj);
                         document.querySelectorAll('.excel-table td').forEach(c => c.classList.remove('selected'));
                         td.classList.add('selected');
                     });
-                    td.addEventListener('input', (e) => {
-                        // Original array might not map 1:1 if grouped, so we find original ref
-                        cellObj.v = e.target.textContent;
-                    });
                     
+                    td.addEventListener('input', (e) => { cellObj.v = e.target.textContent; });
                     tr.appendChild(td);
                 });
                 tBody.appendChild(tr);
             });
         };
 
-        // Resize Logic
+        // കോളം വലുപ്പം മാറ്റാനുള്ള സംവിധാനം (Drag Resizing)
         let isResizing = false;
         const setupResizer = (resizer, th, colIdx) => {
             let startX, startWidth;
@@ -418,7 +484,7 @@
                 
                 const mouseMoveHandler = (e) => {
                     if (!isResizing) return;
-                    const newWidth = startWidth + (e.pageX - startX);
+                    const newWidth = Math.max(40, startWidth + (e.pageX - startX));
                     th.style.width = `${newWidth}px`;
                     colWidths[colIdx] = `${newWidth}px`;
                 };
@@ -435,42 +501,31 @@
             });
         };
 
-        // Formatting Logic
+        // ഫോർമാറ്റിംഗ് (Bold, Italic, Colors)
         const updateFormatToolbar = (cell) => {
-            btnBold.classList.toggle('active', cell.b);
-            btnItalic.classList.toggle('active', cell.i);
-            inputColor.value = cell.c || '#000000';
-            inputBgColor.value = cell.bg || '#ffffff';
+            document.getElementById('rb-bold').classList.toggle('active', cell.b);
+            document.getElementById('rb-italic').classList.toggle('active', cell.i);
+            document.getElementById('rb-color').value = cell.c || '#334155';
+            document.getElementById('rb-bgcolor').value = cell.bg || '#ffffff';
         };
 
         const applyFormat = (prop, val) => {
             if(!selectedCell) return;
-            // Get DOM element directly for speed, and update state
-            let rowNodes = tBody.querySelectorAll('tr:not(.print-page-break)');
-            let td = rowNodes[selectedCell.r].children[selectedCell.c];
-            
-            // To handle grouping mismatch, it's safer to rely on cellObj reference, but we simplified rendering.
-            // Let's just re-render grid to be safe and consistent with state.
-            
-            // Fallback finding state cell (Assuming no grouping structure changes length during edit)
             let rawCell = gridData[selectedCell.r][selectedCell.c]; 
             if(prop === 'b') { rawCell.b = !rawCell.b; }
             else if(prop === 'i') { rawCell.i = !rawCell.i; }
             else { rawCell[prop] = val; }
-            
-            renderGrid(getSortedGroupedData()); // Re-render with current sort/group
+            renderGrid(getSortedGroupedData());
         };
 
-        btnBold.addEventListener('click', () => applyFormat('b'));
-        btnItalic.addEventListener('click', () => applyFormat('i'));
-        inputColor.addEventListener('input', (e) => applyFormat('c', e.target.value));
-        inputBgColor.addEventListener('input', (e) => applyFormat('bg', e.target.value));
+        document.getElementById('rb-bold').addEventListener('click', () => applyFormat('b'));
+        document.getElementById('rb-italic').addEventListener('click', () => applyFormat('i'));
+        document.getElementById('rb-color').addEventListener('input', (e) => applyFormat('c', e.target.value));
+        document.getElementById('rb-bgcolor').addEventListener('input', (e) => applyFormat('bg', e.target.value));
 
-        // Add Row / Col
         addRowBtn.addEventListener('click', () => {
             if(!gridHeaders.length) return;
-            let newRow = Array(gridHeaders.length).fill(0).map(() => createCell(''));
-            gridData.push(newRow);
+            gridData.push(Array(gridHeaders.length).fill(0).map(() => createCell('')));
             applySortAndGroup();
         });
 
@@ -480,16 +535,14 @@
             applySortAndGroup();
         });
 
-        // Copy/Paste Logic (Excel Ctrl+V handler)
+        // എക്സലിൽ നിന്നും കോപ്പി പേസ്റ്റ് ചെയ്യാനുള്ള സംവിധാനം
         document.addEventListener('paste', (e) => {
-            if (!document.activeElement.closest('.excel-table td')) return; // Only paste inside grid
+            if (!document.activeElement.closest('.excel-table td')) return; 
             e.preventDefault();
             let pasteData = (e.clipboardData || window.clipboardData).getData('text');
-            if(!pasteData) return;
+            if(!pasteData || !selectedCell) return;
             
             let rows = pasteData.split(/\r?\n/).filter(r => r.trim() !== '');
-            if(!selectedCell) return;
-
             let startRow = selectedCell.r;
             let startCol = selectedCell.c;
 
@@ -497,14 +550,12 @@
                 let cols = rowStr.split('\t');
                 let targetRow = startRow + i;
                 
-                // Add rows if needed
                 if(!gridData[targetRow]) {
                     gridData.push(Array(gridHeaders.length).fill(0).map(()=>createCell('')));
                 }
                 
                 cols.forEach((colVal, j) => {
                     let targetCol = startCol + j;
-                    // Add cols if needed
                     if(targetCol >= gridHeaders.length) {
                         gridHeaders.push(`Col ${targetCol+1}`);
                         gridData.forEach(r => r.push(createCell('')));
@@ -515,33 +566,31 @@
             applySortAndGroup();
         });
 
-        // Sorting & Grouping Logic
+        // ഗ്രൂപ്പിംഗ് & സോർട്ടിങ് ലോജിക്
         const getSortedGroupedData = () => {
             let processed = [...gridData];
-            let sortType = sortSelect.value;
-            let groupType = groupSelect.value;
+            let sortType = document.getElementById('rb-sort').value;
+            let groupType = document.getElementById('rb-grouping').value;
             
-            // Assume Gender is at index 3 and Name at index 2, Adm at index 1 for logic 
-            // In a real generic builder, user maps columns. We will auto-detect headers.
             const getColIdx = (name) => gridHeaders.findIndex(h => h.toLowerCase().includes(name));
             let nameIdx = getColIdx('name');
             let admIdx = getColIdx('adm');
             let genderIdx = getColIdx('gender');
 
-            // 1. Sort
             if(sortType !== 'none') {
                 processed.sort((a, b) => {
                     if(sortType === 'name-asc' && nameIdx !== -1) {
                         return String(a[nameIdx].v).localeCompare(String(b[nameIdx].v));
                     }
                     if(sortType === 'adm-asc' && admIdx !== -1) {
-                        return parseInt(a[admIdx].v || 0) - parseInt(b[admIdx].v || 0);
+                        const numA = parseInt(a[admIdx].v.replace(/\D/g,'')) || 0;
+                        const numB = parseInt(b[admIdx].v.replace(/\D/g,'')) || 0;
+                        return numA - numB;
                     }
                     return 0;
                 });
             }
 
-            // 2. Group
             if((groupType === 'grouped' || groupType === 'paged') && genderIdx !== -1) {
                 let boys = processed.filter(r => String(r[genderIdx].v).toLowerCase() === 'male');
                 let girls = processed.filter(r => String(r[genderIdx].v).toLowerCase() === 'female');
@@ -549,7 +598,7 @@
                 
                 processed = [...boys];
                 if(groupType === 'paged' && boys.length > 0 && girls.length > 0) {
-                    processed.push({isPageBreak: true}); // Insert page break
+                    processed.push({isPageBreak: true}); // പേജ് ബ്രേക്ക് ചേർക്കുന്നു
                 }
                 processed = [...processed, ...girls, ...others];
             }
@@ -557,53 +606,37 @@
             return processed;
         };
 
-        const applySortAndGroup = () => {
-            renderGrid(getSortedGroupedData());
-            // Reset selection to prevent DOM mismatch errors
-            selectedCell = null;
-        };
+        const applySortAndGroup = () => { renderGrid(getSortedGroupedData()); selectedCell = null; };
 
-        sortSelect.addEventListener('change', applySortAndGroup);
-        groupSelect.addEventListener('change', applySortAndGroup);
+        document.getElementById('rb-sort').addEventListener('change', applySortAndGroup);
+        document.getElementById('rb-grouping').addEventListener('change', applySortAndGroup);
+        document.getElementById('rb-paper-size').addEventListener('change', (e) => paper.className = `paper-sheet paper-${e.target.value}`);
 
-        // Paper Settings
-        paperSelect.addEventListener('change', (e) => {
-            paper.className = `paper-sheet paper-${e.target.value}`;
-        });
-
-        // Print Logic (Print Isolation CSS handles the heavy lifting)
-        printBtn.addEventListener('click', () => {
+        // പ്രിൻ്റ് ഫംഗ്ഷൻ
+        document.getElementById('rb-print').addEventListener('click', () => {
             const titleInput = document.getElementById('rb-custom-title').value;
             document.getElementById('print-custom-title-display').textContent = titleInput;
             window.print();
         });
 
-        // Export to Excel (SheetJS)
-        excelBtn.addEventListener('click', () => {
-            if(typeof XLSX === 'undefined') return alert("SheetJS library failed to load.");
-            
-            // Build simple array of arrays for Excel
-            let ws_data = [];
-            ws_data.push(gridHeaders); // Headers
-            
-            let exportData = getSortedGroupedData();
-            exportData.forEach(row => {
-                if(row.isPageBreak) return; // Skip structural rows
-                let rowData = row.map(cell => cell.v);
-                ws_data.push(rowData);
+        // എക്സൽ ഡൗൺലോഡ്
+        document.getElementById('rb-export-excel').addEventListener('click', () => {
+            if(typeof XLSX === 'undefined') {
+                statusMsg.textContent = "Excel library failed to load."; return;
+            }
+            let ws_data = [gridHeaders];
+            getSortedGroupedData().forEach(row => {
+                if(!row.isPageBreak) ws_data.push(row.map(cell => cell.v));
             });
-
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.aoa_to_sheet(ws_data);
             XLSX.utils.book_append_sheet(wb, ws, "Report");
-            XLSX.writeFile(wb, "Institution_Report.xlsx");
+            XLSX.writeFile(wb, "Class_Report.xlsx");
         });
 
-        // Event Bindings
-        loadBtn.addEventListener('click', loadData);
+        loadBtn.addEventListener('click', loadReportData);
     };
 
-    // Initialize when ready
     document.addEventListener('DOMContentLoaded', () => {
         initReportBuilder();
     });

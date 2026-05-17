@@ -107,9 +107,8 @@ const setMobileMenuState = (isOpen) => {
   mobileToggle?.classList.toggle('active-toggle', isOpen);
   mobileToggle?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 };
-const setTab = (tab = 'dashboard') => {
-  const requested = document.getElementById(`official-tab-${tab}`) ? tab : 'dashboard';
-  const target = document.getElementById(`official-tab-${requested}`) ? requested : 'students';
+const setTab = (tab = 'students') => {
+  const target = document.getElementById(`official-tab-${tab}`) ? tab : 'students';
   document.querySelectorAll('.official-tab').forEach((el) => el.classList.add('hidden'));
   document.getElementById(`official-tab-${target}`)?.classList.remove('hidden');
   document.querySelectorAll('.tab-link').forEach((btn) => {
@@ -177,35 +176,6 @@ const metricCard = (label, value, tone = 'blue', icon = 'fa-circle-info') => `
     <div><div class="official-metric-label">${escapeHtml(label)}</div><div class="official-metric-value">${escapeHtml(String(value))}</div></div>
     <i class="fas ${icon}"></i>
   </div>`;
-
-const renderDashboard = () => {
-  const stats = summaryStats();
-  document.getElementById('official-tab-dashboard').innerHTML = `
-    <div class="space-y-4">
-      <div class="card p-4 rounded-2xl shadow-sm">
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div><h3 class="font-extrabold text-lg">Official Overview</h3><p class="text-sm text-slate-500 font-semibold">Read-only institution register and directory.</p></div>
-          <span class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-50 text-indigo-700">${escapeHtml(resolveInstitutionName(institutionConfig) || 'Institution')}</span>
-        </div>
-        <div class="official-metric-grid">
-          ${metricCard('Students', stats.totalStudents, 'blue', 'fa-user-graduate')}
-          ${metricCard('Classes', stats.classCount, 'indigo', 'fa-school')}
-          ${metricCard('Boys', stats.boys, 'green', 'fa-person')}
-          ${metricCard('Girls', stats.girls, 'teal', 'fa-person-dress')}
-          ${metricCard('Teachers', stats.teachers, 'amber', 'fa-chalkboard-user')}
-          ${metricCard('Management', stats.management, 'purple', 'fa-users-gear')}
-          ${metricCard('Grouped Students', stats.groupedStudents, 'blue', 'fa-people-arrows')}
-          ${metricCard('Concessions', stats.concessionStudents, 'green', 'fa-hand-holding-dollar')}
-        </div>
-      </div>
-      <div class="grid md:grid-cols-3 gap-4">
-        <button type="button" class="official-quick-card" data-open-tab="students"><i class="fas fa-users"></i><b>View Students</b><span>Search and open full student details.</span></button>
-        <button type="button" class="official-quick-card" data-open-tab="summary"><i class="fas fa-table"></i><b>Class Summary</b><span>Class-wise boys, girls, totals and data checks.</span></button>
-        <button type="button" class="official-quick-card" data-open-tab="staff"><i class="fas fa-id-card"></i><b>Staff & Categories</b><span>Teachers, management and directory profiles.</span></button>
-      </div>
-    </div>`;
-  document.querySelectorAll('[data-open-tab]').forEach((btn) => btn.addEventListener('click', () => setTab(btn.dataset.openTab)));
-};
 
 const buildStudentDetailHtml = (student = {}) => {
   const group = getStudentGroup(student.id);
@@ -468,7 +438,6 @@ const renderHome = () => {
 };
 
 const renderAll = () => {
-  renderDashboard();
   renderStudents();
   buildClassSummary();
   renderStaffTab();
@@ -510,7 +479,7 @@ const showApp = () => {
   document.getElementById('official-login-screen').classList.add('hidden');
   document.getElementById('official-app').classList.remove('hidden');
   renderAll();
-  setTab('dashboard');
+  setTab('students');
 };
 
 const tryLogin = async () => {
@@ -581,6 +550,27 @@ document.getElementById('official-logout-btn').addEventListener('click', () => {
 
 const restoreOfficialSession = async () => {
   try {
+    // 1. കളക്ഷൻ / റിസൾട്ട് / അഡ്മിൻ പേജുകളിൽ നിന്നുള്ള ആക്സസ് ചെക്ക് ചെയ്യുന്നു
+    if (window.AppSession && window.AppSession.isFresh()) {
+      const role = window.AppSession.getRole();
+      if (role === 'admin' || role === 'staff') {
+        const stateKey = role === 'admin' ? 'app_session_admin_state' : 'app_session_staff_state';
+        const rawState = localStorage.getItem(stateKey);
+        const state = rawState ? JSON.parse(rawState) : {};
+        
+        userSession = {
+          name: state.name || (role === 'admin' ? 'Super Admin' : 'Staff'),
+          username: state.email || 'admin',
+          type: role === 'admin' ? 'Admin' : 'Staff',
+          source: role === 'admin' ? 'firebase' : 'staff'
+        };
+        await loadData();
+        showApp();
+        return; // ലോഗിൻ സക്സസ്, ഫംഗ്ഷൻ ഇവിടെ നിർത്തുന്നു
+      }
+    }
+
+    // 2. നേരിട്ട് ഒഫീഷ്യൽ പേജിൽ വന്നവരാണെങ്കിൽ പഴയ ലോഗിൻ പരിശോധിക്കുന്നു
     const raw = localStorage.getItem(OFFICIAL_SESSION_KEY);
     if (!raw) return;
     const parsed = JSON.parse(raw);

@@ -1223,3 +1223,85 @@ body.collection-shell.pwa-standalone{padding-bottom:calc(92px + env(safe-area-in
 body.collection-shell.pwa-standalone .collection-bottom-nav{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:950;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:end;gap:5px;padding:8px 8px 10px;border:1px solid rgba(191,219,254,.9);border-radius:26px;background:rgba(255,255,255,.94);box-shadow:0 18px 42px rgba(15,23,42,.18);backdrop-filter:blur(18px)}
 .collection-bottom-nav-link{position:relative;min-width:0;min-height:58px;border:0;border-radius:18px;background:transparent;color:#64748b;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px;font-weight:900;text-align:center;transition:color .2s ease}.collection-bottom-nav-link i{width:38px;height:38px;border:2px solid #e2e8f0;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;transition:color .2s ease,background .2s ease,border-color .2s ease}.collection-bottom-nav-link span{line-height:1.05;white-space:nowrap}.collection-bottom-nav-link.active{background:transparent;color:#1d4ed8}.collection-bottom-nav-link.active i{background:#eff6ff;color:#1d4ed8;border-color:#2563eb;border-width:3px}.collection-bottom-nav-link-fee{min-height:78px;margin-top:-28px;transform:translateY(-8px);color:#2563eb}.collection-bottom-nav-link-fee i{width:54px;height:54px;border:4px solid #fff;outline:2px solid #2563eb;border-radius:20px;background:#2563eb;color:#fff;font-size:22px}.collection-bottom-nav-link-fee.active{background:transparent;color:#1d4ed8}.collection-bottom-nav-link-fee.active i{background:#ffffff;color:#1d4ed8;border-color:#2563eb;outline-color:#0f3fb5}
 @media (max-width: 640px){body.collection-shell.pwa-standalone .collection-bottom-nav{left:6px;right:6px;border-radius:22px}.collection-bottom-nav-link{font-size:9px}.collection-bottom-nav-link span{max-width:54px;overflow:hidden;text-overflow:ellipsis}}
+
+
+/* ==========================================
+   REPORT BUILDER / EXPORT MODULE STYLES
+   ========================================== */
+
+.builder-table {
+    color: var(--builder-font-color, #000);
+    font-size: var(--builder-font-size, 13px);
+}
+.builder-table th, .builder-table td {
+    border: 1px solid #cbd5e1;
+    padding: 6px;
+    text-align: left;
+}
+.builder-table th {
+    background-color: #f8fafc;
+    font-weight: bold;
+    vertical-align: bottom;
+}
+.builder-col-select, .builder-col-title-input, .builder-col-width-input {
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 11px;
+    background: #fff;
+}
+.builder-cell { outline: none; }
+.builder-cell:focus { background-color: #f0fdfa; }
+
+.print-only-heading { display: none; }
+
+/* PRINT STYLES - Hides entire app except the print canvas */
+@media print {
+    body.is-printing {
+        background: #fff;
+        margin: 0;
+        padding: 0;
+    }
+    body.is-printing * {
+        visibility: hidden;
+    }
+    body.is-printing #print-canvas, 
+    body.is-printing #print-canvas * {
+        visibility: visible;
+    }
+    body.is-printing #print-canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+    }
+    body.is-printing .no-print {
+        display: none !important;
+    }
+    body.is-printing .print-only-heading {
+        display: block !important;
+    }
+    
+    /* Dynamic Page Size Handled partially via CSS properties, but browser @page is strict */
+    @page {
+        margin: 0.5cm;
+    }
+}
+
+/* Print Canvas Preview Styling */
+.print-canvas {
+    min-height: 800px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: white;
+}
+.print-canvas[data-paper="A4"] { width: 210mm; }
+.print-canvas[data-paper="Letter"] { width: 8.5in; }
+.print-canvas[data-paper="Legal"] { width: 8.5in; }
+.print-canvas[data-orient="landscape"] {
+    width: 297mm; /* Approximated for landscape preview */
+}

@@ -1,999 +1,623 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ml">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Official Portal - Class Work Sheet</title>
+  <title>Official Portal - Report Builder</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
-    :root {
-      --bg: #f0f2f5;
-      --card: #ffffff;
-      --border: #d1d5db;
-      --primary: #0f172a;
-      --accent: #3b82f6;
-      --accent2: #059669;
-      --sidebar-w: 220px;
-      --ribbon-h: 44px;
-      --databar-h: 38px;
-      --header-h: 52px;
+    :root { 
+        --background-light: #f3f4f6; 
+        --text-light: #1f2937; 
+        --card-light: #ffffff; 
+        --border-light: #e5e7eb; 
+        --primary-light: #3b82f6; 
+        --primary: #0f172a; 
+        --accent: #3b82f6; 
+        --white: #ffffff; 
+        --text-dark: #1e293b; 
+        --text-gray: #64748b; 
+        --header-height: 70px;
     }
+
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-    html, body { height: 100%; overflow: hidden; background: var(--bg); }
+    html { scroll-behavior: smooth !important; }
+    body { background-color: var(--background-light); color: var(--text-light); overflow-x: hidden; }
     .hidden { display: none !important; }
+    .card { background-color: var(--card-light); border: 1px solid var(--border-light); }
+    .btn-primary { background-color: var(--accent); color: #ffffff; transition: 0.2s; cursor: pointer; border: none; }
+    .btn-primary:hover { background-color: #2563eb; }
+    .form-input { width: 100%; padding: 12px 14px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 15px; outline: none; font-size: 14px; }
+    .form-input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    input, select { background-color: #ffffff; border-color: #d1d5db; color: #1f2937; outline: none; }
+    
+    /* Header */
+    header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 15px; z-index: 1000; border: 1px solid #f1f5f9; height: var(--header-height); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border-radius: 16px; margin: 15px auto; width: calc(100% - 30px); max-width: 1200px; }
+    .nav-container { height: 100%; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; position: relative; }
+    .header-logo-box { width: 45px; height: 45px; flex-shrink: 0; z-index: 10; display: flex; align-items: center;}
+    .header-logo-box img { max-height: 100%; max-width: 100%; border-radius: 8px; object-fit: contain; }
+    .header-center-box { position: absolute; left: 50%; transform: translateX(-50%); width: 55%; text-align: center; display: flex; flex-direction: column; justify-content: center; z-index: 1; }
+    .header-center-box h1 { font-weight: 800; color: var(--primary); font-size: 14px; }
+    .nav-menu { display: flex; gap: 15px; align-items: center; list-style: none;}
+    .nav-link { font-size: 14px; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: 0.2s; text-decoration: none;}
+    .nav-link.active { background: #111111 !important; color: #ffffff !important; padding: 6px 12px; border-radius: 8px;}
+    .login-btn-nav { padding: 8px 20px; background: #dc2626; color: var(--white); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none;}
+    .main-login-btn { background: var(--primary); color: var(--white); border: none; padding: 12px 30px; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; }
 
-    /* ── APP SHELL ── */
-    #app-shell { display: flex; flex-direction: column; height: 100vh; width: 100vw; }
+    /* ==========================================
+       EXCEL WORK SHEET UI
+       ========================================== */
+    .excel-container { display: flex; flex-direction: column; height: calc(100vh - 120px); background: #f3f4f6; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden; }
 
-    /* ── HEADER ── */
-    .app-header {
-      height: var(--header-h);
-      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
-      display: flex; align-items: center; gap: 12px;
-      padding: 0 16px;
-      flex-shrink: 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-      z-index: 100;
-    }
-    .app-header img { height: 34px; width: 34px; border-radius: 8px; object-fit: contain; background: #fff; padding: 2px; }
-    .app-header .title { color: #fff; font-weight: 800; font-size: 14px; line-height: 1.2; }
-    .app-header .subtitle { color: #94a3b8; font-size: 10px; font-weight: 600; }
-    .app-header .spacer { flex: 1; }
-    .header-nav { display: flex; gap: 6px; }
-    .nav-btn {
-      padding: 5px 12px; border-radius: 7px; font-size: 12px; font-weight: 700;
-      color: #94a3b8; border: 1px solid transparent; cursor: pointer; background: transparent;
-      display: flex; align-items: center; gap: 6px; transition: 0.15s;
-    }
-    .nav-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
-    .nav-btn.active { background: #3b82f6; color: #fff; border-color: #2563eb; }
-    .nav-btn.logout { background: rgba(239,68,68,0.15); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
-    .nav-btn.logout:hover { background: #ef4444; color: #fff; border-color: #ef4444; }
+    /* Ribbon Toolbar */
+    .excel-ribbon { background: #f1f5f9; border-bottom: 1px solid #cbd5e1; padding: 8px 12px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; user-select: none; }
+    .ribbon-group { display: flex; align-items: center; gap: 4px; padding-right: 15px; border-right: 1px solid #cbd5e1; }
+    .ribbon-group:last-child { border-right: none; }
+    .ribbon-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; cursor: pointer; color: #475569; background: transparent; border: 1px solid transparent; font-size: 14px; }
+    .ribbon-btn:hover { background: #e2e8f0; color: #0f172a; }
+    .ribbon-btn.active { background: #cbd5e1; color: #000; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+    .ribbon-select { height: 32px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 0 8px; font-size: 13px; }
+    .color-picker-wrapper { position: relative; width: 32px; height: 32px; }
+    .color-picker-wrapper input[type="color"] { opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; z-index: 2; }
+    .color-picker-wrapper .icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1; border-radius: 4px; color: #475569; }
+    
+    /* Settings Bar */
+    .excel-data-bar { background: #ffffff; border-bottom: 1px solid #cbd5e1; padding: 8px 12px; display: flex; gap: 15px; align-items: center; font-size: 12px; flex-wrap: wrap; }
+    .data-bar-item { display: flex; align-items: center; gap: 8px; }
+    .data-bar-label { font-weight: 700; color: #64748b; text-transform: uppercase; font-size: 10px; }
+    .data-bar-select, .data-bar-input { border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 8px; font-size: 13px; background: #f8fafc; }
 
-    /* ── RIBBON ── */
-    .excel-ribbon {
-      height: var(--ribbon-h);
-      background: #f8f9fb;
-      border-bottom: 1px solid #d1d9e6;
-      display: flex; align-items: center; gap: 2px;
-      padding: 0 10px;
-      flex-shrink: 0;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .excel-ribbon::-webkit-scrollbar { display: none; }
-    .ribbon-sep { width: 1px; height: 26px; background: #cbd5e1; margin: 0 5px; flex-shrink: 0; }
-    .ribbon-btn {
-      width: 30px; height: 30px; border-radius: 5px; border: 1px solid transparent;
-      background: transparent; color: #475569; cursor: pointer; font-size: 13px;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-      transition: 0.1s; position: relative;
-    }
-    .ribbon-btn:hover { background: #e8ecf2; border-color: #c8d0dc; color: #1e293b; }
-    .ribbon-btn.active { background: #dbeafe; border-color: #93c5fd; color: #1d4ed8; }
-    .ribbon-select {
-      height: 28px; border: 1px solid #cbd5e1; border-radius: 5px;
-      padding: 0 6px; font-size: 12px; color: #334155; outline: none;
-      background: #fff; flex-shrink: 0; cursor: pointer;
-    }
-    .ribbon-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.15); }
-    .color-pick-wrap { position: relative; width: 30px; height: 30px; flex-shrink: 0; }
-    .color-pick-wrap input[type="color"] { opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; z-index: 2; }
-    .color-pick-wrap .cp-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border-radius: 5px; border: 1px solid #cbd5e1; color: #475569; font-size: 13px; pointer-events: none; background: #fff; }
-    .color-pick-wrap:hover .cp-icon { background: #e8ecf2; }
-    .ribbon-action-btn {
-      height: 28px; padding: 0 10px; border-radius: 5px; font-size: 12px; font-weight: 700;
-      display: flex; align-items: center; gap: 5px; cursor: pointer; border: 1px solid; flex-shrink: 0; transition: 0.15s;
-    }
-
-    /* ── MAIN BODY (sidebar + grid) ── */
-    .ws-body {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    /* ── LEFT SIDEBAR ── */
-    .ws-sidebar {
-      width: var(--sidebar-w);
-      flex-shrink: 0;
-      background: #f8f9fb;
-      border-right: 1px solid #d1d9e6;
-      overflow-y: auto;
-      overflow-x: hidden;
-      scrollbar-width: thin;
-      scrollbar-color: #cbd5e1 transparent;
-      padding: 12px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .ws-sidebar::-webkit-scrollbar { width: 4px; }
-    .ws-sidebar::-webkit-scrollbar-track { background: transparent; }
-    .ws-sidebar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-
-    .sidebar-section {
-      padding: 0 10px 12px;
-      border-bottom: 1px solid #e5e9ef;
-      margin-bottom: 2px;
-    }
-    .sidebar-section:last-child { border-bottom: none; }
-    .sb-label {
-      font-size: 9px; font-weight: 900; text-transform: uppercase;
-      letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 6px;
-      padding-top: 10px;
-    }
-    .sb-value-display {
-      font-size: 12px; font-weight: 700; color: #1e293b;
-      background: #fff; border: 1px solid #d1d9e6;
-      border-radius: 6px; padding: 5px 8px;
-      display: flex; align-items: center; justify-content: space-between;
-      cursor: pointer; transition: 0.15s;
-    }
-    .sb-value-display:hover { border-color: var(--accent); }
-    .sb-value-display i { color: #94a3b8; font-size: 10px; }
-    .sb-select {
-      width: 100%; height: 30px; border: 1px solid #d1d9e6;
-      border-radius: 6px; padding: 0 8px; font-size: 12px;
-      color: #1e293b; background: #fff; outline: none;
-      font-weight: 600; cursor: pointer;
-    }
-    .sb-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.15); }
-    .sb-input {
-      width: 100%; height: 30px; border: 1px solid #d1d9e6;
-      border-radius: 6px; padding: 0 8px; font-size: 12px;
-      color: #1e293b; background: #fff; outline: none;
-    }
-    .sb-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.15); }
-    .sb-load-btn {
-      width: 100%; height: 30px; border-radius: 6px;
-      background: #1d4ed8; color: #fff; font-size: 12px;
-      font-weight: 700; border: none; cursor: pointer; margin-top: 6px;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      transition: 0.15s;
-    }
-    .sb-load-btn:hover { background: #1e40af; }
-    .sb-checkbox-row {
-      display: flex; align-items: center; gap: 6px;
-      padding: 5px 0; cursor: pointer;
-    }
-    .sb-checkbox-row input[type="checkbox"] {
-      width: 13px; height: 13px; accent-color: var(--accent); cursor: pointer;
-    }
-    .sb-checkbox-row span { font-size: 11px; font-weight: 600; color: #475569; }
-
-    /* ── GRID AREA ── */
-    .ws-grid-wrapper {
-      flex: 1;
-      overflow: auto;
-      background: #dde1e7;
-      padding: 16px;
-      position: relative;
-    }
-
-    .paper-sheet {
-      background: white;
-      margin: 0 auto;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-      min-height: 700px;
-      position: relative;
-    }
+    /* Grid Area */
+    .excel-grid-wrapper { flex-grow: 1; overflow: auto; background: #e2e8f0; padding: 20px; position: relative; }
+    .paper-sheet { background: white; margin: 0 auto; box-shadow: 0 5px 20px rgba(0,0,0,0.1); min-height: 800px; }
     .paper-A4 { width: 210mm; }
     .paper-Legal { width: 216mm; }
     .paper-Auto { width: 100%; }
     .orientation-Landscape.paper-A4 { width: 297mm; }
 
-    /* ── PRINT HEADER ── */
-    .print-header {
-      display: none;
-      text-align: center;
-      padding: 18px 24px 14px;
-      border-bottom: 2px solid #1e293b;
-      margin-bottom: 0;
-    }
-    .print-header img { height: 55px; margin: 0 auto 8px; display: block; }
-    .print-header h1 { font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.03em; }
-    .print-header .reg { font-size: 11px; color: #475569; font-weight: 600; margin-top: 3px; }
-    .print-custom-heading { font-size: 14px; font-weight: 800; text-decoration: underline; margin-top: 8px; color: #1e293b; }
-
-    /* ── WORKSHEET TABLE ── */
+    /* Table Styles */
     .worksheet-table { border-collapse: collapse; width: 100%; table-layout: fixed; }
-    .worksheet-table th, .worksheet-table td {
-      border: 1px solid #9ca3af;
-      padding: 5px 7px;
-      font-size: 12px;
-      color: #1e293b;
-      position: relative;
-      word-wrap: break-word;
-      vertical-align: middle;
-      min-height: 26px;
-    }
-    .worksheet-table th {
-      background: #e2e8f0;
-      font-weight: 700;
-      text-align: center;
-      user-select: none;
-      font-size: 11px;
-    }
-    .worksheet-table th[contenteditable="true"]:focus { outline: 2px solid #3b82f6; outline-offset: -2px; }
-
-    /* Col letter header row */
-    .col-letter-row th {
-      background: #d9dde3;
-      color: #475569;
-      font-size: 11px;
-      font-weight: 800;
-      text-align: center;
-      border-color: #9ca3af;
-      padding: 3px;
-    }
-
+    .worksheet-table th, .worksheet-table td { border: 1px solid #cbd5e1; padding: 6px; font-size: 13px; position: relative; word-wrap: break-word; vertical-align: middle; }
+    .worksheet-table th { background: #f1f5f9; font-weight: 700; text-align: center; user-select: none; cursor: pointer; transition: background 0.2s;}
+    .worksheet-table th:hover { background: #e2e8f0; }
+    
     /* Sticky Columns */
-    .worksheet-table th:nth-child(1), .worksheet-table td:nth-child(1) { position: sticky; left: 0; width: 36px; text-align: center; background: #f1f5f9; z-index: 5; }
-    .worksheet-table th:nth-child(2), .worksheet-table td:nth-child(2) { position: sticky; left: 36px; width: 56px; text-align: center; background: #f1f5f9; z-index: 5; }
-    .worksheet-table th:nth-child(3), .worksheet-table td:nth-child(3) { position: sticky; left: 92px; width: 190px; background: #f8fafc; z-index: 5; font-weight: 600; }
-    .worksheet-table th:nth-child(1), .worksheet-table th:nth-child(2), .worksheet-table th:nth-child(3) { z-index: 10; background: #d9dde3; }
+    .worksheet-table th:nth-child(1), .worksheet-table td:nth-child(1) { position: sticky; left: 0; width: 40px; text-align: center; background: #f8fafc; z-index: 5; cursor: pointer; font-weight: bold;}
+    .worksheet-table th:nth-child(2), .worksheet-table td:nth-child(2) { position: sticky; left: 40px; width: 80px; text-align: center; background: #f8fafc; z-index: 5; }
+    .worksheet-table th:nth-child(3), .worksheet-table td:nth-child(3) { position: sticky; left: 120px; width: 200px; background: #f8fafc; z-index: 5; font-weight: 600;}
+    .worksheet-table th:nth-child(1), .worksheet-table th:nth-child(2), .worksheet-table th:nth-child(3) { z-index: 10; background: #e2e8f0;}
 
+    /* Selections Highlight */
     .worksheet-table td { outline: none; }
-    .worksheet-table td.selected { box-shadow: inset 0 0 0 2px #2563eb; background: #eff6ff !important; z-index: 15; }
-    .worksheet-table td[contenteditable="true"]:focus { box-shadow: inset 0 0 0 2px #10b981; background: #f0fdf4 !important; z-index: 15; }
-
-    /* Row alternating */
-    .worksheet-table tbody tr:nth-child(even) td { background-color: #f9fafb; }
-    .worksheet-table tbody tr:nth-child(even) td:nth-child(1),
-    .worksheet-table tbody tr:nth-child(even) td:nth-child(2),
-    .worksheet-table tbody tr:nth-child(even) td:nth-child(3) { background: #f0f4f8; }
-
+    .worksheet-table td.selected-cell { box-shadow: inset 0 0 0 2px #2563eb; background: #eff6ff !important; z-index: 15; }
+    .worksheet-table td.selected-row, .worksheet-table th.selected-row { background: #dbeafe !important; }
+    .worksheet-table td.selected-col, .worksheet-table th.selected-col { background: #dbeafe !important; }
+    
     /* Resizer */
     .resizer { position: absolute; right: 0; top: 0; width: 5px; height: 100%; cursor: col-resize; z-index: 20; }
-    .resizer:hover, .resizer:active { background: #3b82f6; opacity: 0.6; }
+    .resizer:hover { background: #3b82f6; opacity: 0.5; }
 
-    /* Page break */
+    /* Print Header */
+    .print-header { display: none; text-align: center; padding: 20px; border-bottom: 2px solid #000; margin-bottom: 20px; }
+    .print-header img { height: 60px; margin: 0 auto 10px; }
+    .print-header h1 { font-size: 22px; font-weight: 900; margin-bottom: 5px; text-transform: uppercase;}
+    .print-custom-heading { font-size: 16px; font-weight: 700; text-decoration: underline; margin-top: 10px;}
     .page-break-row td { border: none !important; padding: 0 !important; height: 0 !important; }
-    .page-break-line { border-top: 2px dashed #ef4444; text-align: center; margin: 12px 0; }
-    .page-break-line span { background: #fef2f2; color: #ef4444; font-size: 10px; padding: 2px 10px; border-radius: 10px; font-weight: bold; position: relative; top: -10px; }
+    .page-break-line { border-top: 2px dashed #ef4444; text-align: center; margin: 15px 0;}
+    .page-break-line span { background: #fef2f2; color: #ef4444; font-size: 10px; padding: 2px 10px; border-radius: 10px; font-weight: bold; position: relative; top: -10px;}
 
-    /* ── FORMULA BAR ── */
-    .formula-bar {
-      background: #fff;
-      border-bottom: 1px solid #d1d9e6;
-      padding: 0 10px;
-      height: 30px;
-      display: flex; align-items: center; gap: 8px;
-      flex-shrink: 0;
-    }
-    .formula-bar .cell-ref {
-      width: 60px; font-size: 12px; font-weight: 700; color: #475569;
-      border: 1px solid #d1d9e6; border-radius: 4px;
-      padding: 2px 6px; text-align: center; background: #f8fafc;
-    }
-    .formula-bar .fx { font-size: 11px; color: #64748b; font-style: italic; font-weight: 700; }
-    .formula-bar .cell-content { flex: 1; font-size: 12px; color: #1e293b; padding: 2px 6px; outline: none; }
-
-    /* ── LOGIN SCREEN ── */
-    #login-screen {
-      position: fixed; inset: 0; background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0f4c75 100%);
-      display: flex; align-items: center; justify-content: center; z-index: 9999;
-    }
-    .login-card {
-      background: #fff; border-radius: 20px; padding: 36px 32px;
-      width: 340px; box-shadow: 0 25px 60px rgba(0,0,0,0.3);
-      animation: popUp 0.4s cubic-bezier(0.34,1.56,0.64,1);
-    }
-    @keyframes popUp { from { transform: scale(0.85) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
-    .login-card img { width: 72px; height: 72px; border-radius: 14px; object-fit: contain; display: block; margin: 0 auto 16px; border: 2px solid #e5e7eb; }
-    .login-card h2 { text-align: center; font-size: 18px; font-weight: 900; color: #0f172a; margin-bottom: 4px; }
-    .login-card p { text-align: center; font-size: 12px; color: #64748b; font-weight: 600; margin-bottom: 20px; }
-    .login-input {
-      width: 100%; padding: 11px 14px; border: 1px solid #d1d9e6; border-radius: 10px;
-      font-size: 14px; color: #1e293b; outline: none; margin-bottom: 12px; font-weight: 500;
-    }
-    .login-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
-    .login-btn {
-      width: 100%; padding: 12px; background: #0f172a; color: #fff;
-      border: none; border-radius: 12px; font-size: 15px; font-weight: 800;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: 0.2s;
-    }
-    .login-btn:hover { background: #1e293b; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(15,23,42,0.3); }
-    #login-error { color: #ef4444; font-size: 12px; text-align: center; margin-bottom: 10px; font-weight: 600; }
-
-    /* ── PRINT STYLES ── */
     @media print {
-      @page { size: auto; margin: 8mm; }
-      body * { visibility: hidden; }
-      #app-shell { visibility: visible; height: auto; overflow: visible; }
-      .app-header, .excel-ribbon, .formula-bar, .ws-sidebar { display: none !important; }
-      .ws-body { display: block !important; }
-      .ws-grid-wrapper { overflow: visible; padding: 0; background: white; }
-      .paper-sheet { box-shadow: none; border: none; width: 100% !important; visibility: visible; }
-      .paper-sheet * { visibility: visible; }
-      .print-header { display: block !important; }
-      .worksheet-table th { background: #e2e8f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .worksheet-table td, .worksheet-table th { border: 1px solid #555 !important; }
-      .worksheet-table th:nth-child(1), .worksheet-table td:nth-child(1),
-      .worksheet-table th:nth-child(2), .worksheet-table td:nth-child(2),
-      .worksheet-table th:nth-child(3), .worksheet-table td:nth-child(3) { position: static; background: transparent !important; }
-      .page-break-row { page-break-after: always; }
-      .page-break-line { display: none; }
+        @page { size: auto; margin: 10mm; }
+        body * { visibility: hidden; }
+        .excel-container, .excel-grid-wrapper, .paper-sheet, .paper-sheet * { visibility: visible; }
+        .excel-container { position: absolute; left: 0; top: 0; width: 100%; height: auto; border: none; overflow: visible;}
+        .excel-ribbon, .excel-data-bar { display: none !important; }
+        .paper-sheet { box-shadow: none; border: none; width: 100% !important; margin: 0; padding: 0;}
+        .print-header { display: block; }
+        .worksheet-table th { background: #e2e8f0 !important; color: #000; -webkit-print-color-adjust: exact; }
+        .worksheet-table td, .worksheet-table th { border: 1px solid #000 !important; background: transparent !important; }
+        .worksheet-table th:nth-child(1), .worksheet-table td:nth-child(1),
+        .worksheet-table th:nth-child(2), .worksheet-table td:nth-child(2),
+        .worksheet-table th:nth-child(3), .worksheet-table td:nth-child(3) { position: static; }
+        .page-break-row { page-break-after: always; }
+        .page-break-line { display: none; }
     }
   </style>
 </head>
-<body>
+<body class="antialiased text-gray-800">
 
-<!-- ═══════════ LOGIN SCREEN ═══════════ -->
-<div id="login-screen">
-  <div class="login-card">
-    <img id="login-logo" src="assets/images/logo.png" alt="Logo" onerror="this.src='https://placehold.co/72x72/e8f0fe/3b82f6?text=Logo'">
-    <h2>Official Login</h2>
-    <p id="login-inst-name">Institution Name</p>
-    <div id="login-error" class="hidden"></div>
-    <input id="inp-user" type="text" class="login-input" placeholder="Username / Email">
-    <input id="inp-pass" type="password" class="login-input" placeholder="Password">
-    <button id="btn-login" class="login-btn"><i class="fas fa-lock-open"></i> Login Securely</button>
-  </div>
-</div>
-
-<!-- ═══════════ APP SHELL ═══════════ -->
-<div id="app-shell" class="hidden">
-
-  <!-- HEADER -->
-  <div class="app-header">
-    <img id="header-logo" src="assets/images/logo.png" alt="Logo" onerror="this.src='https://placehold.co/34x34/ffffff/0f172a?text=L'">
-    <div>
-      <div class="title" id="header-title">Official Portal</div>
-      <div class="subtitle" id="header-sub">Class Work Sheet Builder</div>
-    </div>
-    <div class="spacer"></div>
-    <div class="header-nav">
-      <button class="nav-btn tab-link active" data-tab="worksheet"><i class="fas fa-file-excel"></i> Class Work Sheet</button>
-      <button class="nav-btn tab-link" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
-      <button class="nav-btn tab-link" data-tab="students"><i class="fas fa-user-graduate"></i> Students</button>
-      <button id="btn-logout" class="nav-btn logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  <!-- Login Modal -->
+  <div id="official-login-screen" class="min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-md">
+      <div class="modal-box" style="display:block; position:static; width:100%; max-width:none;">
+        <img src="assets/images/logo.png" alt="Logo" class="h-20 w-20 mx-auto rounded-full object-cover border-2 border-slate-200 shadow mb-3" onerror="this.src='https://via.placeholder.com/80'">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">Official Login</h3>
+        <p class="text-sm font-semibold text-slate-600 mb-4">Institution Portal</p>
+        <button id="official-login-btn" class="main-login-btn">Login Securely</button>
+      </div>
     </div>
   </div>
 
-  <!-- MAIN CONTENT (Tabs) -->
-  <div style="flex:1; overflow:hidden; display:flex; flex-direction:column;">
-
-    <!-- TAB: Dashboard & Students (simple placeholders) -->
-    <div id="official-tab-dashboard" class="official-tab hidden" style="padding:24px; overflow:auto; flex:1;">
-      <div style="background:#fff; border-radius:12px; padding:20px; border:1px solid #e5e7eb;">
-        <h2 style="font-size:18px; font-weight:800; color:#0f172a;">Dashboard</h2>
-        <p style="color:#64748b; font-size:13px; margin-top:6px;">Select "Class Work Sheet" from the menu to build reports.</p>
-      </div>
-    </div>
-    <div id="official-tab-students" class="official-tab hidden" style="padding:24px; overflow:auto; flex:1;">
-      <div style="background:#fff; border-radius:12px; padding:20px; border:1px solid #e5e7eb;">
-        <h2 style="font-size:18px; font-weight:800; color:#0f172a;">Students Register</h2>
-        <p style="color:#64748b; font-size:13px; margin-top:6px;">Student management module.</p>
-      </div>
-    </div>
-
-    <!-- TAB: CLASS WORK SHEET -->
-    <div id="official-tab-worksheet" class="official-tab" style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
-
-      <!-- ① EXCEL RIBBON -->
-      <div class="excel-ribbon">
-        <!-- Font -->
-        <select id="ws-font-family" class="ribbon-select" style="width:88px;">
-          <option value="Arial">Arial</option>
-          <option value="'Plus Jakarta Sans'">Jakarta</option>
-          <option value="'Times New Roman'">Times NR</option>
-          <option value="Calibri">Calibri</option>
-          <option value="Georgia">Georgia</option>
-        </select>
-        <select id="ws-font-size" class="ribbon-select" style="width:52px;">
-          <option value="10px">10</option><option value="11px">11</option>
-          <option value="12px" selected>12</option><option value="13px">13</option>
-          <option value="14px">14</option><option value="15px">15</option><option value="16px">16</option>
-        </select>
-        <div class="ribbon-sep"></div>
-        <!-- Format -->
-        <button class="ribbon-btn" id="btn-bold" title="Bold (Ctrl+B)"><b>B</b></button>
-        <button class="ribbon-btn" id="btn-italic" title="Italic (Ctrl+I)"><i>I</i></button>
-        <button class="ribbon-btn" id="btn-underline" title="Underline (Ctrl+U)" style="text-decoration:underline;">U</button>
-        <div class="ribbon-sep"></div>
-        <!-- Color pickers -->
-        <div class="color-pick-wrap" title="Text Color">
-          <input type="color" id="inp-color" value="#1e293b">
-          <div class="cp-icon"><i class="fas fa-font"></i></div>
+  <div id="official-app" class="hidden">
+    <header>
+      <div class="nav-container">
+        <div class="header-logo-box"><img src="assets/images/logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/45'"></div>
+        <div class="header-center-box">
+          <h1 id="header-title">Official Portal</h1>
         </div>
-        <div class="color-pick-wrap" title="Fill/Background Color">
-          <input type="color" id="inp-bgcolor" value="#ffffff">
-          <div class="cp-icon"><i class="fas fa-fill-drip"></i></div>
-        </div>
-        <div class="ribbon-sep"></div>
-        <!-- Align -->
-        <button class="ribbon-btn" id="btn-align-left" title="Align Left"><i class="fas fa-align-left"></i></button>
-        <button class="ribbon-btn" id="btn-align-center" title="Align Center"><i class="fas fa-align-center"></i></button>
-        <button class="ribbon-btn" id="btn-align-right" title="Align Right"><i class="fas fa-align-right"></i></button>
-        <div class="ribbon-sep"></div>
-        <!-- Insert -->
-        <button class="ribbon-btn" id="btn-add-col" title="Add Column"><i class="fas fa-table-columns"></i></button>
-        <button class="ribbon-btn" id="btn-add-row" title="Add Row"><i class="fas fa-plus-square"></i></button>
-        <button class="ribbon-btn" id="btn-del-col" title="Delete Last Column" style="color:#ef4444;"><i class="fas fa-minus-square"></i></button>
-        <div class="ribbon-sep"></div>
-        <!-- Actions (right side) -->
-        <div style="margin-left:auto; display:flex; gap:6px; align-items:center;">
-          <button id="ws-btn-export" class="ribbon-action-btn" style="background:#f0fdf4; color:#166534; border-color:#86efac;">
-            <i class="fas fa-file-excel"></i> Export Excel
-          </button>
-          <button id="ws-btn-print" class="ribbon-action-btn" style="background:#eff6ff; color:#1d4ed8; border-color:#93c5fd;">
-            <i class="fas fa-print"></i> Print
-          </button>
-        </div>
+        <ul class="nav-menu">
+          <li><a href="#dashboard" class="nav-link tab-link" data-tab="dashboard">Dashboard</a></li>
+          <li><a href="#worksheet" class="nav-link tab-link active text-emerald-600 font-bold" data-tab="worksheet"><i class="fas fa-file-excel"></i> Class Work Sheet</a></li>
+          <li><button id="official-logout-btn" class="login-btn-nav">Logout</button></li>
+        </ul>
       </div>
+    </header>
 
-      <!-- ② FORMULA BAR -->
-      <div class="formula-bar">
-        <div class="cell-ref" id="cell-ref-box">A1</div>
-        <div class="fx">fx</div>
-        <div class="cell-content" id="cell-content-box" contenteditable="false"></div>
+    <main class="max-w-7xl mx-auto p-4">
+      <div id="page-content">
+        <section id="official-tab-dashboard" class="official-tab page-content hidden"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Dashboard</h2></div></section>
+        
+        <section id="official-tab-worksheet" class="official-tab page-content">
+            <div class="excel-container">
+                <!-- Ribbon Toolbar -->
+                <div class="excel-ribbon">
+                    <div class="ribbon-group">
+                        <select id="ws-font-family" class="ribbon-select"><option value="Arial">Arial</option><option value="'Plus Jakarta Sans'">Jakarta</option></select>
+                        <select id="ws-font-size" class="ribbon-select w-16"><option value="12px" selected>12</option><option value="14px">14</option><option value="16px">16</option></select>
+                    </div>
+                    <div class="ribbon-group">
+                        <button class="ribbon-btn" id="btn-bold" title="Bold"><i class="fas fa-bold"></i></button>
+                        <button class="ribbon-btn" id="btn-italic" title="Italic"><i class="fas fa-italic"></i></button>
+                        <button class="ribbon-btn" id="btn-underline" title="Underline"><i class="fas fa-underline"></i></button>
+                    </div>
+                    <div class="ribbon-group">
+                        <div class="color-picker-wrapper" title="Text Color">
+                            <div class="icon"><i class="fas fa-font"></i></div>
+                            <input type="color" id="inp-color" value="#1e293b">
+                        </div>
+                        <div class="color-picker-wrapper" title="Fill Color">
+                            <div class="icon"><i class="fas fa-fill-drip"></i></div>
+                            <input type="color" id="inp-bgcolor" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="ribbon-group">
+                        <button class="ribbon-btn" id="btn-align-left" title="Align Left"><i class="fas fa-align-left"></i></button>
+                        <button class="ribbon-btn" id="btn-align-center" title="Align Center"><i class="fas fa-align-center"></i></button>
+                        <button class="ribbon-btn" id="btn-align-right" title="Align Right"><i class="fas fa-align-right"></i></button>
+                    </div>
+                    <div class="ribbon-group">
+                        <button class="ribbon-btn" id="btn-add-col" title="Add Column"><i class="fas fa-columns"></i><i class="fas fa-plus text-[8px] absolute top-1 right-1 text-green-500"></i></button>
+                        <button class="ribbon-btn" id="btn-add-row" title="Add Row"><i class="fas fa-layer-group"></i><i class="fas fa-plus text-[8px] absolute top-1 right-1 text-green-500"></i></button>
+                    </div>
+                    
+                    <!-- New Delete Button -->
+                    <div class="ribbon-group">
+                        <button class="ribbon-btn text-red-600 hover:bg-red-100" id="btn-delete" title="Delete Selected Row/Column"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+
+                    <div class="ml-auto ribbon-group" style="border:none;">
+                        <button id="ws-btn-export" class="flex items-center gap-2 bg-green-50 text-green-700 font-bold px-3 py-1.5 rounded border border-green-200 hover:bg-green-100 text-xs"><i class="fas fa-file-excel"></i> Export</button>
+                        <button id="ws-btn-print" class="flex items-center gap-2 bg-blue-50 text-blue-700 font-bold px-3 py-1.5 rounded border border-blue-200 hover:bg-blue-100 text-xs"><i class="fas fa-print"></i> Print</button>
+                    </div>
+                </div>
+
+                <!-- Settings / Data Bar -->
+                <div class="excel-data-bar">
+                    <div class="data-bar-item">
+                        <span class="data-bar-label">Data Source:</span>
+                        <select id="ws-class-select" class="data-bar-select"><option value="">Select Class</option></select>
+                        <button id="ws-btn-load" class="bg-indigo-600 text-white px-3 py-1 rounded font-bold text-xs">Load Data</button>
+                    </div>
+                    <div class="data-bar-item ml-2">
+                        <span class="data-bar-label">Paper:</span>
+                        <select id="ws-paper" class="data-bar-select w-20"><option value="A4">A4</option><option value="Legal">Legal</option><option value="Auto">Auto</option></select>
+                    </div>
+                    <div class="data-bar-item">
+                        <span class="data-bar-label">Orientation:</span>
+                        <select id="ws-orient" class="data-bar-select w-24"><option value="Portrait">Portrait</option><option value="Landscape">Landscape</option></select>
+                    </div>
+                    <div class="data-bar-item ml-2">
+                        <span class="data-bar-label">Group By:</span>
+                        <select id="ws-group" class="data-bar-select w-24"><option value="mixed">Mixed</option><option value="paged">Separate Pages</option></select>
+                    </div>
+                    <div class="data-bar-item ml-2">
+                        <span class="data-bar-label">Heading:</span>
+                        <input type="text" id="ws-heading" class="data-bar-input w-32" placeholder="e.g. Term 1">
+                    </div>
+                    <div class="data-bar-item ml-2">
+                        <label class="flex items-center gap-1 font-bold text-gray-700 text-xs cursor-pointer">
+                            <input type="checkbox" id="ws-show-header" checked class="w-3 h-3"> Show Header
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Grid Area -->
+                <div class="excel-grid-wrapper">
+                    <div id="ws-paper-sheet" class="paper-sheet paper-A4 orientation-Portrait">
+                        <div class="print-header" id="ws-print-header">
+                            <img src="assets/images/logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/150x60?text=LOGO'">
+                            <h1 id="ws-print-inst-name">Institution Name</h1>
+                            <p id="ws-print-inst-reg">Reg No: 12345</p>
+                            <div id="ws-print-custom-heading" class="print-custom-heading">Class Report</div>
+                        </div>
+                        <table class="worksheet-table" id="ws-table">
+                            <thead id="ws-thead"></thead>
+                            <tbody id="ws-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
       </div>
-
-      <!-- ③ BODY: Sidebar + Grid -->
-      <div class="ws-body">
-
-        <!-- LEFT SIDEBAR (Settings Panel) -->
-        <div class="ws-sidebar">
-
-          <div class="sidebar-section">
-            <div class="sb-label">Data Source</div>
-            <select id="ws-class-select" class="sb-select">
-              <option value="">Select Class</option>
-            </select>
-            <button id="ws-btn-load" class="sb-load-btn">
-              <i class="fas fa-sync-alt"></i> Load Data
-            </button>
-          </div>
-
-          <div class="sidebar-section">
-            <div class="sb-label">Paper</div>
-            <select id="ws-paper" class="sb-select">
-              <option value="A4" selected>A4 Size</option>
-              <option value="Legal">Legal Size</option>
-              <option value="Auto">Auto (Full Width)</option>
-            </select>
-          </div>
-
-          <div class="sidebar-section">
-            <div class="sb-label">Orientation</div>
-            <select id="ws-orient" class="sb-select">
-              <option value="Portrait" selected>Portrait</option>
-              <option value="Landscape">Landscape</option>
-            </select>
-          </div>
-
-          <div class="sidebar-section">
-            <div class="sb-label">Sort By</div>
-            <select id="ws-sort" class="sb-select">
-              <option value="name-asc">Name A–Z</option>
-              <option value="name-desc">Name Z–A</option>
-              <option value="adm-asc">Adm No ↑</option>
-              <option value="adm-desc">Adm No ↓</option>
-            </select>
-          </div>
-
-          <div class="sidebar-section">
-            <div class="sb-label">Group By</div>
-            <select id="ws-group" class="sb-select">
-              <option value="mixed" selected>Mixed</option>
-              <option value="paged">Separate Pages (Boys / Girls)</option>
-            </select>
-          </div>
-
-          <div class="sidebar-section">
-            <div class="sb-label">Custom Heading</div>
-            <input type="text" id="ws-heading" class="sb-input" placeholder="e.g. Term 1 Attendance">
-          </div>
-
-          <div class="sidebar-section">
-            <label class="sb-checkbox-row">
-              <input type="checkbox" id="ws-show-header" checked>
-              <span>Show Official Header</span>
-            </label>
-            <label class="sb-checkbox-row">
-              <input type="checkbox" id="ws-repeat-header">
-              <span>Repeat on Every Page</span>
-            </label>
-          </div>
-
-          <!-- Stats -->
-          <div class="sidebar-section" id="sb-stats" style="padding-top:6px;">
-            <div class="sb-label">Sheet Info</div>
-            <div style="font-size:11px; color:#475569; line-height:1.8;">
-              <div>Rows: <strong id="stat-rows">0</strong></div>
-              <div>Columns: <strong id="stat-cols">0</strong></div>
-              <div>Class: <strong id="stat-class">—</strong></div>
-            </div>
-          </div>
-
-        </div><!-- /sidebar -->
-
-        <!-- GRID AREA -->
-        <div class="ws-grid-wrapper">
-          <div id="ws-paper-sheet" class="paper-sheet paper-A4 orientation-Portrait">
-
-            <!-- Print Header (hidden on screen, shown on print) -->
-            <div class="print-header" id="ws-print-header">
-              <img src="assets/images/logo.png" alt="Logo" onerror="this.src='https://placehold.co/150x55/f8fafc/0f172a?text=LOGO'">
-              <h1 id="ws-print-inst-name">Institution Name</h1>
-              <div class="reg" id="ws-print-inst-reg">Reg No: 12345</div>
-              <div id="ws-print-custom-heading" class="print-custom-heading">Term 1 Attendance</div>
-            </div>
-
-            <!-- Main Table -->
-            <table class="worksheet-table" id="ws-table">
-              <thead id="ws-thead"></thead>
-              <tbody id="ws-tbody"></tbody>
-            </table>
-
-            <div id="ws-empty-state" style="padding:60px 20px; text-align:center; color:#94a3b8;">
-              <i class="fas fa-table" style="font-size:40px; margin-bottom:12px; display:block; opacity:0.3;"></i>
-              <div style="font-size:14px; font-weight:700;">Select a Class and Click "Load Data"</div>
-              <div style="font-size:12px; margin-top:4px;">Use the left panel to configure your sheet</div>
-            </div>
-          </div>
-        </div><!-- /grid -->
-
-      </div><!-- /ws-body -->
-    </div><!-- /tab-worksheet -->
+    </main>
   </div>
-</div><!-- /app-shell -->
 
-<script>
-// ═══════════════════════════════════════════════════════
-//  CONFIGURATION
-// ═══════════════════════════════════════════════════════
-const institutionConfig = {
-  name: "Noorul Islam Higher Secondary Madrasa",
-  regNo: "Reg No: 123456",
-  credentials: { username: "admin", password: "admin123" }
-};
+  <script type="module">
+    // =========================================================================
+    // 1. REAL DATABASE FETCH LOGIC (From official-page.js mapping)
+    // =========================================================================
+    import { db } from '../../config/firebase-config.js'; 
+    import { collection, getDoc, getDocs, doc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+    import { BASE_PATH } from '../shared/app-common.js';
 
-// ═══════════════════════════════════════════════════════
-//  STUDENT DATA
-// ═══════════════════════════════════════════════════════
-let allStudents = [];
+    let allStudents = [];
+    let institutionConfig = { name: "Institution Portal", regNo: "" };
 
-const loadMockData = () => {
-  allStudents = [
-    { id:'1',  adm:'101', name:'AJMAL SHAH K',           gender:'Male',   class:'Class 1' },
-    { id:'2',  adm:'102', name:'AMAN MUHAMMED PA',        gender:'Male',   class:'Class 1' },
-    { id:'3',  adm:'103', name:'HADI ESHAN PV',           gender:'Male',   class:'Class 1' },
-    { id:'4',  adm:'104', name:'MUHAMMED ANSHIF P',       gender:'Male',   class:'Class 1' },
-    { id:'5',  adm:'105', name:'SAFAR SAVAD K',           gender:'Male',   class:'Class 1' },
-    { id:'6',  adm:'106', name:'SHAHIN AP',               gender:'Male',   class:'Class 1' },
-    { id:'7',  adm:'107', name:'FATHIMA RAFEEDA AT',      gender:'Female', class:'Class 1' },
-    { id:'8',  adm:'108', name:'FATHIMA RIFNA KM',        gender:'Female', class:'Class 1' },
-    { id:'9',  adm:'109', name:'FATHIMA ZIYA KT',         gender:'Female', class:'Class 1' },
-    { id:'10', adm:'110', name:'FIDA P',                  gender:'Female', class:'Class 1' },
-    { id:'11', adm:'111', name:'HISANA NASAR KN',         gender:'Female', class:'Class 1' },
-    { id:'12', adm:'112', name:'NAFEESA NAHBA A',         gender:'Female', class:'Class 1' },
-    { id:'13', adm:'113', name:'SHADIYA SHAMEER AP',      gender:'Female', class:'Class 1' },
-    { id:'14', adm:'201', name:'ARJUN KRISHNA M',         gender:'Male',   class:'Class 2' },
-    { id:'15', adm:'202', name:'BILAL HASSAN K',          gender:'Male',   class:'Class 2' },
-    { id:'16', adm:'203', name:'DANISH AHAMED P',         gender:'Male',   class:'Class 2' },
-    { id:'17', adm:'204', name:'FARIS MUHAMMED T',        gender:'Male',   class:'Class 2' },
-    { id:'18', adm:'205', name:'AMINA BEEVI N',           gender:'Female', class:'Class 2' },
-    { id:'19', adm:'206', name:'BUSHRA FATHIMA KP',       gender:'Female', class:'Class 2' },
-    { id:'20', adm:'207', name:'DILNOZA RAHMAN A',        gender:'Female', class:'Class 2' },
-    { id:'21', adm:'301', name:'GOKUL KRISHNAN S',        gender:'Male',   class:'Class 3' },
-    { id:'22', adm:'302', name:'HAMZA ABDURAHIMAN',       gender:'Male',   class:'Class 3' },
-    { id:'23', adm:'303', name:'IBRAHIM FARIS KV',        gender:'Male',   class:'Class 3' },
-    { id:'24', adm:'304', name:'JASMINE THASNI P',        gender:'Female', class:'Class 3' },
-    { id:'25', adm:'305', name:'KADEEJA BINTU N',         gender:'Female', class:'Class 3' },
-  ];
-};
-
-// ═══════════════════════════════════════════════════════
-//  TAB NAVIGATION
-// ═══════════════════════════════════════════════════════
-const setTab = (tab) => {
-  document.querySelectorAll('.official-tab').forEach(el => el.style.display = 'none');
-  document.querySelectorAll('[data-tab]').forEach(btn => btn.classList.remove('active'));
-  const tabEl = document.getElementById(`official-tab-${tab}`);
-  if (tabEl) {
-    tabEl.style.display = tab === 'worksheet' ? 'flex' : 'block';
-  }
-  document.querySelectorAll(`[data-tab="${tab}"]`).forEach(b => b.classList.add('active'));
-  if (tab === 'worksheet') initClassDropdown();
-};
-
-document.querySelectorAll('.tab-link').forEach(btn => btn.addEventListener('click', () => setTab(btn.dataset.tab)));
-
-// ═══════════════════════════════════════════════════════
-//  LOGIN LOGIC
-// ═══════════════════════════════════════════════════════
-document.getElementById('login-inst-name').textContent = institutionConfig.name;
-
-const showApp = () => {
-  document.getElementById('login-screen').classList.add('hidden');
-  document.getElementById('app-shell').classList.remove('hidden');
-  document.getElementById('header-title').textContent = institutionConfig.name;
-  document.getElementById('ws-print-inst-name').textContent = institutionConfig.name;
-  document.getElementById('ws-print-inst-reg').textContent = institutionConfig.regNo;
-  setTab('worksheet');
-};
-
-document.getElementById('btn-login').addEventListener('click', () => {
-  const u = document.getElementById('inp-user').value.trim();
-  const p = document.getElementById('inp-pass').value.trim();
-  const errEl = document.getElementById('login-error');
-  // Accept any credentials or specific ones
-  if (!u || !p) {
-    errEl.textContent = 'Please enter username and password.';
-    errEl.classList.remove('hidden');
-    return;
-  }
-  errEl.classList.add('hidden');
-  loadMockData();
-  showApp();
-});
-
-// Enter key on login
-['inp-user','inp-pass'].forEach(id => {
-  document.getElementById(id).addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') document.getElementById('btn-login').click();
-  });
-});
-
-document.getElementById('btn-logout').addEventListener('click', () => window.location.reload());
-
-// ═══════════════════════════════════════════════════════
-//  WORKSHEET ENGINE
-// ═══════════════════════════════════════════════════════
-
-let wsHeaders = [
-  { label: '#',             w: '36px',  fixed: true },
-  { label: 'S.No',         w: '56px',  fixed: true },
-  { label: 'Student Name', w: '190px', fixed: true },
-  { label: 'Custom/Blank Sp', w: '110px', fixed: false },
-  { label: 'New Column',    w: '110px', fixed: false },
-];
-let wsData = [];
-let activeCell = null; // { r, c }
-
-const COL_LETTERS = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T'];
-
-// ── Init Class Dropdown ──
-const initClassDropdown = () => {
-  const sel = document.getElementById('ws-class-select');
-  if (allStudents.length === 0) return;
-  const classes = [...new Set(allStudents.map(s => s.class))].sort();
-  sel.innerHTML = `<option value="">Select Class</option>` +
-    classes.map(c => `<option value="${c}">${c}</option>`).join('');
-  // Auto-select first class
-  if (classes.length > 0) {
-    sel.value = classes[0];
-    // Auto-load after a tick
-    setTimeout(loadGridData, 50);
-  }
-};
-
-// ── Create Cell Object ──
-const createCell = (val = '') => ({
-  v: val,
-  b: false, i: false, u: false,
-  c: '#1e293b',
-  bg: '#ffffff',
-  align: 'left',
-  font: 'Arial',
-  size: '12px'
-});
-
-// ── Load Grid Data ──
-const loadGridData = () => {
-  const cls = document.getElementById('ws-class-select').value;
-  if (!cls) { alert('Please select a class first.'); return; }
-
-  let filtered = allStudents.filter(s => s.class === cls);
-
-  // Sort
-  const sort = document.getElementById('ws-sort').value;
-  if (sort === 'name-asc') filtered.sort((a,b) => a.name.localeCompare(b.name));
-  else if (sort === 'name-desc') filtered.sort((a,b) => b.name.localeCompare(a.name));
-  else if (sort === 'adm-asc') filtered.sort((a,b) => parseInt(a.adm||0) - parseInt(b.adm||0));
-  else if (sort === 'adm-desc') filtered.sort((a,b) => parseInt(b.adm||0) - parseInt(a.adm||0));
-
-  // Group
-  const group = document.getElementById('ws-group').value;
-  let finalRows = [];
-  if (group === 'paged') {
-    const boys  = filtered.filter(s => s.gender === 'Male');
-    const girls = filtered.filter(s => s.gender === 'Female');
-    boys.forEach((s, i) => finalRows.push({ ...s, idx: i+1 }));
-    if (boys.length && girls.length) finalRows.push({ isBreak: true });
-    girls.forEach((s, i) => finalRows.push({ ...s, idx: i+1 }));
-  } else {
-    filtered.forEach((s, i) => finalRows.push({ ...s, idx: i+1 }));
-  }
-
-  // Build wsData
-  wsData = [];
-  finalRows.forEach(s => {
-    if (s.isBreak) { wsData.push({ isBreak: true }); return; }
-    let row = wsHeaders.map((h, i) => {
-      if (i === 0) return createCell(s.idx);
-      if (i === 1) return createCell(s.adm || '');
-      if (i === 2) return createCell(s.name || '');
-      return createCell('');
-    });
-    wsData.push(row);
-  });
-
-  document.getElementById('ws-empty-state').style.display = 'none';
-  document.getElementById('ws-table').style.display = '';
-
-  // Update stats
-  document.getElementById('stat-rows').textContent = finalRows.filter(r => !r.isBreak).length;
-  document.getElementById('stat-cols').textContent = wsHeaders.length;
-  document.getElementById('stat-class').textContent = cls;
-
-  renderGrid();
-};
-
-// ── Render Grid ──
-const renderGrid = () => {
-  const tHead = document.getElementById('ws-thead');
-  const tBody = document.getElementById('ws-tbody');
-  tHead.innerHTML = '';
-  tBody.innerHTML = '';
-
-  // ── Column Letter Row ──
-  const trLetters = document.createElement('tr');
-  trLetters.className = 'col-letter-row';
-  wsHeaders.forEach((h, cIdx) => {
-    const th = document.createElement('th');
-    th.textContent = COL_LETTERS[cIdx] || String(cIdx + 1);
-    th.style.width = h.w;
-    trLetters.appendChild(th);
-  });
-  tHead.appendChild(trLetters);
-
-  // ── Column Name Header Row ──
-  const trHead = document.createElement('tr');
-  wsHeaders.forEach((h, cIdx) => {
-    const th = document.createElement('th');
-    th.style.width = h.w;
-    if (!h.fixed) {
-      th.contentEditable = true;
-      th.textContent = h.label;
-      th.addEventListener('input', (e) => h.label = e.target.textContent);
-    } else {
-      th.textContent = h.label;
-    }
-
-    // Sub-label for custom cols
-    if (!h.fixed) {
-      const sub = document.createElement('div');
-      sub.style.cssText = 'font-size:9px; color:#94a3b8; font-weight:500; margin-top:2px;';
-      sub.textContent = 'Heading...';
-      th.appendChild(sub);
-    }
-
-    // Resizer
-    const resizer = document.createElement('div');
-    resizer.className = 'resizer';
-    th.appendChild(resizer);
-    setupResizer(resizer, th, cIdx);
-    trHead.appendChild(th);
-  });
-  tHead.appendChild(trHead);
-
-  // ── Body Rows ──
-  wsData.forEach((rowObj, rIdx) => {
-    const tr = document.createElement('tr');
-    if (rowObj.isBreak) {
-      tr.className = 'page-break-row';
-      const td = document.createElement('td');
-      td.colSpan = wsHeaders.length;
-      td.innerHTML = '<div class="page-break-line"><span>⸻ Page Break (Print) ⸻</span></div>';
-      tr.appendChild(td);
-      tBody.appendChild(tr);
-      return;
-    }
-    rowObj.forEach((cell, cIdx) => {
-      const td = document.createElement('td');
-      td.textContent = cell.v;
-      if (cIdx >= 3) td.contentEditable = true;
-
-      applyStyleToCell(td, cell);
-
-      td.addEventListener('focus', () => {
-        activeCell = { r: rIdx, c: cIdx };
-        document.querySelectorAll('.worksheet-table td').forEach(c => c.classList.remove('selected'));
-        td.classList.add('selected');
-        syncRibbon(cell);
-        // Formula bar
-        const colLetter = COL_LETTERS[cIdx] || cIdx;
-        document.getElementById('cell-ref-box').textContent = `${colLetter}${rIdx + 1}`;
-        document.getElementById('cell-content-box').textContent = cell.v;
-      });
-
-      td.addEventListener('input', (e) => {
-        cell.v = e.target.textContent;
-        document.getElementById('cell-content-box').textContent = cell.v;
-      });
-
-      tr.appendChild(td);
-    });
-    tBody.appendChild(tr);
-  });
-
-  // Update stats
-  document.getElementById('stat-cols').textContent = wsHeaders.length;
-};
-
-const applyStyleToCell = (td, cell) => {
-  td.style.fontWeight  = cell.b ? 'bold' : 'normal';
-  td.style.fontStyle   = cell.i ? 'italic' : 'normal';
-  td.style.textDecoration = cell.u ? 'underline' : 'none';
-  td.style.color       = cell.c;
-  td.style.backgroundColor = cell.bg;
-  td.style.textAlign   = cell.align;
-  td.style.fontFamily  = cell.font;
-  td.style.fontSize    = cell.size;
-};
-
-// ── Column Resize ──
-const setupResizer = (resizer, th, cIdx) => {
-  let startX, startW;
-  resizer.addEventListener('mousedown', (e) => {
-    e.preventDefault();
-    startX = e.pageX;
-    startW = th.offsetWidth;
-    const onMove = (e) => {
-      const newW = Math.max(40, startW + (e.pageX - startX));
-      wsHeaders[cIdx].w = `${newW}px`;
-      th.style.width = `${newW}px`;
+    const setTab = (tab) => {
+      document.querySelectorAll('.official-tab').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`official-tab-${tab}`)?.classList.remove('hidden');
+      document.querySelectorAll('.tab-link').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
     };
-    const onUp = () => {
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
+
+    document.querySelectorAll('.tab-link').forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); setTab(btn.dataset.tab); }));
+
+    // Firebase Data Fetch
+    const loadRealDataFromDB = async () => {
+        try {
+            if(typeof db === 'undefined' || !getDocs) throw new Error("Firebase DB not initialized.");
+            
+            const [studentsSnap, configSnap] = await Promise.all([
+                getDocs(collection(db, `${BASE_PATH}/students`)),
+                getDoc(doc(db, `${BASE_PATH}/settings`, 'config'))
+            ]);
+            
+            allStudents = studentsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+            
+            if(configSnap.exists()) {
+                const conf = configSnap.data();
+                institutionConfig.name = conf.appName || conf.institutionName || "Official Portal";
+                institutionConfig.regNo = conf.regNo || "";
+            }
+            console.log(`Loaded ${allStudents.length} students from Database.`);
+        } catch (error) {
+            console.error("Database connection failed. Check your firebase-config.js", error);
+            alert("Database Error: Could not load real data from Firebase. Ensure config is correct.");
+        }
     };
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup', onUp);
-  });
-};
 
-// ── Apply Formatting ──
-const applyFormat = (prop, val) => {
-  if (!activeCell || wsData[activeCell.r]?.isBreak) return;
-  const cell = wsData[activeCell.r][activeCell.c];
-  cell[prop] = (typeof val === 'undefined') ? !cell[prop] : val;
-  renderGrid();
-  // Re-focus the active cell
-  setTimeout(() => {
-    const tds = document.querySelectorAll('.worksheet-table td');
-    let count = 0;
-    let target = null;
-    for (let r = 0; r < wsData.length; r++) {
-      if (wsData[r].isBreak) continue;
-      for (let c = 0; c < wsHeaders.length; c++) {
-        count++;
-        if (r === activeCell.r && c === activeCell.c) { target = count; break; }
-      }
-      if (target) break;
-    }
-  }, 0);
-};
-
-const syncRibbon = (cell) => {
-  document.getElementById('btn-bold').classList.toggle('active', cell.b);
-  document.getElementById('btn-italic').classList.toggle('active', cell.i);
-  document.getElementById('btn-underline').classList.toggle('active', cell.u);
-  document.getElementById('inp-color').value = cell.c;
-  document.getElementById('inp-bgcolor').value = cell.bg;
-  document.getElementById('ws-font-family').value = cell.font;
-  document.getElementById('ws-font-size').value = cell.size;
-  ['left','center','right'].forEach(a => document.getElementById(`btn-align-${a}`).classList.toggle('active', cell.align === a));
-};
-
-// ── Ribbon Events ──
-document.getElementById('btn-bold').addEventListener('click', () => applyFormat('b'));
-document.getElementById('btn-italic').addEventListener('click', () => applyFormat('i'));
-document.getElementById('btn-underline').addEventListener('click', () => applyFormat('u'));
-document.getElementById('inp-color').addEventListener('input', (e) => applyFormat('c', e.target.value));
-document.getElementById('inp-bgcolor').addEventListener('input', (e) => applyFormat('bg', e.target.value));
-document.getElementById('ws-font-family').addEventListener('change', (e) => applyFormat('font', e.target.value));
-document.getElementById('ws-font-size').addEventListener('change', (e) => applyFormat('size', e.target.value));
-['left','center','right'].forEach(a => document.getElementById(`btn-align-${a}`).addEventListener('click', () => applyFormat('align', a)));
-
-// ── Insert / Delete Columns ──
-document.getElementById('btn-add-col').addEventListener('click', () => {
-  const idx = wsHeaders.length;
-  wsHeaders.push({ label: `Col ${idx - 2}`, w: '110px', fixed: false });
-  wsData.forEach(row => { if (!row.isBreak) row.push(createCell('')); });
-  document.getElementById('stat-cols').textContent = wsHeaders.length;
-  renderGrid();
-});
-
-document.getElementById('btn-del-col').addEventListener('click', () => {
-  if (wsHeaders.length <= 3) { alert('Cannot delete fixed columns.'); return; }
-  wsHeaders.pop();
-  wsData.forEach(row => { if (!row.isBreak) row.pop(); });
-  document.getElementById('stat-cols').textContent = wsHeaders.length;
-  renderGrid();
-});
-
-// ── Insert Row ──
-document.getElementById('btn-add-row').addEventListener('click', () => {
-  const row = wsHeaders.map(() => createCell(''));
-  if (activeCell) wsData.splice(activeCell.r + 1, 0, row);
-  else wsData.push(row);
-  renderGrid();
-});
-
-// ── Sidebar Events ──
-document.getElementById('ws-btn-load').addEventListener('click', loadGridData);
-document.getElementById('ws-sort').addEventListener('change', () => { if (wsData.length) loadGridData(); });
-document.getElementById('ws-group').addEventListener('change', () => { if (wsData.length) loadGridData(); });
-
-document.getElementById('ws-paper').addEventListener('change', (e) => {
-  const orient = document.getElementById('ws-orient').value;
-  document.getElementById('ws-paper-sheet').className = `paper-sheet paper-${e.target.value} orientation-${orient}`;
-});
-document.getElementById('ws-orient').addEventListener('change', (e) => {
-  const paper = document.getElementById('ws-paper').value;
-  document.getElementById('ws-paper-sheet').className = `paper-sheet paper-${paper} orientation-${e.target.value}`;
-});
-
-document.getElementById('ws-heading').addEventListener('input', (e) => {
-  document.getElementById('ws-print-custom-heading').textContent = e.target.value || 'Term 1 Attendance';
-});
-
-document.getElementById('ws-show-header').addEventListener('change', (e) => {
-  document.getElementById('ws-print-header').style.display = e.target.checked ? '' : 'none';
-});
-
-// ── Print ──
-document.getElementById('ws-btn-print').addEventListener('click', () => {
-  document.getElementById('ws-print-custom-heading').textContent =
-    document.getElementById('ws-heading').value || 'Class Work Sheet';
-  window.print();
-});
-
-// ── Export Excel ──
-document.getElementById('ws-btn-export').addEventListener('click', () => {
-  if (typeof XLSX === 'undefined') { alert('SheetJS library not loaded.'); return; }
-  const cls = document.getElementById('ws-class-select').value || 'Class';
-  let exportData = [wsHeaders.map(h => h.label)];
-  wsData.forEach(row => {
-    if (!row.isBreak) exportData.push(row.map(c => c.v));
-  });
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet(exportData);
-  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-  XLSX.writeFile(wb, `${cls.replace(/\s+/g,'_')}_WorkSheet.xlsx`);
-});
-
-// ── Paste from Excel (Ctrl+V) ──
-document.addEventListener('paste', (e) => {
-  if (!document.activeElement.closest('.worksheet-table td')) return;
-  e.preventDefault();
-  const pasteData = (e.clipboardData || window.clipboardData).getData('text');
-  if (!pasteData || !activeCell) return;
-  const rows = pasteData.split(/\r?\n/).filter(r => r.trim() !== '');
-  rows.forEach((rowStr, i) => {
-    const cols = rowStr.split('\t');
-    const tRow = activeCell.r + i;
-    if (!wsData[tRow] || wsData[tRow].isBreak) return;
-    cols.forEach((val, j) => {
-      const tCol = activeCell.c + j;
-      if (tCol < wsHeaders.length && tCol >= 3) wsData[tRow][tCol].v = val.trim();
+    document.getElementById('official-login-btn').addEventListener('click', async () => {
+        document.getElementById('official-login-btn').textContent = "Loading Database...";
+        await loadRealDataFromDB(); // Fetch pure database data
+        
+        document.getElementById('official-login-screen').classList.add('hidden');
+        document.getElementById('official-app').classList.remove('hidden');
+        
+        document.getElementById('header-title').textContent = institutionConfig.name;
+        document.getElementById('ws-print-inst-name').textContent = institutionConfig.name;
+        document.getElementById('ws-print-inst-reg').textContent = institutionConfig.regNo ? `Reg No: ${institutionConfig.regNo}` : '';
+        
+        setTab('worksheet');
+        if(window._initWorksheet) window._initWorksheet();
     });
-  });
-  renderGrid();
-});
 
-// ── Hide table initially ──
-document.getElementById('ws-table').style.display = 'none';
-</script>
+    document.getElementById('official-logout-btn').addEventListener('click', () => window.location.reload());
+
+    // =========================================================================
+    // 2. EXCEL WORK SHEET - ADVANCED ENGINE (Select, Color, Delete)
+    // =========================================================================
+    
+    let wsHeaders = [
+        { label: 'Sl No', w: '50px', fixed: true },
+        { label: 'Adm No', w: '80px', fixed: true },
+        { label: 'Student Name', w: '220px', fixed: true },
+        { label: 'Custom 1', w: '120px', fixed: false },
+        { label: 'Custom 2', w: '120px', fixed: false }
+    ];
+    let wsData = []; 
+    let activeSelection = { type: null, index: -1 }; // type: 'cell' | 'row' | 'col', index: number
+
+    window._initWorksheet = () => {
+        const sel = document.getElementById('ws-class-select');
+        if(sel.options.length <= 1 && allStudents.length > 0) {
+            const classes = [...new Set(allStudents.map(s => s.class))].filter(Boolean).sort();
+            sel.innerHTML = `<option value="">Select Class</option>` + classes.map(c => `<option value="${c}">${c}</option>`).join('');
+            sel.value = classes[0]; 
+        }
+    };
+
+    const initWorksheetEngine = () => {
+        const tHead = document.getElementById('ws-thead');
+        const tBody = document.getElementById('ws-tbody');
+        
+        const createCell = (val = '') => ({ 
+            v: val, b: false, i: false, u: false, 
+            c: '#1e293b', bg: '#ffffff', align: 'left', font: 'Arial', size: '12px'
+        });
+
+        // 1. Load Data from Pure DB
+        const loadGridData = () => {
+            const cls = document.getElementById('ws-class-select').value;
+            if(!cls) return alert("Select a class from the dropdown to load database records.");
+
+            let filtered = allStudents.filter(s => s.class === cls);
+            filtered.sort((a,b) => String(a.name || '').localeCompare(String(b.name || ''))); // Auto sort name
+
+            let finalRows = [];
+            const group = document.getElementById('ws-group').value;
+            
+            if(group === 'paged') {
+                const boys = filtered.filter(s => s.gender === 'Male' || s.gender === 'M');
+                const girls = filtered.filter(s => s.gender === 'Female' || s.gender === 'F');
+                boys.forEach((s, i) => finalRows.push({ ...s, idx: i+1 }));
+                if(boys.length && girls.length) finalRows.push({ isBreak: true });
+                girls.forEach((s, i) => finalRows.push({ ...s, idx: i+1 }));
+            } else {
+                filtered.forEach((s, i) => finalRows.push({ ...s, idx: i+1 }));
+            }
+
+            wsData = [];
+            finalRows.forEach(s => {
+                if(s.isBreak) { wsData.push({ isBreak: true }); return; }
+                let row = [];
+                wsHeaders.forEach((h, i) => {
+                    if(i === 0) row.push(createCell(s.idx)); // Sl No
+                    else if(i === 1) row.push(createCell(s.adm || s.admNo || '')); // Adm
+                    else if(i === 2) row.push(createCell(s.name || '')); // Name
+                    else row.push(createCell('')); // Custom
+                });
+                wsData.push(row);
+            });
+            activeSelection = { type: null, index: -1 };
+            renderGrid();
+        };
+
+        // 2. Render Engine & Selection Logic
+        const renderGrid = () => {
+            tHead.innerHTML = '';
+            tBody.innerHTML = '';
+
+            let trHead = document.createElement('tr');
+            wsHeaders.forEach((h, cIdx) => {
+                let th = document.createElement('th');
+                th.textContent = h.label;
+                
+                // Highlight if column is selected
+                if(activeSelection.type === 'col' && activeSelection.index === cIdx) th.classList.add('selected-col');
+
+                // Header Click -> Select Entire Column
+                th.addEventListener('click', (e) => {
+                    if(e.target.className === 'resizer') return; // Don't select if resizing
+                    activeSelection = { type: 'col', index: cIdx };
+                    renderGrid(); // Re-render to highlight
+                });
+
+                if(!h.fixed) {
+                    th.contentEditable = true;
+                    th.addEventListener('input', (e) => h.label = e.target.textContent);
+                }
+                th.style.width = h.w;
+                
+                let resizer = document.createElement('div');
+                resizer.className = 'resizer';
+                th.appendChild(resizer);
+                setupResizer(resizer, th, cIdx);
+
+                trHead.appendChild(th);
+            });
+            tHead.appendChild(trHead);
+
+            wsData.forEach((rowObj, rIdx) => {
+                let tr = document.createElement('tr');
+                if(rowObj.isBreak) {
+                    tr.className = 'page-break-row';
+                    let td = document.createElement('td');
+                    td.colSpan = wsHeaders.length;
+                    td.innerHTML = '<div class="page-break-line"><span>Page Break (Print)</span></div>';
+                    tr.appendChild(td);
+                    tBody.appendChild(tr);
+                    return;
+                }
+
+                rowObj.forEach((cell, cIdx) => {
+                    let td = document.createElement('td');
+                    td.textContent = cell.v;
+                    if(cIdx >= 3) td.contentEditable = true; 
+
+                    td.style.fontWeight = cell.b ? 'bold' : 'normal';
+                    td.style.fontStyle = cell.i ? 'italic' : 'normal';
+                    td.style.textDecoration = cell.u ? 'underline' : 'none';
+                    td.style.color = cell.c;
+                    td.style.backgroundColor = cell.bg;
+                    td.style.textAlign = cell.align;
+
+                    // Selection Highlights
+                    if(activeSelection.type === 'row' && activeSelection.index === rIdx) td.classList.add('selected-row');
+                    if(activeSelection.type === 'col' && activeSelection.index === cIdx) td.classList.add('selected-col');
+                    if(activeSelection.type === 'cell' && activeSelection.r === rIdx && activeSelection.c === cIdx) td.classList.add('selected-cell');
+
+                    // Click Logic
+                    td.addEventListener('click', () => {
+                        if(cIdx === 0) { // Click on Sl No selects Entire Row
+                            activeSelection = { type: 'row', index: rIdx };
+                        } else { // Click on other cell selects only cell
+                            activeSelection = { type: 'cell', r: rIdx, c: cIdx };
+                        }
+                        syncRibbon(cell);
+                        renderGrid(); // Re-render highlights
+                    });
+
+                    td.addEventListener('input', (e) => cell.v = e.target.textContent);
+                    tr.appendChild(td);
+                });
+                tBody.appendChild(tr);
+            });
+        };
+
+        const setupResizer = (resizer, th, cIdx) => {
+            let startX, startW;
+            resizer.addEventListener('mousedown', (e) => {
+                startX = e.pageX; startW = th.offsetWidth;
+                const onMove = (e) => {
+                    let newW = Math.max(40, startW + (e.pageX - startX));
+                    wsHeaders[cIdx].w = `${newW}px`;
+                    th.style.width = `${newW}px`;
+                };
+                const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
+                document.addEventListener('mousemove', onMove); document.addEventListener('mouseup', onUp);
+            });
+        };
+
+        // 3. Batch Format & Color Engine
+        const applyFormat = (prop, val) => {
+            if(!activeSelection.type) return;
+
+            const applyToCell = (cellObj) => {
+                if(typeof val === 'undefined') cellObj[prop] = !cellObj[prop]; 
+                else cellObj[prop] = val; 
+            };
+
+            if(activeSelection.type === 'cell') {
+                applyToCell(wsData[activeSelection.r][activeSelection.c]);
+            } 
+            else if(activeSelection.type === 'row') {
+                wsData[activeSelection.index].forEach(c => applyToCell(c));
+            } 
+            else if(activeSelection.type === 'col') {
+                wsData.forEach(row => { if(!row.isBreak) applyToCell(row[activeSelection.index]); });
+            }
+            renderGrid();
+        };
+
+        const syncRibbon = (cell) => {
+            document.getElementById('btn-bold').classList.toggle('active', cell.b);
+            document.getElementById('inp-color').value = cell.c;
+            document.getElementById('inp-bgcolor').value = cell.bg;
+        };
+
+        // Format Bindings
+        document.getElementById('btn-bold').addEventListener('click', () => applyFormat('b'));
+        document.getElementById('btn-italic').addEventListener('click', () => applyFormat('i'));
+        document.getElementById('btn-underline').addEventListener('click', () => applyFormat('u'));
+        document.getElementById('inp-color').addEventListener('input', (e) => applyFormat('c', e.target.value));
+        document.getElementById('inp-bgcolor').addEventListener('input', (e) => applyFormat('bg', e.target.value));
+        document.getElementById('ws-font-family').addEventListener('change', (e) => applyFormat('font', e.target.value));
+        document.getElementById('ws-font-size').addEventListener('change', (e) => applyFormat('size', e.target.value));
+        ['left','center','right'].forEach(a => document.getElementById(`btn-align-${a}`).addEventListener('click', () => applyFormat('align', a)));
+
+        // 4. Delete & Add Engine
+        document.getElementById('btn-delete').addEventListener('click', () => {
+            if(!activeSelection.type) return alert("Please select a Row (click Sl No) or Column (click Header) to delete.");
+            
+            if(activeSelection.type === 'row') {
+                // Delete Row
+                wsData.splice(activeSelection.index, 1);
+                activeSelection = { type: null, index: -1 };
+                renderGrid();
+            } 
+            else if(activeSelection.type === 'col') {
+                // Check protection for DB Columns
+                if(activeSelection.index < 3) {
+                    return alert("Protection Active: You cannot delete the primary database columns (Sl No, Adm No, Name).");
+                }
+                // Delete Column
+                wsHeaders.splice(activeSelection.index, 1);
+                wsData.forEach(row => { if(!row.isBreak) row.splice(activeSelection.index, 1); });
+                activeSelection = { type: null, index: -1 };
+                renderGrid();
+            }
+        });
+
+        document.getElementById('btn-add-col').addEventListener('click', () => {
+            wsHeaders.push({ label: `New Col ${wsHeaders.length-2}`, w: '120px', fixed: false });
+            wsData.forEach(row => { if(!row.isBreak) row.push(createCell('')); });
+            renderGrid();
+        });
+
+        document.getElementById('btn-add-row').addEventListener('click', () => {
+            let row = wsHeaders.map(() => createCell(''));
+            if(activeSelection.type === 'row') wsData.splice(activeSelection.index + 1, 0, row);
+            else wsData.push(row);
+            renderGrid();
+        });
+
+        // 5. Settings Bar Events
+        document.getElementById('ws-btn-load').addEventListener('click', loadGridData);
+        document.getElementById('ws-group').addEventListener('change', loadGridData);
+        
+        document.getElementById('ws-paper').addEventListener('change', (e) => {
+            document.getElementById('ws-paper-sheet').className = `paper-sheet orientation-${document.getElementById('ws-orient').value} paper-${e.target.value}`;
+        });
+        document.getElementById('ws-orient').addEventListener('change', (e) => {
+            document.getElementById('ws-paper-sheet').className = `paper-sheet paper-${document.getElementById('ws-paper').value} orientation-${e.target.value}`;
+        });
+
+        const updateHeading = () => { document.getElementById('ws-print-custom-heading').textContent = document.getElementById('ws-heading').value; };
+        document.getElementById('ws-heading').addEventListener('input', updateHeading);
+
+        document.getElementById('ws-show-header').addEventListener('change', (e) => {
+            document.getElementById('ws-print-header').style.display = e.target.checked ? '' : 'none';
+        });
+
+        // 6. Print & Export
+        document.getElementById('ws-btn-print').addEventListener('click', () => {
+            activeSelection = { type: null, index: -1 }; // Clear selection before print
+            renderGrid();
+            updateHeading();
+            setTimeout(() => window.print(), 100);
+        });
+
+        document.getElementById('ws-btn-export').addEventListener('click', () => {
+            if(typeof XLSX === 'undefined') return alert("SheetJS missing");
+            let exportData = [wsHeaders.map(h => h.label)];
+            wsData.forEach(row => { if(!row.isBreak) exportData.push(row.map(c => c.v)); });
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(exportData);
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, "Class_Report.xlsx");
+        });
+
+        // Paste functionality
+        document.addEventListener('paste', (e) => {
+            if (!document.activeElement.closest('.worksheet-table td')) return; 
+            e.preventDefault();
+            let pasteData = (e.clipboardData || window.clipboardData).getData('text');
+            if(!pasteData || activeSelection.type !== 'cell') return;
+            
+            let rows = pasteData.split(/\r?\n/).filter(r => r.trim() !== '');
+            let startRow = activeSelection.r, startCol = activeSelection.c;
+
+            rows.forEach((rowStr, i) => {
+                let cols = rowStr.split('\t');
+                let tRow = startRow + i;
+                if(!wsData[tRow] || wsData[tRow].isBreak) return;
+                cols.forEach((val, j) => {
+                    let tCol = startCol + j;
+                    if(tCol < wsHeaders.length && tCol >= 3) { // Protect DB cols on paste
+                        wsData[tRow][tCol].v = val.trim();
+                    }
+                });
+            });
+            renderGrid();
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initWorksheetEngine();
+    });
+  </script>
 </body>
 </html>

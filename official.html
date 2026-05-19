@@ -44,8 +44,8 @@
     input, select, textarea { background-color: #ffffff; border-color: #d1d5db; color: #1f2937; transition: border 0.2s; outline: none; }
     input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
 
-    header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 15px; z-index: 1000; border: 1px solid #f1f5f9; height: var(--header-height); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border-radius: 16px; margin: 15px auto; width: calc(100% - 30px); max-width: 1200px; }
-    @media (max-width: 768px) { header { margin: 10px; width: calc(100% - 20px); border-radius: 12px; top: 10px; } }
+    header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: relative; z-index: 1000; border: 1px solid #f1f5f9; height: var(--header-height); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border-radius: 16px; margin: 15px auto 10px auto; width: calc(100% - 30px); max-width: 1200px; }
+    @media (max-width: 768px) { header { margin: 10px auto; width: calc(100% - 20px); border-radius: 12px; } }
     .nav-container { height: 100%; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; position: relative; }
     .header-logo-box { width: 45px; height: 45px; flex-shrink: 0; z-index: 10; display: flex; align-items: center;}
     .header-logo-box img { max-height: 100%; max-width: 100%; border-radius: 8px; object-fit: contain; opacity: 0; transition: opacity 0.5s ease; }
@@ -123,7 +123,7 @@
     .detail-value{font-size:12px;color:#0f172a;font-weight:600;word-break:break-word}
 
     /* ==========================================
-       EXCEL SPREADSHEET UI STYLES
+       EXCEL SPREADSHEET UI STYLES (UPDATED)
        ========================================== */
 
     .excel-container { display: flex; flex-direction: column; height: 100%; background: #f3f2f1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
@@ -177,7 +177,7 @@
     .excel-workspace::-webkit-scrollbar-thumb:hover { background: #a19f9d; }
 
     /* Strict Canvas bounds */
-    .print-canvas { background: #fff; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; border-right: 2px dashed #ef4444; overflow-x: visible; transition: padding 0.2s;}
+    .print-canvas { background: #fff; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: visible; transition: padding 0.2s; border-right: 2px dashed #ef4444;}
     
     /* Strict A4 Base dimensions (approx 96dpi) */
     .print-canvas[data-orient="portrait"] { width: 210mm; min-height: 297mm;}
@@ -193,9 +193,9 @@
     .row-header.selected { border-bottom: 1px solid #d4d4d4 !important; border-right: 2px solid #107c41 !important;}
     
     /* Freeze Panes CSS */
-    .excel-table thead tr:first-child th { position: sticky; top: 0; z-index: 30; }
-    .excel-table td.row-header { position: sticky; left: 0; z-index: 25; }
-    .excel-table th.select-all-corner { position: sticky; top: 0; left: 0; z-index: 40; }
+    .excel-table thead tr:first-child th { position: sticky; top: 0; z-index: 30; box-shadow: 0 1px 2px rgba(0,0,0,0.1);}
+    .excel-table td.row-header { position: sticky; left: 0; z-index: 25; box-shadow: 1px 0 2px rgba(0,0,0,0.05);}
+    .excel-table th.select-all-corner { position: sticky; top: 0; left: 0; z-index: 40; box-shadow: 1px 1px 2px rgba(0,0,0,0.1);}
 
     /* Cells */
     .excel-cell { outline: none; transition: 0.1s; white-space: nowrap; overflow: hidden; position: relative;}
@@ -260,8 +260,8 @@
     </div>
   </div>
 
-  <div id="official-app" class="hidden h-screen flex flex-col relative overflow-hidden">
-    <header class="no-print shrink-0 z-10">
+  <div id="official-app" class="hidden h-screen flex flex-col bg-slate-50">
+    <header class="no-print shrink-0 relative z-[1000] bg-white">
       <div class="nav-container">
         <div class="header-logo-box">
           <img id="header-logo" src="assets/images/logo.png" alt="Logo" onerror="this.style.display='none'">
@@ -290,8 +290,8 @@
       </div>
     </header>
 
-    <main id="app" class="flex-grow flex flex-col overflow-hidden relative w-full">
-      <div id="page-content" class="h-full overflow-y-auto w-full relative z-0">
+    <main id="app" class="flex-grow flex flex-col overflow-hidden relative w-full z-0">
+      <div id="page-content" class="h-full overflow-y-auto w-full relative">
         <section id="official-tab-dashboard" class="official-tab p-4"></section>
         <section id="official-tab-students" class="official-tab hidden p-4"></section>
         <section id="official-tab-summary" class="official-tab hidden p-4"></section>
@@ -299,8 +299,8 @@
         <section id="official-tab-home" class="official-tab hidden p-4"></section>
       </div>
       
-      <!-- Excel Interface Container (Takes absolute priority to avoid layout push) -->
-      <section id="official-tab-export" class="official-tab hidden h-full flex-col bg-[#f3f2f1] w-full absolute inset-0 z-50"></section>
+      <!-- Excel Interface Container -->
+      <section id="official-tab-export" class="official-tab hidden h-full flex-col bg-[#f3f2f1] w-full"></section>
     </main>
 
     <!-- Modal details -->
@@ -455,10 +455,11 @@
       classId: '', paper: 'A4', orientation: 'portrait', margin: '20px', sortBy: 'name', groupBy: 'mixed',
       showHeader: false, repeatHeader: false, customTitle: '', activeTab: 'home',
       columns: [
-        { id: 'col_sno', field: 'SNO', title: 'S.No', width: '60px' },
-        { id: 'col_name', field: 'name', title: 'Student Name', width: '250px' },
+        { id: 'col_sno', field: 'SNO', title: 'S.No', width: 'auto' },
+        { id: 'col_name', field: 'name', title: 'Student Name', width: 'auto' },
         { id: 'col_c1', field: 'CUSTOM', title: 'Custom Sp.', width: '150px' },
-        { id: 'col_c2', field: 'CUSTOM', title: 'Custom Sp.', width: '150px' }
+        { id: 'col_c2', field: 'CUSTOM', title: 'Custom Sp.', width: '150px' },
+        { id: 'col_c3', field: 'CUSTOM', title: 'Custom Sp.', width: '150px' }
       ]
     };
 
@@ -574,12 +575,13 @@
       
       const targetEl = document.getElementById(`official-tab-${target}`);
       if(targetEl) {
-          targetEl.classList.remove('hidden');
           if (target === 'export') {
-              targetEl.classList.add('flex'); 
               document.getElementById('page-content').classList.add('hidden');
+              targetEl.classList.remove('hidden');
+              targetEl.classList.add('flex'); 
           } else {
               document.getElementById('page-content').classList.remove('hidden');
+              targetEl.classList.remove('hidden');
           }
       }
 
@@ -1429,16 +1431,6 @@
         const wb = XLSX.utils.table_to_book(tableClone, {sheet: "Report"});
         XLSX.writeFile(wb, `${builderConfig.classId ? 'Class_'+builderConfig.classId : 'Report'}_${formatDate(new Date())}.xlsx`);
       });
-    };
-
-    const updateCanvasStyle = () => {
-      const canvas = document.getElementById('print-canvas');
-      if(canvas) {
-        canvas.dataset.paper = builderConfig.paper;
-        canvas.dataset.orient = builderConfig.orientation;
-        canvas.style.padding = builderConfig.margin;
-      }
-      updatePrintStyles();
     };
 
     const attachTableFormatListeners = () => {

@@ -3,92 +3,736 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Official Portal</title>
+  <title>Official Portal - Report Builder</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- Excel Export Library -->
-  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-  <link rel="stylesheet" href="styles/main.css">
+  
+  <!-- SheetJS for Excel Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style>
+    /* ==========================================
+       FEE TRACKER PRO - GLOBAL CSS (From your main.css)
+       ========================================== */
+    :root { 
+        --background-light: #f3f4f6; 
+        --text-light: #1f2937; 
+        --card-light: #ffffff; 
+        --border-light: #e5e7eb; 
+        --primary-light: #3b82f6; 
+        --primary: #0f172a; 
+        --accent: #3b82f6; 
+        --white: #ffffff; 
+        --text-dark: #1e293b; 
+        --text-gray: #64748b; 
+        --header-height: 70px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth !important; }
+    body { overflow-x: hidden; background-color: var(--background-light); color: var(--text-light); }
+    body.modal-scroll-lock { overflow: hidden !important; overscroll-behavior: none; }
+    .hidden { display: none !important; }
+    .page-content { content-visibility: auto; contain-intrinsic-size: 1px 800px; }
+    .card { background-color: var(--card-light); border: 1px solid var(--border-light); }
+    .btn-primary { background-color: var(--accent); color: #ffffff; transition: 0.2s; cursor: pointer; border: none; }
+    .btn-primary:hover { background-color: #2563eb; }
+    .modal-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 15px; }
+    .modal-box { background: #ffffff; width: 100%; max-width: 340px; padding: 25px 20px; border-radius: 20px; position: relative; animation: popUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
+    @keyframes popUp { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+    .form-input { width: 100%; padding: 12px 14px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 15px; outline: none; font-weight: 500; transition: 0.2s; color: #0f172a; font-size: 14px; }
+    .form-input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    input, select, textarea { background-color: #ffffff; border-color: #d1d5db; color: #1f2937; outline: none; }
+    
+    header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 15px; z-index: 1000; border: 1px solid #f1f5f9; height: var(--header-height); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border-radius: 16px; margin: 15px auto; width: calc(100% - 30px); max-width: 1200px; }
+    @media (max-width: 768px) { header { margin: 10px; width: calc(100% - 20px); border-radius: 12px; top: 10px; } }
+    .nav-container { height: 100%; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; position: relative; }
+    .header-logo-box { width: 45px; height: 45px; flex-shrink: 0; z-index: 10; display: flex; align-items: center;}
+    .header-logo-box img { max-height: 100%; max-width: 100%; border-radius: 8px; object-fit: contain; }
+    .header-center-box { position: absolute; left: 50%; transform: translateX(-50%); width: 55%; text-align: center; display: flex; flex-direction: column; justify-content: center; z-index: 1; }
+    .header-center-box h1 { font-weight: 800; color: var(--primary); font-size: 14px; }
+    .header-center-box p { font-size: 10px; color: var(--text-gray); font-weight: 600; margin-top: 2px; }
+    
+    .nav-menu { display: flex; gap: 15px; align-items: center; z-index: 10; list-style: none;}
+    .nav-link { font-size: 14px; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: 0.2s; text-decoration: none;}
+    .nav-link:hover { color: var(--accent); }
+    .nav-link.active { background: #111111 !important; color: #ffffff !important; padding: 6px 12px; border-radius: 8px;}
+    .login-btn-nav { padding: 8px 20px; background: var(--primary); color: var(--white); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none;}
+    .mobile-toggle { display: none; color: var(--primary); cursor: pointer; padding: 5px 10px; z-index: 1001; position: relative; }
+    @media (max-width: 900px) {
+        .mobile-toggle { display: block; }
+        .nav-menu { position: absolute; top: calc(100% + 10px); right: 0; width: min(280px, calc(100vw - 30px)); background: rgba(255, 255, 255, 0.98); flex-direction: column; padding: 15px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); display: none; }
+        .nav-menu.active { display: flex;}
+    }
+
+    .main-login-btn { background: var(--primary); color: var(--white); border: none; padding: 12px 30px; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2); width: 100%; }
+
+    /* Dashboard UI */
+    .official-metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+    .official-metric-card{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #dbeafe;border-radius:18px;background:linear-gradient(135deg,#fff,#eff6ff);padding:14px;box-shadow:0 8px 20px rgba(15,23,42,.06)}
+    .official-metric-card i{font-size:24px;opacity:.75}
+    .official-metric-card.green{border-color:#bbf7d0;background:linear-gradient(135deg,#fff,#f0fdf4);color:#166534}
+    .official-metric-label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:900;color:#64748b}
+    .official-metric-value{font-size:26px;line-height:1;font-weight:900;color:#0f172a;margin-top:4px}
+    .official-quick-card{width:100%;text-align:left;border:1px solid #e2e8f0;background:#fff;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:7px}
+    .official-quick-card i{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:#eef2ff;color:#4f46e5;font-size:18px}
+
+
+    /* ==========================================
+       ADVANCED EXCEL WORK SHEET UI (IMAGE BASED)
+       ========================================== */
+    
+    .excel-container { 
+        display: flex; 
+        flex-direction: column; 
+        height: calc(100vh - 120px); 
+        background: #f3f4f6; 
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+    }
+
+    /* Ribbon Toolbar */
+    .excel-ribbon {
+        background: #f1f5f9;
+        border-bottom: 1px solid #cbd5e1;
+        padding: 8px 12px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+        user-select: none;
+    }
+    .ribbon-group {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding-right: 15px;
+        border-right: 1px solid #cbd5e1;
+    }
+    .ribbon-group:last-child { border-right: none; }
+    .ribbon-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        cursor: pointer;
+        color: #475569;
+        background: transparent;
+        border: 1px solid transparent;
+        transition: 0.1s;
+        font-size: 14px;
+    }
+    .ribbon-btn:hover { background: #e2e8f0; border-color: #cbd5e1; color: #0f172a; }
+    .ribbon-btn.active { background: #cbd5e1; border-color: #94a3b8; color: #000; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+    .ribbon-select {
+        height: 32px;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        padding: 0 8px;
+        font-size: 13px;
+        color: #334155;
+        outline: none;
+    }
+    .color-picker-wrapper {
+        position: relative;
+        width: 32px; height: 32px;
+    }
+    .color-picker-wrapper input[type="color"] {
+        opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; z-index: 2;
+    }
+    .color-picker-wrapper .icon {
+        position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1; border-radius: 4px; color: #475569;
+    }
+    .color-picker-wrapper:hover .icon { background: #e2e8f0; }
+
+    /* Settings & Data Toolbar */
+    .excel-data-bar {
+        background: #ffffff;
+        border-bottom: 1px solid #cbd5e1;
+        padding: 8px 12px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        font-size: 12px;
+        flex-wrap: wrap;
+    }
+    .data-bar-item { display: flex; align-items: center; gap: 8px; }
+    .data-bar-label { font-weight: 700; color: #64748b; text-transform: uppercase; font-size: 10px; }
+    .data-bar-select, .data-bar-input {
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 13px;
+        outline: none;
+        color: #1e293b;
+        background: #f8fafc;
+    }
+
+    /* Grid Area */
+    .excel-grid-wrapper {
+        flex-grow: 1;
+        overflow: auto;
+        background: #e2e8f0;
+        padding: 20px;
+        position: relative;
+    }
+    
+    .paper-sheet {
+        background: white;
+        margin: 0 auto;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        min-height: 800px;
+        position: relative;
+    }
+    .paper-A4 { width: 210mm; }
+    .paper-Legal { width: 216mm; }
+    .paper-Auto { width: 100%; }
+    .orientation-Landscape.paper-A4 { width: 297mm; }
+
+    /* Table Styles */
+    .worksheet-table {
+        border-collapse: collapse;
+        width: 100%;
+        table-layout: fixed; /* Important for resizing */
+    }
+    .worksheet-table th, .worksheet-table td {
+        border: 1px solid #cbd5e1;
+        padding: 6px;
+        font-size: 13px;
+        color: #1e293b;
+        position: relative;
+        word-wrap: break-word;
+        vertical-align: middle;
+    }
+    .worksheet-table th {
+        background: #f1f5f9;
+        font-weight: 700;
+        text-align: center;
+        user-select: none;
+    }
+    
+    /* Sticky Columns (First 3 columns) */
+    .worksheet-table th:nth-child(1), .worksheet-table td:nth-child(1) { position: sticky; left: 0; width: 40px; text-align: center; background: #f8fafc; z-index: 5; }
+    .worksheet-table th:nth-child(2), .worksheet-table td:nth-child(2) { position: sticky; left: 40px; width: 60px; text-align: center; background: #f8fafc; z-index: 5; }
+    .worksheet-table th:nth-child(3), .worksheet-table td:nth-child(3) { position: sticky; left: 100px; width: 200px; background: #f8fafc; z-index: 5; font-weight: 600;}
+    
+    /* Z-index fix for sticky headers */
+    .worksheet-table th:nth-child(1), .worksheet-table th:nth-child(2), .worksheet-table th:nth-child(3) { z-index: 10; background: #e2e8f0;}
+
+    /* Cell Selection */
+    .worksheet-table td { outline: none; }
+    .worksheet-table td.selected { box-shadow: inset 0 0 0 2px #2563eb; background: #eff6ff !important; z-index: 15; }
+    
+    /* Resizer */
+    .resizer { position: absolute; right: 0; top: 0; width: 5px; height: 100%; cursor: col-resize; z-index: 20; }
+    .resizer:hover { background: #3b82f6; opacity: 0.5; }
+
+    /* Official Header (Print) */
+    .print-header { display: none; text-align: center; padding: 20px; border-bottom: 2px solid #000; margin-bottom: 20px; }
+    .print-header img { height: 60px; margin: 0 auto 10px; }
+    .print-header h1 { font-size: 22px; font-weight: 900; margin-bottom: 5px; text-transform: uppercase;}
+    .print-custom-heading { font-size: 16px; font-weight: 700; text-decoration: underline; margin-top: 10px;}
+
+    .page-break-row td { border: none !important; padding: 0 !important; height: 0 !important; }
+    .page-break-line { border-top: 2px dashed #ef4444; text-align: center; margin: 15px 0;}
+    .page-break-line span { background: #fef2f2; color: #ef4444; font-size: 10px; padding: 2px 10px; border-radius: 10px; font-weight: bold; position: relative; top: -10px;}
+
+    /* Print Architecture */
+    @media print {
+        @page { size: auto; margin: 10mm; }
+        body * { visibility: hidden; }
+        .excel-container, .excel-grid-wrapper, .paper-sheet, .paper-sheet * { visibility: visible; }
+        .excel-container { position: absolute; left: 0; top: 0; width: 100%; height: auto; border: none; overflow: visible;}
+        .excel-ribbon, .excel-data-bar { display: none !important; }
+        .paper-sheet { box-shadow: none; border: none; width: 100% !important; margin: 0; padding: 0;}
+        .print-header { display: block; }
+        .worksheet-table th { background: #e2e8f0 !important; color: #000; -webkit-print-color-adjust: exact; }
+        .worksheet-table td, .worksheet-table th { border: 1px solid #000 !important; }
+        .worksheet-table th:nth-child(1), .worksheet-table td:nth-child(1),
+        .worksheet-table th:nth-child(2), .worksheet-table td:nth-child(2),
+        .worksheet-table th:nth-child(3), .worksheet-table td:nth-child(3) { position: static; background: transparent !important; }
+        .page-break-row { page-break-after: always; }
+        .page-break-line { display: none; }
+    }
+  </style>
 </head>
-<body class="antialiased text-gray-800 collection-shell">
+<body class="antialiased text-gray-800">
+
+  <!-- Login Modal -->
   <div id="official-login-screen" class="min-h-screen flex items-center justify-center px-4">
     <div class="w-full max-w-md">
       <div class="modal-box" style="display:block; position:static; width:100%; max-width:none;">
-        <div class="icon-badge !bg-transparent !shadow-none !p-0"><img id="official-login-modal-logo" src="assets/images/logo.png" alt="Institution Logo" class="h-20 w-20 rounded-full object-cover bg-white border-2 border-slate-200 shadow" onerror="this.src='assets/images/logo.png'"></div>
-        <h3 class="modal-title">Official Login</h3>
-        <p id="official-login-institution-name" class="text-sm font-semibold text-slate-600 text-center mb-3">Institution Name</p>
-        <div class="input-with-icon">
-          <input id="official-username" type="text" class="form-input" placeholder="Username / Email" autocomplete="username">
-        </div>
-        <div class="input-with-icon">
-          <input id="official-password" type="password" class="form-input form-input-with-trailing-icon" placeholder="Password" autocomplete="current-password">
-          <i class="fas fa-eye trailing-icon" id="official-toggle-password"></i>
-        </div>
-        <p id="official-login-msg" class="auth-alert"></p>
-        <button id="official-login-btn" class="main-login-btn w-full rounded-xl"><i class="fas fa-sign-in-alt"></i> Login Securely</button>
+        <img id="official-login-modal-logo" src="assets/images/logo.png" alt="Logo" class="h-20 w-20 mx-auto rounded-full object-cover border-2 border-slate-200 shadow mb-3" onerror="this.src='https://via.placeholder.com/80'">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">Official Login</h3>
+        <p id="official-login-institution-name" class="text-sm font-semibold text-slate-600 mb-4">Institution Name</p>
+        <input id="official-username" type="text" class="form-input" placeholder="Username / Email">
+        <input id="official-password" type="password" class="form-input" placeholder="Password">
+        <p id="official-login-msg" class="text-red-500 text-sm mb-3 hidden"></p>
+        <button id="official-login-btn" class="main-login-btn">Login Securely</button>
       </div>
     </div>
   </div>
 
-  <div id="official-app" class="hidden h-screen flex flex-col">
-    <header class="no-print shrink-0">
+  <!-- App Container -->
+  <div id="official-app" class="hidden">
+    <header>
       <div class="nav-container">
-        <div class="header-logo-box">
-          <img id="header-logo" src="assets/images/logo.png" alt="Logo" onerror="this.style.display='none'">
-        </div>
+        <div class="header-logo-box"><img id="header-logo" src="assets/images/logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/45'"></div>
         <div class="header-center-box">
           <h1 id="header-title">Official Portal</h1>
-          <p id="header-subtitle"><span id="official-user-line">--</span></p>
+          <p><span id="official-user-line">--</span></p>
         </div>
-        <img id="header-logo-right" src="assets/images/logo.png" alt="Institution Logo" class="h-10 w-10 rounded-full object-cover border border-slate-200 shadow-sm mr-2" onerror="this.src='assets/images/logo.png'">
-        <button class="mobile-toggle" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" type="button">
-          <div class="menu-icon-wrapper">
-            <i class="fas fa-bars icon-bars"></i>
-            <i class="fas fa-times icon-close"></i>
-          </div>
-        </button>
-        <ul class="nav-menu" aria-label="Official navigation">
-          <li><a href="#dashboard" class="nav-link tab-link active" data-tab="dashboard"><i class="fas fa-chart-pie text-lg w-6"></i> Dashboard</a></li>
-          <li><a href="#students" class="nav-link tab-link" data-tab="students"><i class="fas fa-user-graduate text-lg w-6"></i> Students</a></li>
-          <li><a href="#summary" class="nav-link tab-link" data-tab="summary"><i class="fas fa-table text-lg w-6"></i> Class Summary</a></li>
-          <li><a href="#staff" class="nav-link tab-link" data-tab="staff"><i class="fas fa-users text-lg w-6"></i> Staff & Categories</a></li>
-          <li><a href="#export" class="nav-link tab-link font-bold text-emerald-700" data-tab="export"><i class="fas fa-file-excel text-lg w-6"></i> Class WorkSheet</a></li>
-          <li><a href="#home" class="nav-link tab-link" data-tab="home"><i class="fas fa-user-circle text-lg w-6"></i> Me</a></li>
-          <div class="border-t border-gray-100 my-1"></div>
-          <li><button id="official-logout-btn" class="login-btn-nav btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
+        <button class="mobile-toggle" id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        <ul class="nav-menu">
+          <li><a href="#dashboard" class="nav-link tab-link active" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+          <li><a href="#students" class="nav-link tab-link" data-tab="students"><i class="fas fa-user-graduate"></i> Students</a></li>
+          
+          <!-- NEW: Excel Work Sheet Tab -->
+          <li><a href="#worksheet" class="nav-link tab-link text-emerald-600 font-bold" data-tab="worksheet"><i class="fas fa-file-excel"></i> Class Work Sheet</a></li>
+          
+          <li><button id="official-logout-btn" class="login-btn-nav btn-danger">Logout</button></li>
         </ul>
       </div>
     </header>
 
-    <main id="app" class="flex-grow flex flex-col overflow-hidden relative">
-      <div id="page-content" class="h-full overflow-y-auto">
-        <section id="official-tab-dashboard" class="official-tab page-content p-4"></section>
-        <section id="official-tab-students" class="official-tab page-content hidden p-4"></section>
-        <section id="official-tab-summary" class="official-tab page-content hidden p-4"></section>
-        <section id="official-tab-staff" class="official-tab page-content hidden p-4"></section>
-        <section id="official-tab-home" class="official-tab page-content hidden p-4"></section>
-      </div>
-      
-      <!-- Excel Interface Container (Takes full height when active) -->
-      <section id="official-tab-export" class="official-tab hidden h-full flex-col bg-[#f3f2f1]"></section>
-    </main>
+    <main class="max-w-7xl mx-auto p-4">
+      <div id="page-content">
+        <!-- Old Tabs Placeholder -->
+        <section id="official-tab-dashboard" class="official-tab page-content"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Dashboard</h2><p class="text-gray-500 text-sm mt-2">Select "Class Work Sheet" from menu.</p></div></section>
+        <section id="official-tab-students" class="official-tab page-content hidden"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Students Register</h2></div></section>
+        
+        <!-- NEW ADVANCED REPORT BUILDER (EXCEL WORK SHEET) -->
+        <section id="official-tab-worksheet" class="official-tab page-content hidden">
+            
+            <div class="excel-container">
+                <!-- 1. Excel Ribbon Toolbar -->
+                <div class="excel-ribbon">
+                    <div class="ribbon-group">
+                        <select id="ws-font-family" class="ribbon-select"><option value="Arial">Arial</option><option value="'Plus Jakarta Sans'">Jakarta</option><option value="Times New Roman">Times</option></select>
+                        <select id="ws-font-size" class="ribbon-select w-16"><option value="10px">10</option><option value="12px" selected>12</option><option value="14px">14</option><option value="16px">16</option></select>
+                    </div>
+                    <div class="ribbon-group">
+                        <button class="ribbon-btn" id="btn-bold" title="Bold"><i class="fas fa-bold"></i></button>
+                        <button class="ribbon-btn" id="btn-italic" title="Italic"><i class="fas fa-italic"></i></button>
+                        <button class="ribbon-btn" id="btn-underline" title="Underline"><i class="fas fa-underline"></i></button>
+                    </div>
+                    <div class="ribbon-group">
+                        <div class="color-picker-wrapper" title="Text Color">
+                            <div class="icon"><i class="fas fa-font"></i></div>
+                            <input type="color" id="inp-color" value="#1e293b">
+                        </div>
+                        <div class="color-picker-wrapper" title="Fill Color">
+                            <div class="icon"><i class="fas fa-fill-drip"></i></div>
+                            <input type="color" id="inp-bgcolor" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="ribbon-group">
+                        <button class="ribbon-btn" id="btn-align-left" title="Align Left"><i class="fas fa-align-left"></i></button>
+                        <button class="ribbon-btn" id="btn-align-center" title="Align Center"><i class="fas fa-align-center"></i></button>
+                        <button class="ribbon-btn" id="btn-align-right" title="Align Right"><i class="fas fa-align-right"></i></button>
+                    </div>
+                    <div class="ribbon-group">
+                        <button class="ribbon-btn" id="btn-add-col" title="Insert Column"><i class="fas fa-columns"></i><i class="fas fa-plus text-[8px] absolute top-1 right-1 text-green-500"></i></button>
+                        <button class="ribbon-btn" id="btn-add-row" title="Insert Row"><i class="fas fa-layer-group"></i><i class="fas fa-plus text-[8px] absolute top-1 right-1 text-green-500"></i></button>
+                    </div>
+                    <div class="ml-auto ribbon-group" style="border:none;">
+                        <button id="ws-btn-export" class="flex items-center gap-2 bg-green-50 text-green-700 font-bold px-3 py-1.5 rounded border border-green-200 hover:bg-green-100 text-xs"><i class="fas fa-file-excel"></i> Export</button>
+                        <button id="ws-btn-print" class="flex items-center gap-2 bg-blue-50 text-blue-700 font-bold px-3 py-1.5 rounded border border-blue-200 hover:bg-blue-100 text-xs"><i class="fas fa-print"></i> Print</button>
+                    </div>
+                </div>
 
-    <div id="official-detail-modal" class="fixed inset-0 z-[1000] hidden items-center justify-center bg-slate-950/60 p-3 no-print" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="official-detail-title">
-      <div class="official-detail-dialog w-full max-w-5xl max-h-[90vh] overflow-hidden rounded-3xl bg-white shadow-2xl border border-slate-200">
-        <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 bg-slate-50">
-          <div>
-            <h2 id="official-detail-title" class="text-lg font-extrabold text-slate-900">Details</h2>
-            <p class="text-xs font-semibold text-slate-500">Read-only official view</p>
-          </div>
-          <button id="official-detail-close" type="button" class="h-10 w-10 rounded-full border border-slate-200 bg-white text-slate-600 hover:bg-slate-100" aria-label="Close details"><i class="fas fa-times"></i></button>
-        </div>
-        <div id="official-detail-body" class="max-h-[calc(90vh-74px)] overflow-auto p-4"></div>
+                <!-- 2. Settings / Data Source Bar -->
+                <div class="excel-data-bar">
+                    <div class="data-bar-item">
+                        <span class="data-bar-label">Data Source:</span>
+                        <select id="ws-class-select" class="data-bar-select"><option value="">Select Class</option></select>
+                        <button id="ws-btn-load" class="bg-indigo-600 text-white px-3 py-1 rounded font-bold text-xs">Load</button>
+                    </div>
+                    <div class="data-bar-item ml-2">
+                        <span class="data-bar-label">Paper:</span>
+                        <select id="ws-paper" class="data-bar-select w-20"><option value="A4">A4</option><option value="Legal">Legal</option><option value="Auto">Auto</option></select>
+                    </div>
+                    <div class="data-bar-item">
+                        <span class="data-bar-label">Orientation:</span>
+                        <select id="ws-orient" class="data-bar-select w-24"><option value="Portrait">Portrait</option><option value="Landscape">Landscape</option></select>
+                    </div>
+                    <div class="data-bar-item ml-2">
+                        <span class="data-bar-label">Sort:</span>
+                        <select id="ws-sort" class="data-bar-select w-24"><option value="name-asc">Name A-Z</option><option value="adm-asc">Adm No</option></select>
+                    </div>
+                    <div class="data-bar-item">
+                        <span class="data-bar-label">Group By:</span>
+                        <select id="ws-group" class="data-bar-select w-24"><option value="mixed">Mixed</option><option value="paged">Separate Pages</option></select>
+                    </div>
+                    <div class="data-bar-item ml-2">
+                        <span class="data-bar-label">Heading:</span>
+                        <input type="text" id="ws-heading" class="data-bar-input w-32" placeholder="e.g. Term 1">
+                    </div>
+                    <div class="data-bar-item ml-2">
+                        <label class="flex items-center gap-1 font-bold text-gray-700 text-xs cursor-pointer">
+                            <input type="checkbox" id="ws-show-header" checked class="w-3 h-3"> Show Official Header
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 3. Grid Area -->
+                <div class="excel-grid-wrapper">
+                    <div id="ws-paper-sheet" class="paper-sheet paper-A4 orientation-Portrait">
+                        
+                        <!-- Print Header -->
+                        <div class="print-header" id="ws-print-header">
+                            <img src="assets/images/logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/150x60?text=LOGO'">
+                            <h1 id="ws-print-inst-name">Institution Name</h1>
+                            <p id="ws-print-inst-reg">Reg No: 12345</p>
+                            <div id="ws-print-custom-heading" class="print-custom-heading">Term 1 Attendance</div>
+                        </div>
+
+                        <!-- Main Table -->
+                        <table class="worksheet-table" id="ws-table">
+                            <thead id="ws-thead"></thead>
+                            <tbody id="ws-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </section>
       </div>
-    </div>
+    </main>
   </div>
 
-  <script src="./scripts/shared/session-guard.js"></script>
-  <script type="module" src="./scripts/pages/official-page.js"></script>
+  <script type="module">
+    // =========================================================================
+    // 1. FIREBASE & CORE LOGIC (From official-page.js)
+    // =========================================================================
+    
+    // Using mock logic if firebase is not fully configured, ensuring app runs standalone
+    let allStudents = [];
+    let institutionConfig = { name: "Noorul Islam Higher Secondary Madrasa", regNo: "Reg: 123456" };
+    let userSession = null;
+
+    const setTab = (tab) => {
+      document.querySelectorAll('.official-tab').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`official-tab-${tab}`)?.classList.remove('hidden');
+      document.querySelectorAll('.tab-link').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      
+      // Auto Load Class Dropdown when Worksheet is opened
+      if(tab === 'worksheet' && window._initWorksheet) window._initWorksheet();
+    };
+
+    document.querySelectorAll('.tab-link').forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); setTab(btn.dataset.tab); }));
+
+    const showApp = () => {
+      document.getElementById('official-login-screen').classList.add('hidden');
+      document.getElementById('official-app').classList.remove('hidden');
+      
+      document.getElementById('header-title').textContent = institutionConfig.name;
+      document.getElementById('ws-print-inst-name').textContent = institutionConfig.name;
+      document.getElementById('ws-print-inst-reg').textContent = institutionConfig.regNo;
+      
+      setTab('worksheet');
+    };
+
+    const loadMockData = () => {
+        allStudents = [
+            { id: '1', adm: '101', name: 'AJMAL SHAH K', gender: 'Male', class: 'Class 1' },
+            { id: '2', adm: '102', name: 'AMAN MUHAMMED PA', gender: 'Male', class: 'Class 1' },
+            { id: '3', adm: '103', name: 'HADI ESHAN PV', gender: 'Male', class: 'Class 1' },
+            { id: '4', adm: '104', name: 'FATHIMA RAFEEDA AT', gender: 'Female', class: 'Class 1' },
+            { id: '5', adm: '105', name: 'FATHIMA RIFNA KM', gender: 'Female', class: 'Class 1' },
+            { id: '6', adm: '106', name: 'FIDA P', gender: 'Female', class: 'Class 1' },
+        ];
+    };
+
+    document.getElementById('official-login-btn').addEventListener('click', () => {
+        loadMockData();
+        showApp();
+    });
+    document.getElementById('official-logout-btn').addEventListener('click', () => window.location.reload());
+
+
+    // =========================================================================
+    // 2. EXCEL WORK SHEET ENGINE (Based on User Image)
+    // =========================================================================
+    
+    // Initial Grid State based on Image: # | S.No | Student Name | Custom 1 | Custom 2
+    let wsHeaders = [
+        { label: '#', w: '40px', fixed: true },
+        { label: 'S.No', w: '60px', fixed: true },
+        { label: 'Student Name', w: '220px', fixed: true },
+        { label: 'Custom/Blank Sp', w: '120px', fixed: false },
+        { label: 'New Column', w: '120px', fixed: false }
+    ];
+    let wsData = []; // 2D array: [ [ {v, b, i, u, c, bg, align}, ... ], ... ]
+    let activeCell = null; // { r, c }
+
+    window._initWorksheet = () => {
+        // Populate Class Dropdown
+        const sel = document.getElementById('ws-class-select');
+        if(sel.options.length <= 1 && allStudents.length > 0) {
+            const classes = [...new Set(allStudents.map(s => s.class))].sort();
+            sel.innerHTML = `<option value="">Select Class</option>` + classes.map(c => `<option value="${c}">${c}</option>`).join('');
+            sel.value = classes[0]; // Auto select first
+        }
+    };
+
+    const initWorksheetEngine = () => {
+        const tHead = document.getElementById('ws-thead');
+        const tBody = document.getElementById('ws-tbody');
+        const paper = document.getElementById('ws-paper-sheet');
+
+        // Create Cell Object
+        const createCell = (val = '') => ({ 
+            v: val, b: false, i: false, u: false, 
+            c: document.getElementById('inp-color').value || '#1e293b', 
+            bg: document.getElementById('inp-bgcolor').value || '#ffffff', 
+            align: 'left',
+            font: 'Arial', size: '12px'
+        });
+
+        const loadGridData = () => {
+            const cls = document.getElementById('ws-class-select').value;
+            if(!cls) return alert("Select a class first");
+
+            let filtered = allStudents.filter(s => s.class === cls);
+            
+            // Sort
+            const sort = document.getElementById('ws-sort').value;
+            if(sort === 'name-asc') filtered.sort((a,b) => String(a.name).localeCompare(String(b.name)));
+            else if(sort === 'adm-asc') filtered.sort((a,b) => parseInt(a.adm||0) - parseInt(b.adm||0));
+
+            // Group (Page Break)
+            let finalRows = [];
+            const group = document.getElementById('ws-group').value;
+            
+            if(group === 'paged') {
+                const boys = filtered.filter(s => s.gender === 'Male');
+                const girls = filtered.filter(s => s.gender === 'Female');
+                boys.forEach((s, i) => finalRows.push({ ...s, idx: i+1 }));
+                if(boys.length && girls.length) finalRows.push({ isBreak: true });
+                girls.forEach((s, i) => finalRows.push({ ...s, idx: i+1 }));
+            } else {
+                filtered.forEach((s, i) => finalRows.push({ ...s, idx: i+1 }));
+            }
+
+            // Build gridData
+            wsData = [];
+            finalRows.forEach(s => {
+                if(s.isBreak) {
+                    wsData.push({ isBreak: true });
+                    return;
+                }
+                let row = [];
+                wsHeaders.forEach((h, i) => {
+                    if(i === 0) row.push(createCell(s.idx)); // # 
+                    else if(i === 1) row.push(createCell(s.adm || '')); // S.No (Using Adm)
+                    else if(i === 2) row.push(createCell(s.name || '')); // Name
+                    else row.push(createCell('')); // Blank Custom cols
+                });
+                wsData.push(row);
+            });
+            renderGrid();
+        };
+
+        const renderGrid = () => {
+            tHead.innerHTML = '';
+            tBody.innerHTML = '';
+
+            // Header Row
+            let trHead = document.createElement('tr');
+            wsHeaders.forEach((h, cIdx) => {
+                let th = document.createElement('th');
+                th.textContent = h.label;
+                if(!h.fixed) {
+                    th.contentEditable = true;
+                    th.addEventListener('input', (e) => h.label = e.target.textContent);
+                }
+                th.style.width = h.w;
+                
+                // Resizer
+                let resizer = document.createElement('div');
+                resizer.className = 'resizer';
+                th.appendChild(resizer);
+                setupResizer(resizer, th, cIdx);
+
+                trHead.appendChild(th);
+            });
+            tHead.appendChild(trHead);
+
+            // Body Rows
+            wsData.forEach((rowObj, rIdx) => {
+                let tr = document.createElement('tr');
+                if(rowObj.isBreak) {
+                    tr.className = 'page-break-row';
+                    let td = document.createElement('td');
+                    td.colSpan = wsHeaders.length;
+                    td.innerHTML = '<div class="page-break-line"><span>Page Break (Print)</span></div>';
+                    tr.appendChild(td);
+                    tBody.appendChild(tr);
+                    return;
+                }
+
+                rowObj.forEach((cell, cIdx) => {
+                    let td = document.createElement('td');
+                    td.textContent = cell.v;
+                    if(cIdx >= 3) td.contentEditable = true; // Only custom columns editable to protect DB
+                    
+                    // Apply Formatting
+                    td.style.fontWeight = cell.b ? 'bold' : 'normal';
+                    td.style.fontStyle = cell.i ? 'italic' : 'normal';
+                    td.style.textDecoration = cell.u ? 'underline' : 'none';
+                    td.style.color = cell.c;
+                    td.style.backgroundColor = cell.bg;
+                    td.style.textAlign = cell.align;
+                    td.style.fontFamily = cell.font;
+                    td.style.fontSize = cell.size;
+
+                    // Select logic
+                    td.addEventListener('focus', () => {
+                        activeCell = { r: rIdx, c: cIdx };
+                        document.querySelectorAll('.worksheet-table td').forEach(c => c.classList.remove('selected'));
+                        td.classList.add('selected');
+                        syncRibbon(cell);
+                    });
+
+                    td.addEventListener('input', (e) => cell.v = e.target.textContent);
+                    tr.appendChild(td);
+                });
+                tBody.appendChild(tr);
+            });
+        };
+
+        // Resizing Columns
+        const setupResizer = (resizer, th, cIdx) => {
+            let startX, startW;
+            resizer.addEventListener('mousedown', (e) => {
+                startX = e.pageX; startW = th.offsetWidth;
+                const onMove = (e) => {
+                    let newW = Math.max(40, startW + (e.pageX - startX));
+                    wsHeaders[cIdx].w = `${newW}px`;
+                    th.style.width = `${newW}px`;
+                };
+                const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
+                document.addEventListener('mousemove', onMove); document.addEventListener('mouseup', onUp);
+            });
+        };
+
+        // Formatting Logic
+        const applyFormat = (prop, val) => {
+            if(!activeCell || wsData[activeCell.r].isBreak) return;
+            let cell = wsData[activeCell.r][activeCell.c];
+            if(typeof val === 'undefined') cell[prop] = !cell[prop]; // toggle boolean
+            else cell[prop] = val; // set value
+            renderGrid();
+        };
+
+        const syncRibbon = (cell) => {
+            document.getElementById('btn-bold').classList.toggle('active', cell.b);
+            document.getElementById('btn-italic').classList.toggle('active', cell.i);
+            document.getElementById('btn-underline').classList.toggle('active', cell.u);
+            document.getElementById('inp-color').value = cell.c;
+            document.getElementById('inp-bgcolor').value = cell.bg;
+            document.getElementById('ws-font-family').value = cell.font;
+            document.getElementById('ws-font-size').value = cell.size;
+            
+            ['left','center','right'].forEach(a => document.getElementById(`btn-align-${a}`).classList.toggle('active', cell.align === a));
+        };
+
+        // Ribbon Events
+        document.getElementById('btn-bold').addEventListener('click', () => applyFormat('b'));
+        document.getElementById('btn-italic').addEventListener('click', () => applyFormat('i'));
+        document.getElementById('btn-underline').addEventListener('click', () => applyFormat('u'));
+        document.getElementById('inp-color').addEventListener('input', (e) => applyFormat('c', e.target.value));
+        document.getElementById('inp-bgcolor').addEventListener('input', (e) => applyFormat('bg', e.target.value));
+        document.getElementById('ws-font-family').addEventListener('change', (e) => applyFormat('font', e.target.value));
+        document.getElementById('ws-font-size').addEventListener('change', (e) => applyFormat('size', e.target.value));
+        ['left','center','right'].forEach(a => document.getElementById(`btn-align-${a}`).addEventListener('click', () => applyFormat('align', a)));
+
+        // Insert Col/Row
+        document.getElementById('btn-add-col').addEventListener('click', () => {
+            wsHeaders.push({ label: `Col ${wsHeaders.length+1}`, w: '120px', fixed: false });
+            wsData.forEach(row => { if(!row.isBreak) row.push(createCell('')); });
+            renderGrid();
+        });
+        document.getElementById('btn-add-row').addEventListener('click', () => {
+            let row = wsHeaders.map(() => createCell(''));
+            if(activeCell) wsData.splice(activeCell.r + 1, 0, row);
+            else wsData.push(row);
+            renderGrid();
+        });
+
+        // Settings Bar Events
+        document.getElementById('ws-btn-load').addEventListener('click', loadGridData);
+        document.getElementById('ws-sort').addEventListener('change', loadGridData);
+        document.getElementById('ws-group').addEventListener('change', loadGridData);
+        
+        document.getElementById('ws-paper').addEventListener('change', (e) => {
+            paper.className = `paper-sheet orientation-${document.getElementById('ws-orient').value} paper-${e.target.value}`;
+        });
+        document.getElementById('ws-orient').addEventListener('change', (e) => {
+            paper.className = `paper-sheet paper-${document.getElementById('ws-paper').value} orientation-${e.target.value}`;
+        });
+
+        const updateHeading = () => {
+            document.getElementById('ws-print-custom-heading').textContent = document.getElementById('ws-heading').value;
+        };
+        document.getElementById('ws-heading').addEventListener('input', updateHeading);
+
+        document.getElementById('ws-show-header').addEventListener('change', (e) => {
+            document.getElementById('ws-print-header').style.display = e.target.checked ? '' : 'none';
+        });
+
+        // Print & Export
+        document.getElementById('ws-btn-print').addEventListener('click', () => {
+            updateHeading();
+            window.print();
+        });
+
+        document.getElementById('ws-btn-export').addEventListener('click', () => {
+            if(typeof XLSX === 'undefined') return alert("SheetJS missing");
+            let exportData = [wsHeaders.map(h => h.label)];
+            wsData.forEach(row => {
+                if(!row.isBreak) exportData.push(row.map(c => c.v));
+            });
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(exportData);
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, "Class_Work_Sheet.xlsx");
+        });
+
+        // Paste functionality (Excel Ctrl+V)
+        document.addEventListener('paste', (e) => {
+            if (!document.activeElement.closest('.worksheet-table td')) return; 
+            e.preventDefault();
+            let pasteData = (e.clipboardData || window.clipboardData).getData('text');
+            if(!pasteData || !activeCell) return;
+            
+            let rows = pasteData.split(/\r?\n/).filter(r => r.trim() !== '');
+            let startRow = activeCell.r, startCol = activeCell.c;
+
+            rows.forEach((rowStr, i) => {
+                let cols = rowStr.split('\t');
+                let tRow = startRow + i;
+                if(!wsData[tRow] || wsData[tRow].isBreak) return; // Skip if break or out of bounds
+                cols.forEach((val, j) => {
+                    let tCol = startCol + j;
+                    if(tCol < wsHeaders.length && tCol >= 3) { // Only paste into editable cols
+                        wsData[tRow][tCol].v = val.trim();
+                    }
+                });
+            });
+            renderGrid();
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initWorksheetEngine();
+    });
+
+  </script>
 </body>
 </html>

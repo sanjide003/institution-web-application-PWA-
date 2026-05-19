@@ -162,21 +162,6 @@
     .excel-btn-small:hover { background: #f3f2f1; border-color: #c8c6c4;}
     .excel-btn-small:active { background: #e1dfdd; transform: scale(0.95);}
 
-    .excel-btn-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 3px 6px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; transition: 0.1s; font-size: 9px; font-weight: 600; white-space: nowrap; min-width: 38px; height: 30px; }
-    .excel-btn-cell i { font-size: 10px; }
-    .excel-btn-cell:hover { border-color: #c8c6c4; background: #f3f2f1; }
-    .excel-btn-cell:active { background: #e1dfdd; transform: scale(0.95); }
-    .excel-btn-cell.cell-del { color: #dc2626; }
-    .excel-btn-cell.cell-del:hover { background: #fef2f2; border-color: #fecaca; }
-    .excel-btn-cell.cell-ins { color: #2563eb; }
-    .excel-btn-cell.cell-ins:hover { background: #eff6ff; border-color: #bfdbfe; }
-    .excel-btn-cell.cell-add { color: #059669; }
-    .excel-btn-cell.cell-add:hover { background: #ecfdf5; border-color: #a7f3d0; }
-
-    .margin-input-row { display: flex; align-items: center; gap: 3px; }
-    .margin-label { font-size: 9px; font-weight: 700; color: #605e5c; width: 10px; text-align: center; }
-    .margin-unit { font-size: 9px; color: #a19f9d; }
-
     .excel-input-ribbon { border: 1px solid #8a8886; border-radius: 2px; padding: 2px 6px; font-size: 12px; height: 26px; outline: none; color: #323130;}
     .excel-input-ribbon:focus { border-color: #107c41; box-shadow: 0 0 0 1px #107c41; }
 
@@ -198,11 +183,11 @@
     .excel-workspace::-webkit-scrollbar-thumb { background: #c8c6c4; border: 2px solid #f3f2f1; border-radius: 6px; }
     .excel-workspace::-webkit-scrollbar-thumb:hover { background: #a19f9d; }
 
-    .print-canvas { background: #fff; margin: 0 auto; min-height: 600px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: visible; border-right: 2px dashed #ef4444;
-      padding: var(--mg-top, 10mm) var(--mg-right, 10mm) var(--mg-bottom, 10mm) var(--mg-left, 10mm);
-    }
+    .print-canvas { background: #fff; margin: 0 auto; min-height: 600px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: visible; border-right: 2px dashed #ef4444;}
     .print-canvas[data-paper="A4"][data-orient="portrait"] { width: 210mm; }
     .print-canvas[data-paper="A4"][data-orient="landscape"] { width: 297mm; }
+    .print-canvas[data-paper="Legal"][data-orient="portrait"] { width: 8.5in; }
+    .print-canvas[data-paper="Legal"][data-orient="landscape"] { width: 14in; }
 
     .excel-table { border-collapse: collapse; min-width: 100%; table-layout: auto;}
     .excel-table th, .excel-table td { border: 1px solid #d4d4d4; padding: 4px; font-size: 13px; color: #000; background: #fff; vertical-align: bottom;}
@@ -241,7 +226,7 @@
         body.is-printing { background: #fff; margin: 0; padding: 0; }
         body.is-printing * { visibility: hidden; }
         body.is-printing #print-canvas, body.is-printing #print-canvas * { visibility: visible; }
-        body.is-printing #print-canvas { position: absolute; left: 0; top: 0; width: 100% !important; max-width: none !important; margin: 0; padding: 0 !important; border: none; box-shadow: none; overflow: visible; }
+        body.is-printing #print-canvas { position: absolute; left: 0; top: 0; width: 100% !important; max-width: none !important; margin: 0; padding: 0; border: none; box-shadow: none; overflow: visible; }
         body.is-printing .no-print { display: none !important; }
         body.is-printing .print-only-heading { display: block !important; font-size: 13px; font-weight: bold; text-align: center; padding: 4px; border-bottom: 1px solid #000;}
         body.is-printing .builder-print-header { display: table-header-group !important; }
@@ -466,7 +451,6 @@
     let builderConfig = {
       classId: '', paper: 'A4', orientation: 'portrait', sortBy: 'name', groupBy: 'mixed',
       showHeader: false, repeatHeader: false, customTitle: '', activeTab: 'home',
-      margins: { top: 10, right: 10, bottom: 10, left: 10 },
       columns: [
         { id: 'col_sno', field: 'SNO', title: 'S.No', width: 'auto' },
         { id: 'col_name', field: 'name', title: 'Student Name', width: 'auto' },
@@ -478,8 +462,6 @@
 
     let undoStack = [];
     let redoStack = [];
-    let selectedColIndex = -1;
-    let selectedRowIndex = -1;
 
     const saveBuilderState = () => {
         const table = document.getElementById('builder-table');
@@ -1007,6 +989,7 @@
             <select class="grid-select builder-col-select" data-col-index="${cIndex}">
               ${availableDataFields.map(f => `<option value="${f.id}" ${f.id === col.field ? 'selected' : ''}>${f.label}</option>`).join('')}
             </select>
+            <button class="text-red-500 hover:bg-red-100 px-1 py-0.5 rounded delete-col-btn opacity-0 group-hover:opacity-100 transition-opacity" data-col-index="${cIndex}" title="Remove Column"><i class="fas fa-times"></i></button>
           </div>
           <div class="no-print flex gap-1 items-center">
             <input type="text" class="grid-input builder-col-title-input" value="${escapeHtml(col.title)}" placeholder="Heading..." data-col-index="${cIndex}">
@@ -1089,19 +1072,9 @@
            </div>
            
            <div class="ribbon-group">
-               <div class="flex flex-col gap-1 justify-between h-full">
-                 <div class="ribbon-row gap-1">
-                   <button id="btn-add-col" class="excel-btn-cell cell-add" title="Add Column at End"><i class="fas fa-columns"></i>Add Col</button>
-                   <button id="btn-add-row" class="excel-btn-cell cell-add" title="Add Row at End"><i class="fas fa-table-rows"></i>Add Row</button>
-                 </div>
-                 <div class="ribbon-row gap-1">
-                   <button id="btn-del-col" class="excel-btn-cell cell-del" title="Delete Selected Column"><i class="fas fa-trash-alt"></i>Del Col</button>
-                   <button id="btn-del-row" class="excel-btn-cell cell-del" title="Delete Selected Row"><i class="fas fa-minus-square"></i>Del Row</button>
-                 </div>
-                 <div class="ribbon-row gap-1">
-                   <button id="btn-ins-col" class="excel-btn-cell cell-ins" title="Insert Column After Selected"><i class="fas fa-indent"></i>Ins Col</button>
-                   <button id="btn-ins-row" class="excel-btn-cell cell-ins" title="Insert Row After Selected"><i class="fas fa-level-down-alt"></i>Ins Row</button>
-                 </div>
+               <div class="ribbon-row h-full">
+                   <button id="btn-add-col" class="excel-btn-ribbon text-emerald-700" title="Insert Column"><i class="fas fa-columns"></i><span>Add Col</span></button>
+                   <button id="btn-add-row" class="excel-btn-ribbon text-emerald-700" title="Insert Row"><i class="fas fa-table-rows"></i><span>Add Row</span></button>
                </div>
                <span class="ribbon-label">Cells</span>
            </div>
@@ -1150,51 +1123,21 @@
             <div class="ribbon-group">
                 <div class="ribbon-row h-full gap-2 items-center">
                    <div class="flex flex-col">
-                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Paper Size</label>
-                       <div class="excel-input-ribbon w-20 flex items-center justify-center bg-slate-100 text-slate-500 font-bold text-xs cursor-not-allowed select-none rounded" style="height:26px;border:1px solid #c8c6c4;">A4 Size</div>
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Size</label>
+                       <select id="builder-paper" class="excel-input-ribbon w-20">
+                          <option value="A4" ${builderConfig.paper === 'A4' ? 'selected' : ''}>A4</option>
+                          <option value="Legal" ${builderConfig.paper === 'Legal' ? 'selected' : ''}>Legal</option>
+                       </select>
                    </div>
                    <div class="flex flex-col">
                        <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Orientation</label>
-                       <select id="builder-orient" class="excel-input-ribbon w-28">
+                       <select id="builder-orient" class="excel-input-ribbon w-24">
                           <option value="portrait" ${builderConfig.orientation === 'portrait' ? 'selected' : ''}>Portrait</option>
                           <option value="landscape" ${builderConfig.orientation === 'landscape' ? 'selected' : ''}>Landscape</option>
                        </select>
                    </div>
                 </div>
                 <span class="ribbon-label">Page Setup</span>
-            </div>
-            <div class="ribbon-group">
-                <div class="ribbon-row h-full gap-2 items-start pt-1">
-                  <div class="flex flex-col gap-1">
-                    <label class="text-[10px] font-semibold text-slate-600">Margin Preset</label>
-                    <select id="builder-margin-preset" class="excel-input-ribbon w-28">
-                      <option value="normal">Normal (10mm)</option>
-                      <option value="narrow">Narrow (5mm)</option>
-                      <option value="moderate">Moderate (15mm)</option>
-                      <option value="wide">Wide (25mm)</option>
-                      <option value="custom">Custom</option>
-                    </select>
-                    <div id="margin-custom-box" class="flex flex-col gap-1 mt-1">
-                      <div class="margin-input-row">
-                        <span class="margin-label">T</span>
-                        <input type="number" id="mg-top" class="excel-input-ribbon" style="width:42px;" value="${builderConfig.margins.top}" min="0" max="60">
-                        <span class="margin-unit">mm</span>
-                        <span class="margin-label" style="margin-left:4px">B</span>
-                        <input type="number" id="mg-bottom" class="excel-input-ribbon" style="width:42px;" value="${builderConfig.margins.bottom}" min="0" max="60">
-                        <span class="margin-unit">mm</span>
-                      </div>
-                      <div class="margin-input-row">
-                        <span class="margin-label">L</span>
-                        <input type="number" id="mg-left" class="excel-input-ribbon" style="width:42px;" value="${builderConfig.margins.left}" min="0" max="60">
-                        <span class="margin-unit">mm</span>
-                        <span class="margin-label" style="margin-left:4px">R</span>
-                        <input type="number" id="mg-right" class="excel-input-ribbon" style="width:42px;" value="${builderConfig.margins.right}" min="0" max="60">
-                        <span class="margin-unit">mm</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <span class="ribbon-label">Margins</span>
             </div>
             <div class="ribbon-group">
                 <div class="ribbon-row h-full gap-2 items-center">
@@ -1267,7 +1210,6 @@
       `;
 
       attachBuilderListeners();
-      updateCanvasStyle();
     };
 
     const bindColumnListeners = (thElement) => {
@@ -1302,6 +1244,19 @@
             const heading = e.target.closest('th').querySelector('.print-only-heading');
             if(heading) heading.textContent = e.target.value;
         });
+
+        const delBtn = thElement.querySelector('.delete-col-btn');
+        delBtn?.addEventListener('click', (e) => {
+            const idx = parseInt(e.currentTarget.dataset.colIndex);
+            if(builderConfig.columns.length > 1) {
+                saveBuilderState();
+                builderConfig.columns.splice(idx, 1);
+                renderExportTab();
+                setupExcelEngine();
+            } else {
+                alert("At least one column is required.");
+            }
+        });
     };
 
     const rebindAllColumnListeners = () => {
@@ -1322,29 +1277,507 @@
       document.getElementById('builder-class')?.addEventListener('change', (e) => { builderConfig.classId = e.target.value; renderExportTab(); setupExcelEngine(); });
       document.getElementById('builder-sort')?.addEventListener('change', (e) => { builderConfig.sortBy = e.target.value; renderExportTab(); setupExcelEngine();});
       document.getElementById('builder-group')?.addEventListener('change', (e) => { builderConfig.groupBy = e.target.value; renderExportTab(); setupExcelEngine();});
+      document.getElementById('builder-paper')?.addEventListener('change', (e) => { builderConfig.paper = e.target.value; updateCanvasStyle(); });
       document.getElementById('builder-orient')?.addEventListener('change', (e) => { builderConfig.orientation = e.target.value; updateCanvasStyle(); });
       document.getElementById('builder-show-header')?.addEventListener('change', (e) => { builderConfig.showHeader = e.target.checked; renderExportTab(); setupExcelEngine();});
       document.getElementById('builder-repeat-header')?.addEventListener('change', (e) => { builderConfig.repeatHeader = e.target.checked; renderExportTab(); setupExcelEngine();});
-
-      // Margin preset handler
-      const MARGIN_PRESETS = {
-        normal: { top: 10, right: 10, bottom: 10, left: 10 },
-        narrow: { top: 5, right: 5, bottom: 5, left: 5 },
-        moderate: { top: 15, right: 15, bottom: 15, left: 15 },
-        wide: { top: 25, right: 25, bottom: 25, left: 25 }
-      };
-      const applyMarginPreset = (preset) => {
-        const m = MARGIN_PRESETS[preset];
-        if (!m) return;
-        builderConfig.margins = { ...m };
-        ['top','bottom','left','right'].forEach(side => {
-          const el = document.getElementById(`mg-${side}`);
-          if (el) el.value = m[side];
-        });
-        updateCanvasStyle();
-      };
-      document.getElementById('builder-margin-preset')?.addEventListener('change', (e) => {
-        if (e.target.value !== 'custom') applyMarginPreset(e.target.value);
+      
+      document.getElementById('builder-custom-title')?.addEventListener('input', (e) => { 
+          builderConfig.customTitle = e.target.value; 
+          const el = document.querySelector('.print-custom-title');
+          if(el) el.textContent = e.target.value;
       });
-      ['top','bottom','left','right'].forEach(side => {
-        document.getElementById(`mg-${side}`)?.
+
+      rebindAllColumnListeners();
+
+      // Targeted DOM update for columns (No full re-render)
+      document.getElementById('btn-add-col')?.addEventListener('click', () => {
+        saveBuilderState();
+        const newColIdx = builderConfig.columns.length;
+        const newCol = { id: `col_${Date.now()}`, field: 'CUSTOM', title: 'New Column', width: '150px' };
+        builderConfig.columns.push(newCol);
+
+        const printHeaderTh = document.querySelector('.print-header-th');
+        if (printHeaderTh) printHeaderTh.colSpan = builderConfig.columns.length + 1;
+        
+        document.querySelectorAll('.page-break-before td[colspan]').forEach(td => td.colSpan = builderConfig.columns.length + 1);
+
+        const excelHeaderRow = document.querySelector('#builder-table thead tr:first-child');
+        const newExcelTh = document.createElement('th');
+        newExcelTh.className = "no-print col-header";
+        newExcelTh.dataset.col = newColIdx;
+        newExcelTh.title = `Select Column ${String.fromCharCode(65 + newColIdx)}`;
+        newExcelTh.textContent = String.fromCharCode(65 + newColIdx);
+        excelHeaderRow.appendChild(newExcelTh);
+
+        const configRow = document.querySelector('#builder-table thead tr.config-row');
+        const newConfigTh = document.createElement('th');
+        newConfigTh.className = "builder-th group config-row-th";
+        newConfigTh.style.width = newCol.width;
+        newConfigTh.innerHTML = `
+          <div class="col-resizer" data-col-index="${newColIdx}"></div>
+          <div class="no-print mb-1 flex items-center justify-between gap-1">
+            <select class="grid-select builder-col-select" data-col-index="${newColIdx}">
+              ${availableDataFields.map(f => `<option value="${f.id}" ${f.id === newCol.field ? 'selected' : ''}>${f.label}</option>`).join('')}
+            </select>
+            <button class="text-red-500 hover:bg-red-100 px-1 py-0.5 rounded delete-col-btn opacity-0 group-hover:opacity-100 transition-opacity" data-col-index="${newColIdx}" title="Remove Column"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="no-print flex gap-1 items-center">
+            <input type="text" class="grid-input builder-col-title-input" value="${escapeHtml(newCol.title)}" placeholder="Heading..." data-col-index="${newColIdx}">
+          </div>
+          <div class="print-only-heading">${escapeHtml(newCol.title)}</div>
+        `;
+        configRow.appendChild(newConfigTh);
+
+        document.querySelectorAll('#builder-table tr[data-index]').forEach(tr => {
+            const rIndex = tr.dataset.index;
+            const td = document.createElement('td');
+            td.className = "excel-cell builder-cell";
+            td.contentEditable = "true";
+            td.dataset.row = rIndex;
+            td.dataset.col = newColIdx;
+            tr.appendChild(td);
+        });
+
+        bindColumnListeners(newConfigTh);
+        attachTableFormatListeners();
+      });
+
+      document.getElementById('btn-add-row')?.addEventListener('click', () => {
+        saveBuilderState();
+        const tbodys = document.querySelectorAll('#builder-table tbody');
+        if(tbodys.length === 0) return;
+        const targetTbody = tbodys[tbodys.length - 1]; 
+        const colsCount = builderConfig.columns.length;
+        const tr = document.createElement('tr');
+        const nextRowIdx = document.querySelectorAll('.row-header').length;
+        tr.dataset.index = nextRowIdx;
+        tr.dataset.studentId = ""; 
+        tr.innerHTML = `<td class="no-print row-header" data-row="${nextRowIdx}">${nextRowIdx + 1}</td>` + 
+                       Array.from({ length: colsCount }).map((_, cIndex) => `<td class="excel-cell builder-cell" contenteditable="true" data-row="${nextRowIdx}" data-col="${cIndex}"></td>`).join('');
+        targetTbody.appendChild(tr);
+        attachTableFormatListeners();
+      });
+
+      const applyFormat = (styleProp, valueFn) => {
+          saveBuilderState();
+          document.querySelectorAll('.builder-cell.selected').forEach(td => {
+              td.style[styleProp] = typeof valueFn === 'function' ? valueFn(td.style[styleProp]) : valueFn;
+          });
+      };
+      
+      const getActiveFontSize = () => parseInt(document.getElementById('fmt-size-input').value) || 13;
+      const toggleStyle = (prop, val1, val2) => (currentVal) => currentVal === val1 ? val2 : val1;
+
+      document.getElementById('fmt-bold')?.addEventListener('click', () => applyFormat('fontWeight', toggleStyle('fontWeight', 'bold', 'normal')));
+      document.getElementById('fmt-italic')?.addEventListener('click', () => applyFormat('fontStyle', toggleStyle('fontStyle', 'italic', 'normal')));
+      
+      document.getElementById('fmt-color')?.addEventListener('input', (e) => {
+          const indicator = e.target.parentElement.querySelector('.indicator-color');
+          if(indicator) indicator.style.backgroundColor = e.target.value;
+          applyFormat('color', e.target.value);
+      });
+      document.getElementById('fmt-bg')?.addEventListener('input', (e) => {
+          const indicator = e.target.parentElement.querySelector('.indicator-bg');
+          if(indicator) indicator.style.backgroundColor = e.target.value;
+          applyFormat('backgroundColor', e.target.value);
+      });
+      
+      document.getElementById('fmt-size-plus')?.addEventListener('click', () => {
+          let size = getActiveFontSize() + 1;
+          document.getElementById('fmt-size-input').value = size;
+          applyFormat('fontSize', size + 'px');
+      });
+      document.getElementById('fmt-size-minus')?.addEventListener('click', () => {
+          let size = Math.max(8, getActiveFontSize() - 1);
+          document.getElementById('fmt-size-input').value = size;
+          applyFormat('fontSize', size + 'px');
+      });
+      document.getElementById('fmt-size-input')?.addEventListener('change', (e) => {
+          applyFormat('fontSize', e.target.value + 'px');
+      });
+
+      document.getElementById('fmt-undo')?.addEventListener('click', undoBuilder);
+      document.getElementById('fmt-redo')?.addEventListener('click', redoBuilder);
+
+      document.getElementById('btn-export-print')?.addEventListener('click', () => {
+        document.querySelectorAll('.builder-cell, .col-header, .row-header, .select-all-corner').forEach(c => c.classList.remove('selected'));
+        document.body.classList.add('is-printing');
+        window.print();
+        setTimeout(() => document.body.classList.remove('is-printing'), 500);
+      });
+
+      document.getElementById('btn-export-excel')?.addEventListener('click', () => {
+        if(typeof XLSX === 'undefined') { alert("Excel library loading, please try again."); return; }
+        const tableClone = document.getElementById('builder-table').cloneNode(true);
+        tableClone.querySelectorAll('.no-print').forEach(el => el.remove());
+        tableClone.querySelectorAll('th').forEach(th => {
+           const heading = th.querySelector('.print-only-heading');
+           if(heading) th.textContent = heading.textContent;
+        });
+        const wb = XLSX.utils.table_to_book(tableClone, {sheet: "Report"});
+        XLSX.writeFile(wb, `${builderConfig.classId ? 'Class_'+builderConfig.classId : 'Report'}_${formatDate(new Date())}.xlsx`);
+      });
+    };
+
+    const updateCanvasStyle = () => {
+      const canvas = document.getElementById('print-canvas');
+      if(canvas) {
+        canvas.dataset.paper = builderConfig.paper;
+        canvas.dataset.orient = builderConfig.orientation;
+      }
+    };
+
+    const attachTableFormatListeners = () => {
+        const fInput = document.getElementById('formula-input');
+        if(!fInput) return;
+        document.querySelectorAll('.builder-cell').forEach(cell => {
+            // Remove old listener to avoid duplicates if re-attaching
+            const newCell = cell.cloneNode(true);
+            cell.parentNode.replaceChild(newCell, cell);
+            
+            newCell.addEventListener('focus', (e) => {
+                const row = e.target.dataset.row;
+                const col = e.target.dataset.col;
+                const colLetter = String.fromCharCode(65 + parseInt(col));
+                document.getElementById('active-cell-id').textContent = `${colLetter}${parseInt(row)+1}`;
+                fInput.value = e.target.innerText;
+            });
+            newCell.addEventListener('input', (e) => {
+                if(e.target.classList.contains('selected')) fInput.value = e.target.innerText;
+            });
+        });
+        
+        // Ensure formula input only has one listener
+        const newFInput = fInput.cloneNode(true);
+        fInput.parentNode.replaceChild(newFInput, fInput);
+        newFInput.addEventListener('input', (e) => {
+            const activeCell = document.querySelector('.builder-cell.selected');
+            if(activeCell) activeCell.innerText = e.target.value;
+        });
+    };
+
+    const setupExcelEngine = () => {
+        const table = document.getElementById('builder-table');
+        if (!table) return;
+
+        attachTableFormatListeners();
+
+        let resizingCol = null;
+        let startX = 0;
+        let startWidth = 0;
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target.classList.contains('col-resizer')) {
+                saveBuilderState();
+                resizingCol = e.target.closest('th');
+                startX = e.pageX;
+                startWidth = resizingCol.offsetWidth;
+                e.preventDefault();
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (resizingCol) {
+                const newWidth = startWidth + (e.pageX - startX);
+                if (newWidth > 30) {
+                    resizingCol.style.width = newWidth + 'px';
+                    const colIndex = resizingCol.querySelector('.col-resizer').dataset.colIndex;
+                    if(builderConfig.columns[colIndex]) {
+                        builderConfig.columns[colIndex].width = newWidth + 'px';
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('mouseup', () => { resizingCol = null; });
+
+        let isSelecting = false;
+        let startCell = null;
+
+        const getCellCoords = (td) => {
+            return { row: parseInt(td.dataset.row), col: parseInt(td.dataset.col) };
+        };
+
+        const clearSelection = () => document.querySelectorAll('.builder-cell, .col-header, .row-header, .select-all-corner').forEach(c => c.classList.remove('selected'));
+
+        table.addEventListener('mousedown', (e) => {
+            if (e.target.classList.contains('col-resizer')) return; 
+            
+            const colHeader = e.target.closest('th.col-header');
+            if (colHeader) {
+                clearSelection();
+                colHeader.classList.add('selected');
+                document.querySelectorAll(`.builder-cell[data-col="${colHeader.dataset.col}"]`).forEach(c => c.classList.add('selected'));
+                return;
+            }
+            
+            const rowHeader = e.target.closest('td.row-header');
+            if (rowHeader) {
+                clearSelection();
+                rowHeader.classList.add('selected');
+                document.querySelectorAll(`.builder-cell[data-row="${rowHeader.dataset.row}"]`).forEach(c => c.classList.add('selected'));
+                return;
+            }
+            
+            const selectAll = e.target.closest('.select-all-corner');
+            if (selectAll) {
+                clearSelection();
+                selectAll.classList.add('selected');
+                document.querySelectorAll('.builder-cell, .col-header, .row-header').forEach(c => c.classList.add('selected'));
+                return;
+            }
+
+            const td = e.target.closest('td.builder-cell');
+            if (td) {
+                isSelecting = true;
+                startCell = getCellCoords(td);
+                clearSelection();
+                td.classList.add('selected');
+            }
+        });
+
+        table.addEventListener('mouseover', (e) => {
+            if (isSelecting) {
+                const td = e.target.closest('td.builder-cell');
+                if (td) {
+                    const endCell = getCellCoords(td);
+                    const minR = Math.min(startCell.row, endCell.row);
+                    const maxR = Math.max(startCell.row, endCell.row);
+                    const minC = Math.min(startCell.col, endCell.col);
+                    const maxC = Math.max(startCell.col, endCell.col);
+                    
+                    document.querySelectorAll('.builder-cell').forEach(cell => {
+                        const r = parseInt(cell.dataset.row);
+                        const c = parseInt(cell.dataset.col);
+                        if (r >= minR && r <= maxR && c >= minC && c <= maxC) {
+                            cell.classList.add('selected');
+                        } else {
+                            cell.classList.remove('selected');
+                        }
+                    });
+                }
+            }
+        });
+
+        document.addEventListener('mouseup', () => isSelecting = false);
+        
+        table.addEventListener('focusin', (e) => {
+            if(e.target.classList.contains('builder-cell')) e.target.dataset.original = e.target.innerHTML;
+        });
+        table.addEventListener('focusout', (e) => {
+            if(e.target.classList.contains('builder-cell')) {
+                if(e.target.dataset.original !== e.target.innerHTML) saveBuilderState();
+            }
+        });
+
+        document.addEventListener('copy', (e) => {
+            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+            if (builderConfig.activeTab !== 'home' && builderConfig.activeTab !== 'data' && builderConfig.activeTab !== 'layout') return;
+            const selected = document.querySelectorAll('.builder-cell.selected');
+            if (selected.length === 0) return;
+
+            const rowMap = new Map();
+            selected.forEach(td => {
+                const tr = td.parentElement;
+                if(!rowMap.has(tr)) rowMap.set(tr, []);
+                rowMap.get(tr).push(td.innerText.trim());
+            });
+
+            const tsv = Array.from(rowMap.values()).map(row => row.join('\t')).join('\n');
+            e.clipboardData.setData('text/plain', tsv);
+            e.preventDefault();
+        });
+
+        document.addEventListener('paste', (e) => {
+            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+            if (builderConfig.activeTab !== 'home' && builderConfig.activeTab !== 'data' && builderConfig.activeTab !== 'layout') return;
+            
+            const activeCell = document.querySelector('.builder-cell.selected') || document.activeElement.closest('td.builder-cell');
+            if (activeCell) {
+                saveBuilderState();
+                e.preventDefault();
+                const text = e.clipboardData.getData('text/plain');
+                const rowsData = text.split(/\r?\n/).map(r => r.split('\t'));
+                
+                const startR = parseInt(activeCell.dataset.row);
+                const startC = parseInt(activeCell.dataset.col);
+                
+                rowsData.forEach((rowData, i) => {
+                    let tr = document.querySelector(`.builder-cell[data-row="${startR + i}"]`)?.parentElement;
+                    if (!tr) {
+                        const targetTbody = document.querySelector('#builder-table tbody:last-child');
+                        if(targetTbody) {
+                            tr = document.createElement('tr');
+                            const nextRowIdx = startR + i;
+                            tr.dataset.index = nextRowIdx;
+                            tr.dataset.studentId = ""; 
+                            tr.innerHTML = `<td class="no-print row-header" data-row="${nextRowIdx}">${nextRowIdx + 1}</td>` + 
+                                           Array.from({ length: builderConfig.columns.length }).map((_, cIndex) => `<td class="excel-cell builder-cell" contenteditable="true" data-row="${nextRowIdx}" data-col="${cIndex}"></td>`).join('');
+                            targetTbody.appendChild(tr);
+                            attachTableFormatListeners();
+                        }
+                    }
+                    
+                    if(tr) {
+                        rowData.forEach((val, j) => {
+                            const td = tr.querySelector(`.builder-cell[data-col="${startC + j}"]`);
+                            if (td) td.textContent = val;
+                        });
+                    }
+                });
+            }
+        });
+    };
+
+    const renderAll = () => {
+      renderDashboard();
+      renderStudents();
+      buildClassSummary();
+      renderStaffTab();
+      if(document.getElementById('official-tab-export')?.classList.contains('flex')) {
+          renderExportTab();
+          setupExcelEngine();
+      }
+      renderHome();
+    };
+
+    const loadData = async () => {
+      const [studentsSnap, staffSnap, groupsSnap, dirSnap, contentSnap, configSnap, authConfigSnap, pageAccessSnap] = await Promise.all([
+        getDocs(collection(db, `${BASE_PATH}/students`)),
+        getDocs(collection(db, `${BASE_PATH}/staff`)),
+        getDocs(collection(db, `${BASE_PATH}/studentGroups`)),
+        getDocs(collection(db, `${BASE_PATH}/publicDirectory`)),
+        getDoc(doc(db, `${BASE_PATH}/settings`, 'content')),
+        getDoc(doc(db, `${BASE_PATH}/settings`, 'config')),
+        getDoc(doc(db, `${BASE_PATH}/settings`, 'categoryAuthConfig')),
+        getDoc(doc(db, `${BASE_PATH}/settings`, 'pageAccess'))
+      ]);
+      allStudents = studentsSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
+      allStaff = staffSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
+      studentGroups = groupsSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
+      directoryEntries = dirSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
+      const content = contentSnap.exists() ? contentSnap.data() : {};
+      directoryCategories = Array.isArray(content.directoryCategories) ? content.directoryCategories : [];
+      categoryAuthConfig = authConfigSnap.exists() ? { categories: {}, ...(authConfigSnap.data() || {}) } : { categories: {} };
+      pageAccessConfig = pageAccessSnap.exists() ? { categories: {}, overrides: {}, ...(pageAccessSnap.data() || {}) } : { categories: {}, overrides: {} };
+      const conf = configSnap.exists() ? configSnap.data() : {};
+      applyOfficialBranding(conf);
+    };
+
+    const preloadOfficialBranding = async () => {
+      try {
+        const configSnap = await getDoc(doc(db, `${BASE_PATH}/settings`, 'config'));
+        if (!configSnap.exists()) return;
+        applyOfficialBranding(configSnap.data() || {});
+      } catch (_error) {}
+    };
+
+    const showApp = () => {
+      document.getElementById('official-login-screen').classList.add('hidden');
+      document.getElementById('official-app').classList.remove('hidden');
+      renderAll();
+      setTab('dashboard');
+    };
+
+    const tryLogin = async () => {
+      if (!authReady) return showMsg('Initializing authentication... please try again.');
+      const username = String(document.getElementById('official-username').value || '').trim();
+      const password = String(document.getElementById('official-password').value || '').trim();
+      if (!username || !password) return showMsg('Username, password required');
+      showMsg('');
+      const uname = username.toLowerCase();
+      const passHash = await hashCredentialValue(password);
+      let session = null;
+
+      if (uname.includes('@')) {
+        try {
+          const cred = await signInWithEmailAndPassword(auth, username, password);
+          if (cred?.user?.email && String(cred.user.email).toLowerCase() === uname) {
+            session = { name: 'Super Admin', username: cred.user.email, type: 'Admin', source: 'firebase', photo: 'assets/images/logo.png' };
+          }
+        } catch (_error) {}
+      }
+
+      const adminAuthSnap = await getDoc(doc(db, `${BASE_PATH}/settings`, 'adminAuth'));
+      const adminAuth = adminAuthSnap.exists() ? adminAuthSnap.data() : {};
+      if (!session && String(adminAuth.email || '').toLowerCase() === uname && String(adminAuth.password || '').trim() === password) {
+        session = { name: 'Super Admin', username, type: 'Admin', source: 'legacy-admin', photo: 'assets/images/logo.png' };
+      }
+
+      if (!session) {
+        const staffSnap = await getDocs(collection(db, `${BASE_PATH}/staff`));
+        const staff = staffSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() })).find((item) => item.isActive !== false && (((item.email || '').toLowerCase() === uname) || ((item.username || '').toLowerCase() === uname)) && String(item.password || '').trim() === password);
+        if (staff) session = { ...staff, name: staff.name || 'Staff', username, type: staff.type || 'Staff', source: 'staff', photo: staff.photo || '' };
+      }
+
+      if (!session) {
+        const dirSnap = await getDocs(collection(db, `${BASE_PATH}/publicDirectory`));
+        const directoryUser = dirSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() })).find((entry) => {
+          const meta = entry.authMeta || {};
+          return String(meta.username || '').toLowerCase() === uname && String(meta.passwordHash || '') === passHash;
+        });
+        if (directoryUser) session = { id: directoryUser.id, ...(directoryUser.values || {}), name: String(directoryUser.values?.name || 'Directory User'), username, type: 'Category User', source: 'directory', categoryId: directoryUser.categoryId, photo: String(directoryUser.values?.photo || directoryUser.values?.image || '') };
+      }
+
+      if (!session) return showMsg('Invalid credentials / access denied');
+      userSession = session;
+      await loadData();
+      localStorage.setItem(OFFICIAL_SESSION_KEY, JSON.stringify(userSession));
+      showApp();
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) await signInAnonymously(auth);
+      authReady = true;
+    });
+
+    document.getElementById('official-login-btn').addEventListener('click', tryLogin);
+    document.getElementById('official-password').addEventListener('keydown', (event) => { if (event.key === 'Enter') tryLogin(); });
+    document.getElementById('official-username').addEventListener('keydown', (event) => { if (event.key === 'Enter') tryLogin(); });
+    document.getElementById('official-toggle-password').addEventListener('click', () => {
+      const input = document.getElementById('official-password');
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      document.getElementById('official-toggle-password').className = isPassword ? 'fas fa-eye-slash trailing-icon' : 'fas fa-eye trailing-icon';
+    });
+    document.getElementById('official-logout-btn').addEventListener('click', () => {
+      localStorage.removeItem(OFFICIAL_SESSION_KEY);
+      window.location.reload();
+    });
+
+    const restoreOfficialSession = async () => {
+      try {
+        if (window.AppSession && window.AppSession.isFresh()) {
+          const role = window.AppSession.getRole();
+          if (role === 'admin' || role === 'staff') {
+            const stateKey = role === 'admin' ? 'app_session_admin_state' : 'app_session_staff_state';
+            const rawState = localStorage.getItem(stateKey);
+            const state = rawState ? JSON.parse(rawState) : {};
+            
+            userSession = {
+              name: state.name || (role === 'admin' ? 'Super Admin' : 'Staff'),
+              username: state.email || 'admin',
+              type: role === 'admin' ? 'Admin' : 'Staff',
+              source: role === 'admin' ? 'firebase' : 'staff'
+            };
+            await loadData();
+            showApp();
+            return; 
+          }
+        }
+        const raw = localStorage.getItem(OFFICIAL_SESSION_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (!parsed?.username) return;
+        userSession = parsed;
+        await loadData();
+        showApp();
+      } catch (_error) {}
+    };
+
+    preloadOfficialBranding();
+    restoreOfficialSession();
+  </script>
+</body>
+</html>

@@ -131,55 +131,57 @@
     .detail-value{font-size:12px;color:#0f172a;font-weight:600;word-break:break-word}
 
     /* ==========================================
-       EXCEL SPREADSHEET UI STYLES (NEW)
+       EXCEL SPREADSHEET UI STYLES (UPDATED)
        ========================================== */
 
     .excel-container { display: flex; flex-direction: column; height: 100%; background: #f3f2f1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
     
     /* Top Ribbon Area */
-    .excel-ribbon-wrapper { background: #f3f2f1; border-bottom: 1px solid #c8c6c4; padding-top: 4px;}
-    .excel-tabs { display: flex; gap: 2px; padding: 0 10px; border-bottom: 1px solid #c8c6c4;}
-    .excel-tab { padding: 4px 12px; font-size: 13px; color: #323130; cursor: pointer; border: 1px solid transparent; border-bottom: none; border-radius: 4px 4px 0 0; position: relative; bottom: -1px;}
+    .excel-ribbon-wrapper { background: #f3f2f1; border-bottom: 1px solid #c8c6c4; padding-top: 4px; z-index: 40; position: relative;}
+    .excel-tabs { display: flex; gap: 4px; padding: 0 10px; border-bottom: 1px solid #c8c6c4;}
+    .excel-tab { padding: 4px 16px; font-size: 13px; color: #323130; cursor: pointer; border: 1px solid transparent; border-bottom: none; border-radius: 4px 4px 0 0; position: relative; bottom: -1px; transition: 0.1s; background: transparent;}
     .excel-tab:hover { background: #e1dfdd; }
     .excel-tab.active { background: #ffffff; color: #107c41; font-weight: 600; border-color: #c8c6c4; border-bottom-color: #ffffff; z-index: 10; }
     
-    .excel-ribbon { background: #ffffff; display: flex; padding: 6px 10px; gap: 16px; align-items: center; overflow-x: auto; min-height: 80px;}
-    .excel-tool-group { display: flex; align-items: center; gap: 4px; border-right: 1px solid #e1dfdd; padding-right: 16px; height: 100%;}
-    .excel-tool-group:last-child { border-right: none; }
-    
-    .excel-btn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 4px; color: #323130; cursor: pointer; transition: 0.1s; border: 1px solid transparent; background: transparent; }
-    .excel-btn:hover { background: #f3f2f1; border-color: #c8c6c4; }
-    .excel-btn:active { background: #e1dfdd; transform: scale(0.96); }
-    
-    .excel-select { border: 1px solid #8a8886; border-radius: 2px; padding: 4px; font-size: 12px; color: #323130; outline: none; background: #fff;}
-    .excel-select:focus { border-color: #107c41; outline: 1px solid #107c41; }
-    
-    .excel-color-picker-wrap { position: relative; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid transparent; cursor: pointer;}
-    .excel-color-picker-wrap:hover { background: #f3f2f1; border-color: #c8c6c4; }
-    .excel-color-indicator { position: absolute; bottom: 4px; left: 6px; right: 6px; height: 4px; background: #000; pointer-events: none;}
-    .excel-color-input { opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; }
+    .excel-ribbon { background: #ffffff; display: flex; padding: 6px 10px; gap: 16px; align-items: flex-start; overflow-x: auto; min-height: 84px; scrollbar-width: none;}
+    .excel-ribbon::-webkit-scrollbar { display: none; }
+    .ribbon-panel { display: none; width: 100%; align-items: flex-start; gap: 16px;}
+    .ribbon-panel.active { display: flex; }
 
-    /* Custom App Filters (Below Ribbon) */
-    .excel-app-filters { display: flex; flex-wrap: wrap; gap: 12px; padding: 8px 15px; background: #f8f8f8; border-bottom: 1px solid #c8c6c4; align-items: flex-end;}
-    .excel-filter-item { display: flex; flex-direction: column; gap: 4px; }
-    .excel-filter-label { font-size: 10px; font-weight: 700; color: #605e5c; text-transform: uppercase; letter-spacing: 0.5px;}
+    .ribbon-group { display: flex; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #e1dfdd; padding-right: 16px; min-height: 68px; }
+    .ribbon-group:last-child { border-right: none; }
+    .ribbon-row { display: flex; gap: 4px; align-items: center; width: 100%; justify-content: center;}
+    .ribbon-label { font-size: 11px; color: #605e5c; margin-top: auto; }
+
+    .excel-btn-ribbon { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-width: 48px; height: 50px; border-radius: 4px; border: 1px solid transparent; color: #323130; cursor: pointer; background: transparent; transition: 0.1s;}
+    .excel-btn-ribbon:hover { background: #f3f2f1; border-color: #c8c6c4;}
+    .excel-btn-ribbon:active { background: #e1dfdd; transform: scale(0.96); }
+    .excel-btn-ribbon i { font-size: 18px; }
+    .excel-btn-ribbon span { font-size: 10px; }
+
+    .excel-btn-small { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; color: #323130; transition: 0.1s;}
+    .excel-btn-small:hover { background: #f3f2f1; border-color: #c8c6c4;}
+    .excel-btn-small:active { background: #e1dfdd; transform: scale(0.95);}
+
+    .excel-input-ribbon { border: 1px solid #8a8886; border-radius: 2px; padding: 2px 6px; font-size: 12px; height: 26px; outline: none; color: #323130;}
+    .excel-input-ribbon:focus { border-color: #107c41; box-shadow: 0 0 0 1px #107c41; }
 
     /* Premium Export Buttons */
-    .premium-export-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; color: #fff; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: none; }
-    .btn-excel-green { background: linear-gradient(180deg, #21a366 0%, #107c41 100%); border: 1px solid #0f6c39;}
-    .btn-excel-green:hover { background: linear-gradient(180deg, #1e925b 0%, #0c6132 100%); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(16, 124, 65, 0.2);}
-    .btn-pdf-red { background: linear-gradient(180deg, #e11d48 0%, #be123c 100%); border: 1px solid #9f1239;}
-    .btn-pdf-red:hover { background: linear-gradient(180deg, #be123c 0%, #9f1239 100%); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(225, 29, 72, 0.2);}
+    .premium-export-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 600; color: #fff; cursor: pointer; transition: 0.2s; border: none; }
+    .btn-excel-green { background: #107c41;}
+    .btn-excel-green:hover { background: #185c37; }
+    .btn-pdf-red { background: #d83b01; }
+    .btn-pdf-red:hover { background: #a4262c; }
 
     /* Formula Bar */
     .formula-bar { display: flex; align-items: center; background: #fff; border-bottom: 1px solid #c8c6c4; padding: 4px 10px; gap: 10px;}
-    .formula-name-box { width: 60px; font-size: 13px; text-align: center; color: #323130; font-family: monospace;}
+    .formula-name-box { width: 60px; font-size: 13px; text-align: center; color: #323130; font-family: monospace; font-weight: bold;}
     .formula-divider { width: 1px; height: 18px; background: #c8c6c4; }
     .formula-icon { color: #605e5c; font-style: italic; font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 14px;}
     .formula-input { flex-grow: 1; border: none; outline: none; font-size: 13px; color: #000; padding: 2px 5px;}
 
     /* Workspace & Canvas */
-    .excel-workspace { flex-grow: 1; overflow: auto; padding: 15px; position: relative;}
+    .excel-workspace { flex-grow: 1; overflow: auto; padding: 15px; position: relative; background: #e1dfdd;}
     .excel-workspace::-webkit-scrollbar { width: 12px; height: 12px; }
     .excel-workspace::-webkit-scrollbar-track { background: #f3f2f1; }
     .excel-workspace::-webkit-scrollbar-thumb { background: #c8c6c4; border: 2px solid #f3f2f1; border-radius: 6px; }
@@ -211,10 +213,11 @@
 
     /* Config Rows inside grid */
     .config-row th { background: #f8fafc; padding: 4px; border-bottom: none;}
-    .grid-select { width: 100%; border: 1px solid #c8c6c4; padding: 2px; font-size: 11px; outline: none; color: #333;}
+    .grid-select { width: 100%; border: 1px solid #c8c6c4; padding: 2px; font-size: 11px; outline: none; color: #333; border-radius: 2px;}
     .grid-select:focus { border-color: #107c41;}
-    .grid-input { width: 100%; border: 1px solid #c8c6c4; padding: 2px 4px; font-size: 12px; font-weight: bold; outline: none; color: #000; border-top: none;}
-    .grid-input:focus { border-color: #107c41;}
+    .grid-input { width: 100%; border: 1px solid transparent; padding: 2px 4px; font-size: 12px; font-weight: bold; outline: none; color: #000; border-top: none;}
+    .grid-input:focus { border-color: #c8c6c4;}
+    .grid-input:hover { border-color: #e1dfdd; }
 
     .col-resizer { position: absolute; right: -4px; top: 0; bottom: 0; width: 8px; cursor: col-resize; z-index: 20; }
     .col-resizer:hover { background: rgba(16, 124, 65, 0.5); }
@@ -426,80 +429,12 @@
             SESSION_IDLE_MAX_AGE_MS: DEFAULT_SESSION_IDLE_MAX_AGE_MS,
             SESSION_POLICY: ROLE_SESSION_POLICY,
             clearAll,
-            consumeFlash() { const message = sessionStorage.getItem(FLASH_KEY) || ''; if (message) sessionStorage.removeItem(FLASH_KEY); return message; },
-            getStartedAt() { const role = getRole(); const state = getStateByRole(role); return Number(state?.startedAt || 0); },
-            getLastActiveAt() { const role = getRole(); const state = getStateByRole(role); return Number(state?.lastActiveAt || 0); },
             getRole,
-            getRolePolicy(role = getRole()) { return getSessionPolicy(role); },
             getStudentId() { const state = getStudentState(); return state?.studentId || ''; },
             getStaffName() { const state = getStaffState(); return state?.name || ''; },
             getStaffEmail() { const state = getStaffState(); return state?.email || ''; },
             isFresh() { const role = getRole(); return isStateFresh(getStateByRole(role), role); },
-            startStudent(studentId, profile = {}) {
-                writeJson(STUDENT_STATE_KEY, buildState({ studentId, role: 'student' }));
-                const accounts = getStudentAccounts();
-                const nextAccount = { studentId, name: profile.name || '', class: profile.class || '', adm: profile.adm || '', updatedAt: now() };
-                const nextAccounts = [nextAccount, ...accounts.filter((acc) => acc.studentId !== studentId)].slice(0, 8);
-                saveStudentAccounts(nextAccounts);
-                setCurrentRole('student');
-            },
-            getStudentAccounts() { return getStudentAccounts(); },
-            switchStudent(studentId = '') {
-                const account = getStudentAccounts().find((item) => item.studentId === studentId);
-                if (!account) return false;
-                this.startStudent(studentId, account);
-                return true;
-            },
-            logoutStudent(studentId = '', { removeAccount = false } = {}) {
-                const activeStudentId = studentId || this.getStudentId();
-                if (removeAccount && activeStudentId) {
-                    const nextAccounts = getStudentAccounts().filter((account) => account.studentId !== activeStudentId);
-                    saveStudentAccounts(nextAccounts);
-                }
-                removeKey(STUDENT_STATE_KEY);
-                if (getRole() === 'student') setCurrentRole('');
-            },
-            startStaff(name = '', email = '', access = null) {
-                writeJson(STAFF_STATE_KEY, buildState({ name, email, role: 'staff', access: access && typeof access === 'object' ? access : null }));
-                setCurrentRole('staff');
-            },
-            getStaffAccess() { const state = getStaffState(); return (state?.access && typeof state.access === 'object') ? state.access : null; },
-            startAdmin() { writeJson(ADMIN_STATE_KEY, buildState({ role: 'admin' })); setCurrentRole('admin'); },
-            touchSession,
-            guardStudentPage() {
-                pruneExpiredStates();
-                if (!hasStudentSession()) { redirectHome('Please log in to continue.'); return; }
-                setCurrentRole('student');
-                if (!this.getStudentId()) redirectHome('Please select your student profile again.');
-            },
-            guardStaffOrAdminPage() {
-                pruneExpiredStates();
-                if (hasAdminSession()) { setCurrentRole('admin'); return; }
-                if (hasStaffSession()) { setCurrentRole('staff'); return; }
-                redirectHome('Your staff/admin session expired. Please log in again.');
-            },
-            guardStaffPageAccess(requiredPage = 'collection') {
-                pruneExpiredStates();
-                if (hasAdminSession()) { setCurrentRole('admin'); return; }
-                if (!hasStaffSession()) { redirectHome('Your staff session expired. Please log in again.'); return; }
-                setCurrentRole('staff');
-                const access = this.getStaffAccess();
-                if (requiredPage === 'collection' && access && access.collection !== true) { redirectHome('Your account does not have collection page access.'); return; }
-                if (requiredPage === 'student' && access && access.student !== true) { redirectHome('Your account does not have student page access.'); return; }
-                if (requiredPage === 'result' && access) {
-                    const hasResultAccess = access.result === true || access.canManageResults === true;
-                    const collectionFallback = access.collection === true && window.location.search.includes('from=collection');
-                    if (!hasResultAccess && !collectionFallback) { redirectHome('Your account does not have result page access.'); }
-                }
-            },
-            guardAdminPage() {
-                pruneExpiredStates();
-                const requestedTab = (window.location.hash || '#dashboard').replace('#', '') || 'dashboard';
-                const wantsResultsTab = requestedTab === 'results';
-                if (hasAdminSession()) { setCurrentRole('admin'); return; }
-                if (wantsResultsTab && hasStaffSession()) { setCurrentRole('staff'); return; }
-                redirectHome('Your admin session expired. Please log in again.');
-            }
+            getStaffAccess() { const state = getStaffState(); return (state?.access && typeof state.access === 'object') ? state.access : null; }
         };
     }());
   </script>
@@ -1021,13 +956,12 @@
       const instSub = institutionConfig.place || institutionConfig.subtitle || 'Institution Portal';
       const instReg = institutionConfig.regNo ? `Reg No: ${institutionConfig.regNo}` : '';
       
-      const colSpanPrint = builderConfig.columns.length + 1; 
-      const printColSpan = builderConfig.columns.length;
+      const colSpanPrint = builderConfig.columns.length; 
       
       const headerHtml = builderConfig.showHeader ? `
         <thead class="${builderConfig.repeatHeader ? 'builder-print-header repeat-header' : 'builder-print-header'}">
            <tr>
-             <th colspan="${printColSpan}" class="print-header-th bg-white border-0 !p-0">
+             <th colspan="${colSpanPrint + 1}" class="print-header-th bg-white border-0 !p-0">
                <div class="print-header-content">
                   <h1 class="print-inst-name">${escapeHtml(instName)}</h1>
                   <h2 class="print-inst-sub">${escapeHtml(instSub)}</h2>
@@ -1095,151 +1029,181 @@
           }
       }
 
+      // Ribbon Tabs
       const ribbonHome = `
-          <div class="excel-toolbar">
-              <div class="toolbar-group">
-                <button id="fmt-undo" class="excel-btn" title="Undo"><i class="fas fa-undo"></i></button>
-                <button id="fmt-redo" class="excel-btn" title="Redo"><i class="fas fa-redo"></i></button>
-              </div>
-              <div class="toolbar-divider"></div>
-              <div class="toolbar-group">
-                <button id="fmt-bold" class="excel-btn font-serif font-bold text-[14px]" title="Bold">B</button>
-                <button id="fmt-italic" class="excel-btn font-serif italic text-[14px]" title="Italic">I</button>
-              </div>
-              <div class="toolbar-group">
-                <button id="fmt-size-minus" class="excel-btn text-[10px]" title="Decrease Font Size"><i class="fas fa-minus"></i></button>
-                <input type="number" id="fmt-size-input" class="excel-input w-12 text-center font-bold" value="13" />
-                <button id="fmt-size-plus" class="excel-btn text-[10px]" title="Increase Font Size"><i class="fas fa-plus"></i></button>
-              </div>
-              <div class="toolbar-divider"></div>
-              <div class="toolbar-group">
-                 <div class="excel-color-picker-wrap" title="Text Color">
-                     <i class="fas fa-font"></i>
-                     <div class="excel-color-indicator bg-slate-900"></div>
-                     <input type="color" id="fmt-color" class="excel-color-input" value="#0f172a">
-                 </div>
-                 <div class="excel-color-picker-wrap" title="Fill Color">
-                     <i class="fas fa-fill-drip"></i>
-                     <div class="excel-color-indicator bg-white"></div>
-                     <input type="color" id="fmt-bg" class="excel-color-input" value="#ffffff">
-                 </div>
-              </div>
-              <div class="toolbar-divider"></div>
-              <div class="toolbar-group">
-                <button id="btn-add-col" class="excel-btn w-auto px-2 text-indigo-700 font-bold" title="Add Column"><i class="fas fa-plus mr-1"></i> Col</button>
-                <button id="btn-add-row" class="excel-btn w-auto px-2 text-indigo-700 font-bold" title="Add Row"><i class="fas fa-plus mr-1"></i> Row</button>
-              </div>
-          </div>
+        <div id="ribbon-home" class="ribbon-panel ${builderConfig.activeTab === 'home' ? 'active' : ''}">
+           <div class="ribbon-group">
+               <div class="ribbon-row h-full">
+                   <button id="fmt-undo" class="excel-btn-ribbon" title="Undo"><i class="fas fa-undo"></i><span>Undo</span></button>
+                   <button id="fmt-redo" class="excel-btn-ribbon" title="Redo"><i class="fas fa-redo"></i><span>Redo</span></button>
+               </div>
+               <span class="ribbon-label">History</span>
+           </div>
+           
+           <div class="ribbon-group">
+               <div class="ribbon-row mb-1">
+                   <select class="excel-input-ribbon w-28"><option>Calibri</option><option>Inter</option></select>
+                   <div class="flex border border-gray-400 rounded overflow-hidden h-[24px]">
+                       <button id="fmt-size-minus" class="px-2 bg-white hover:bg-slate-100 border-r border-gray-400 text-[#323130]"><i class="fas fa-minus text-[10px]"></i></button>
+                       <input type="number" id="fmt-size-input" class="w-10 text-center outline-none font-bold text-xs text-[#323130]" value="13" />
+                       <button id="fmt-size-plus" class="px-2 bg-white hover:bg-slate-100 border-l border-gray-400 text-[#323130]"><i class="fas fa-plus text-[10px]"></i></button>
+                   </div>
+               </div>
+               <div class="ribbon-row">
+                   <button id="fmt-bold" class="excel-btn-small font-serif font-bold text-[14px]">B</button>
+                   <button id="fmt-italic" class="excel-btn-small font-serif italic text-[14px]">I</button>
+                   <div class="w-px h-4 bg-slate-300 mx-2"></div>
+                   <div class="relative flex items-center justify-center excel-btn-small cursor-pointer mr-1" title="Fill Color">
+                       <i class="fas fa-fill-drip text-xs"></i>
+                       <div class="absolute bottom-0.5 left-1 right-1 h-[3px] bg-white border border-gray-300 pointer-events-none indicator-bg"></div>
+                       <input type="color" id="fmt-bg" class="opacity-0 absolute inset-0 cursor-pointer" value="#ffffff">
+                   </div>
+                   <div class="relative flex items-center justify-center excel-btn-small cursor-pointer" title="Text Color">
+                       <i class="fas fa-font text-xs"></i>
+                       <div class="absolute bottom-0.5 left-1 right-1 h-[3px] bg-slate-900 pointer-events-none indicator-color"></div>
+                       <input type="color" id="fmt-color" class="opacity-0 absolute inset-0 cursor-pointer" value="#0f172a">
+                   </div>
+               </div>
+               <span class="ribbon-label">Font</span>
+           </div>
+           
+           <div class="ribbon-group">
+               <div class="ribbon-row h-full">
+                   <button id="btn-add-col" class="excel-btn-ribbon text-emerald-700" title="Insert Column"><i class="fas fa-columns"></i><span>Add Col</span></button>
+                   <button id="btn-add-row" class="excel-btn-ribbon text-emerald-700" title="Insert Row"><i class="fas fa-table-rows"></i><span>Add Row</span></button>
+               </div>
+               <span class="ribbon-label">Cells</span>
+           </div>
+        </div>
       `;
 
       const ribbonData = `
-          <div class="excel-toolbar">
-              <div class="excel-app-filters bg-transparent border-0 p-0">
-                  <div class="excel-filter-item">
-                    <span class="excel-filter-label">Data Source</span>
-                    <select id="builder-class" class="excel-select w-32">
-                      <option value="">-- Blank Table --</option>
-                      ${classOptions.map((className) => `<option value="${escapeHtml(className)}" ${builderConfig.classId === className ? 'selected' : ''}>Class ${escapeHtml(className)}</option>`).join('')}
-                    </select>
-                  </div>
-                  <div class="toolbar-divider"></div>
-                  <div class="excel-filter-item">
-                    <span class="excel-filter-label">Sort By</span>
-                    <select id="builder-sort" class="excel-select w-24">
-                      <option value="name" ${builderConfig.sortBy === 'name' ? 'selected' : ''}>Name A-Z</option>
-                      <option value="adm" ${builderConfig.sortBy === 'adm' ? 'selected' : ''}>Adm No</option>
-                    </select>
-                  </div>
-                  <div class="excel-filter-item">
-                    <span class="excel-filter-label">Group By</span>
-                    <select id="builder-group" class="excel-select w-28">
-                      <option value="mixed" ${builderConfig.groupBy === 'mixed' ? 'selected' : ''}>Mixed</option>
-                      <option value="grouped" ${builderConfig.groupBy === 'grouped' ? 'selected' : ''}>Boys First</option>
-                      <option value="separate" ${builderConfig.groupBy === 'separate' ? 'selected' : ''}>Page Break</option>
-                    </select>
-                  </div>
-              </div>
-          </div>
+        <div id="ribbon-data" class="ribbon-panel ${builderConfig.activeTab === 'data' ? 'active' : ''}">
+            <div class="ribbon-group">
+               <div class="ribbon-row h-full items-center gap-2">
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Source Class</label>
+                       <select id="builder-class" class="excel-input-ribbon w-32">
+                         <option value="">-- Blank Table --</option>
+                         ${classOptions.map((className) => `<option value="${escapeHtml(className)}" ${builderConfig.classId === className ? 'selected' : ''}>Class ${escapeHtml(className)}</option>`).join('')}
+                       </select>
+                   </div>
+               </div>
+               <span class="ribbon-label">Data Source</span>
+            </div>
+            <div class="ribbon-group">
+               <div class="ribbon-row h-full items-center gap-2">
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Sort By</label>
+                       <select id="builder-sort" class="excel-input-ribbon w-24">
+                          <option value="name" ${builderConfig.sortBy === 'name' ? 'selected' : ''}>Name A-Z</option>
+                          <option value="adm" ${builderConfig.sortBy === 'adm' ? 'selected' : ''}>Adm No</option>
+                       </select>
+                   </div>
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Group By</label>
+                       <select id="builder-group" class="excel-input-ribbon w-28">
+                          <option value="mixed" ${builderConfig.groupBy === 'mixed' ? 'selected' : ''}>Mixed</option>
+                          <option value="grouped" ${builderConfig.groupBy === 'grouped' ? 'selected' : ''}>Boys First</option>
+                          <option value="separate" ${builderConfig.groupBy === 'separate' ? 'selected' : ''}>Page Break</option>
+                       </select>
+                   </div>
+               </div>
+               <span class="ribbon-label">Sort & Filter</span>
+            </div>
+        </div>
       `;
 
       const ribbonLayout = `
-          <div class="excel-toolbar">
-              <div class="excel-app-filters bg-transparent border-0 p-0">
-                  <div class="excel-filter-item">
-                    <span class="excel-filter-label">Page Setup</span>
-                    <div class="flex gap-2">
-                        <select id="builder-paper" class="excel-select w-20">
+        <div id="ribbon-layout" class="ribbon-panel ${builderConfig.activeTab === 'layout' ? 'active' : ''}">
+            <div class="ribbon-group">
+                <div class="ribbon-row h-full gap-2 items-center">
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Size</label>
+                       <select id="builder-paper" class="excel-input-ribbon w-20">
                           <option value="A4" ${builderConfig.paper === 'A4' ? 'selected' : ''}>A4</option>
                           <option value="Legal" ${builderConfig.paper === 'Legal' ? 'selected' : ''}>Legal</option>
-                        </select>
-                        <select id="builder-orient" class="excel-select w-24">
+                       </select>
+                   </div>
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Orientation</label>
+                       <select id="builder-orient" class="excel-input-ribbon w-24">
                           <option value="portrait" ${builderConfig.orientation === 'portrait' ? 'selected' : ''}>Portrait</option>
                           <option value="landscape" ${builderConfig.orientation === 'landscape' ? 'selected' : ''}>Landscape</option>
-                        </select>
-                    </div>
-                  </div>
-                  <div class="toolbar-divider"></div>
-                  <div class="excel-filter-item">
-                    <span class="excel-filter-label">Custom Heading</span>
-                    <input type="text" id="builder-custom-title" value="${escapeHtml(builderConfig.customTitle)}" class="excel-select w-48" placeholder="e.g. Term 1 Attendance">
-                 </div>
-                 <div class="toolbar-divider"></div>
-                 <div class="excel-filter-item justify-center gap-2 mt-2">
-                     <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
-                        <input type="checkbox" id="builder-show-header" ${builderConfig.showHeader ? 'checked' : ''} class="w-3.5 h-3.5 text-indigo-600 rounded"> Show Official Header
+                       </select>
+                   </div>
+                </div>
+                <span class="ribbon-label">Page Setup</span>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-row h-full gap-2 items-center">
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Report Title</label>
+                       <input type="text" id="builder-custom-title" value="${escapeHtml(builderConfig.customTitle)}" class="excel-input-ribbon w-48" placeholder="e.g. Term 1 Attendance">
+                   </div>
+                </div>
+                <span class="ribbon-label">Titles</span>
+            </div>
+            <div class="ribbon-group">
+                <div class="flex flex-col gap-1 mt-1 justify-center h-full">
+                     <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+                        <input type="checkbox" id="builder-show-header" ${builderConfig.showHeader ? 'checked' : ''} class="w-3.5 h-3.5 text-emerald-600 rounded"> Show Header
                      </label>
-                     <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer ${!builderConfig.showHeader ? 'opacity-50 pointer-events-none' : ''}">
-                        <input type="checkbox" id="builder-repeat-header" ${builderConfig.repeatHeader ? 'checked' : ''} class="w-3.5 h-3.5 text-indigo-600 rounded"> Repeat on Every Page
+                     <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer ${!builderConfig.showHeader ? 'opacity-50 pointer-events-none' : ''}">
+                        <input type="checkbox" id="builder-repeat-header" ${builderConfig.repeatHeader ? 'checked' : ''} class="w-3.5 h-3.5 text-emerald-600 rounded"> Repeat all pages
                      </label>
-                 </div>
-              </div>
-          </div>
+                </div>
+                <span class="ribbon-label">Print Options</span>
+            </div>
+        </div>
       `;
 
       document.getElementById('official-tab-export').innerHTML = `
-        <div class="excel-ui-header no-print">
-            <div class="excel-tabs">
-                <button class="excel-tab ${builderConfig.activeTab === 'home' ? 'active' : ''}" data-ribbon="home">Home</button>
-                <button class="excel-tab ${builderConfig.activeTab === 'data' ? 'active' : ''}" data-ribbon="data">Data</button>
-                <button class="excel-tab ${builderConfig.activeTab === 'layout' ? 'active' : ''}" data-ribbon="layout">Page Layout</button>
-                <div class="flex-grow"></div>
-                <div class="flex gap-2 items-center pr-4">
-                    <button id="btn-export-print" class="premium-export-btn btn-pdf-red"><i class="fas fa-file-pdf"></i> PDF / Print</button>
-                    <button id="btn-export-excel" class="premium-export-btn btn-excel-green"><i class="fas fa-file-excel"></i> Export Excel</button>
+        <div class="excel-container">
+            <div class="excel-ribbon-wrapper no-print">
+                <div class="excel-tabs">
+                    <button class="excel-tab ${builderConfig.activeTab === 'home' ? 'active' : ''}" data-ribbon="home">Home</button>
+                    <button class="excel-tab ${builderConfig.activeTab === 'data' ? 'active' : ''}" data-ribbon="data">Data</button>
+                    <button class="excel-tab ${builderConfig.activeTab === 'layout' ? 'active' : ''}" data-ribbon="layout">Page Layout</button>
+                    <div class="flex-grow"></div>
+                    <div class="flex gap-2 items-center pr-2 mb-1">
+                        <button id="btn-export-print" class="premium-export-btn btn-pdf-red"><i class="fas fa-file-pdf"></i> Print / PDF</button>
+                        <button id="btn-export-excel" class="premium-export-btn btn-excel-green"><i class="fas fa-file-excel"></i> Export</button>
+                    </div>
+                </div>
+                
+                <div class="excel-ribbon">
+                    ${ribbonHome}
+                    ${ribbonData}
+                    ${ribbonLayout}
+                </div>
+                
+                <div class="formula-bar">
+                    <div id="active-cell-id" class="formula-name-box">A1</div>
+                    <div class="formula-divider"></div>
+                    <div class="formula-icon">fx</div>
+                    <input type="text" id="formula-input" class="formula-input" placeholder="Select a cell to edit..." />
                 </div>
             </div>
-            
-            <div class="excel-ribbon-container">
-                <div id="ribbon-home" class="ribbon-panel ${builderConfig.activeTab === 'home' ? 'active' : ''}">${ribbonHome}</div>
-                <div id="ribbon-data" class="ribbon-panel ${builderConfig.activeTab === 'data' ? 'active' : ''}">${ribbonData}</div>
-                <div id="ribbon-layout" class="ribbon-panel ${builderConfig.activeTab === 'layout' ? 'active' : ''}">${ribbonLayout}</div>
-            </div>
-            
-            <div class="formula-bar">
-                <div id="active-cell-id" class="formula-name-box">A1</div>
-                <div class="formula-divider"></div>
-                <div class="formula-icon">fx</div>
-                <input type="text" id="formula-input" class="formula-input" placeholder="Select a cell..." />
-            </div>
-        </div>
 
-        <div class="excel-workspace spreadsheet-container">
-          <div id="print-canvas" class="print-canvas" data-paper="${builderConfig.paper}" data-orient="${builderConfig.orientation}">
-            <table id="builder-table" class="excel-table">
-              ${headerHtml}
-              <thead>
-                <tr class="no-print">
-                   <th class="select-all-corner w-10 border-slate-300" title="Select All"></th>
-                   ${excelColHeaders}
-                </tr>
-                <tr class="config-row">
-                   <th class="no-print row-header bg-slate-200 border-slate-300"></th>
-                   ${colHeadersHtml}
-                </tr>
-              </thead>
-              ${bodyHtml}
-            </table>
-          </div>
+            <div class="excel-workspace spreadsheet-container">
+              <div id="print-canvas" class="print-canvas" data-paper="${builderConfig.paper}" data-orient="${builderConfig.orientation}">
+                <table id="builder-table" class="excel-table">
+                  ${headerHtml}
+                  <thead>
+                    <tr class="no-print">
+                       <th class="select-all-corner w-10 border-slate-300" title="Select All"></th>
+                       ${excelColHeaders}
+                    </tr>
+                    <tr class="config-row">
+                       <th class="no-print row-header bg-slate-200 border-slate-300"></th>
+                       ${colHeadersHtml}
+                    </tr>
+                  </thead>
+                  ${bodyHtml}
+                </table>
+              </div>
+            </div>
         </div>
       `;
 
@@ -1362,11 +1326,13 @@
       document.getElementById('fmt-italic')?.addEventListener('click', () => applyFormat('fontStyle', toggleStyle('fontStyle', 'italic', 'normal')));
       
       document.getElementById('fmt-color')?.addEventListener('input', (e) => {
-          e.target.previousElementSibling.style.background = e.target.value;
+          const indicator = e.target.parentElement.querySelector('.indicator-color');
+          if(indicator) indicator.style.backgroundColor = e.target.value;
           applyFormat('color', e.target.value);
       });
       document.getElementById('fmt-bg')?.addEventListener('input', (e) => {
-          e.target.previousElementSibling.style.background = e.target.value;
+          const indicator = e.target.parentElement.querySelector('.indicator-bg');
+          if(indicator) indicator.style.backgroundColor = e.target.value;
           applyFormat('backgroundColor', e.target.value);
       });
       

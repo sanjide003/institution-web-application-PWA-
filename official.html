@@ -177,7 +177,7 @@
     .excel-workspace::-webkit-scrollbar-thumb:hover { background: #a19f9d; }
 
     /* Strict Canvas bounds */
-    .print-canvas { background: #fff; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: visible; transition: padding 0.2s; border-right: 2px dashed #ef4444;}
+    .print-canvas { background: #fff; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: visible; transition: padding 0.2s; border: 1px solid #d4d4d4; box-sizing: border-box;}
     
     /* Strict A4 Base dimensions (approx 96dpi) */
     .print-canvas[data-orient="portrait"] { width: 210mm; min-height: 297mm;}
@@ -260,8 +260,8 @@
     </div>
   </div>
 
-  <div id="official-app" class="hidden h-screen flex flex-col relative overflow-hidden">
-    <header class="no-print shrink-0 relative z-[1000] bg-white">
+  <div id="official-app" class="hidden h-screen flex flex-col bg-slate-50">
+    <header class="no-print shrink-0 relative z-[100] bg-white">
       <div class="nav-container">
         <div class="header-logo-box">
           <img id="header-logo" src="assets/images/logo.png" alt="Logo" onerror="this.style.display='none'">
@@ -290,7 +290,7 @@
       </div>
     </header>
 
-    <main id="app-main" class="flex-grow flex flex-col overflow-hidden relative w-full z-0">
+    <main id="app" class="flex-grow flex flex-col overflow-hidden relative w-full z-0">
       <div id="page-content" class="h-full overflow-y-auto w-full relative z-0">
         <section id="official-tab-dashboard" class="official-tab p-4"></section>
         <section id="official-tab-students" class="official-tab hidden p-4"></section>
@@ -300,7 +300,7 @@
       </div>
       
       <!-- Excel Interface Container -->
-      <section id="official-tab-export" class="official-tab hidden h-full flex-col bg-[#f3f2f1] w-full"></section>
+      <section id="official-tab-export" class="official-tab hidden h-full flex-col bg-[#f3f2f1] w-full z-10"></section>
     </main>
 
     <!-- Modal details -->
@@ -318,9 +318,6 @@
     </div>
   </div>
 
-  <!-- ==========================================
-       SESSION GUARD LOGIC
-       ========================================== -->
   <script>
     (function () {
         const DEFAULT_SESSION_MAX_AGE_MS = 1000 * 60 * 15;
@@ -429,9 +426,6 @@
     }());
   </script>
 
-  <!-- ==========================================
-       MAIN PAGE & SPREADSHEET LOGIC (ONLY ONE MODULE SCRIPT)
-       ========================================== -->
   <script type="module">
     import { signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
     import { collection, doc, getDoc, getDocs } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
@@ -454,7 +448,22 @@
 
     const officialFilters = { studentClass: '', studentGender: 'ALL', studentInfo: 'ALL', studentSearch: '', staffType: 'ALL', staffStatus: 'ALL', staffSearch: '' };
 
-    // EXCEL BUILDER STATE
+    const showMsgToast = (msg) => {
+        let toast = document.getElementById('excel-toast');
+        if(!toast) {
+            toast = document.createElement('div');
+            toast.id = 'excel-toast';
+            toast.className = 'fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-2 rounded-lg shadow-xl z-[9999] font-semibold text-sm transition-opacity duration-300 pointer-events-none opacity-0';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.style.opacity = '1';
+        setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+    };
+
+    // ==========================================
+    // EXCEL SPREADSHEET BUILDER CONFIG
+    // ==========================================
     let builderConfig = {
       classId: '', paper: 'A4', orientation: 'portrait', margin: '20px', sortBy: 'name', groupBy: 'mixed',
       showHeader: false, repeatHeader: false, customTitle: '', activeTab: 'home',
@@ -473,9 +482,48 @@
     const saveBuilderState = () => {
         const table = document.getElementById('builder-table');
         if (table) {
-            undoStack.push(table.innerHTML);
+            undoStack.push({
+                html: table.innerHTML,
+                config: JSON.parse(JSON.stringify(builderConfig))
+            });
             if (undoStack.length > 20) undoStack.shift(); 
             redoStack = [];
+        }
+    };
+
+    const undoBuilder = () => {
+        if (undoStack.length > 0) {
+            const table = document.getElementById('builder-table');
+            redoStack.push({
+                html: table.innerHTML,
+                config: JSON.parse(JSON.stringify(builderConfig))
+            });
+            const prevState = undoStack.pop();
+            table.innerHTML = prevState.html;
+            builderConfig = prevState.config;
+            attachTableFormatListeners();
+            rebindAllColumnListeners();
+            showMsgToast("Undo Applied");
+        } else {
+            showMsgToast("Nothing to undo.");
+        }
+    };
+
+    const redoBuilder = () => {
+        if (redoStack.length > 0) {
+            const table = document.getElementById('builder-table');
+            undoStack.push({
+                html: table.innerHTML,
+                config: JSON.parse(JSON.stringify(builderConfig))
+            });
+            const nextState = redoStack.pop();
+            table.innerHTML = nextState.html;
+            builderConfig = nextState.config;
+            attachTableFormatListeners();
+            rebindAllColumnListeners();
+            showMsgToast("Redo Applied");
+        } else {
+            showMsgToast("Nothing to redo.");
         }
     };
 
@@ -534,6 +582,7 @@
     const renderKeyValueGrid = (obj = {}, skipKeys = []) => renderEntriesGrid(getVisibleEntries(obj, skipKeys).map(([key, value]) => ({ key, label: toLabel(key), value })));
     const getPhoto = (obj = {}) => sanitizeUrl(obj.photo || obj.image || obj.logo || '') || 'assets/images/logo.png';
     const getStudentClass = (student = {}) => String(student.class || '--').trim() || '--';
+    const getStudentGender = (student = {}) => String(student.gender || '').trim();
     const getStudentStatus = (student = {}) => student.isActive === false || student.status === 'inactive' || student.left === true ? 'Inactive' : 'Active';
     const hasStudentConcession = (student = {}) => student.concessionFee !== undefined && student.concessionFee !== null && student.concessionFee !== '';
     const getStudentGroup = (studentId = '') => studentGroups.find((group) => Array.isArray(group.memberIds) && group.memberIds.includes(studentId));
@@ -545,6 +594,43 @@
       navMenu?.classList.toggle('active', isOpen);
       mobileToggle?.classList.toggle('active-toggle', isOpen);
       mobileToggle?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    };
+
+    const setTab = (tab = 'dashboard') => {
+      const requested = document.getElementById(`official-tab-${tab}`) ? tab : 'dashboard';
+      const target = document.getElementById(`official-tab-${requested}`) ? requested : 'students';
+      
+      document.querySelectorAll('.official-tab').forEach((el) => {
+          el.classList.add('hidden');
+          el.classList.remove('flex');
+      });
+      
+      const targetEl = document.getElementById(`official-tab-${target}`);
+      if(targetEl) {
+          if (target === 'export') {
+              document.getElementById('page-content').classList.add('hidden');
+              targetEl.classList.remove('hidden');
+              targetEl.classList.add('flex'); 
+          } else {
+              document.getElementById('page-content').classList.remove('hidden');
+              targetEl.classList.remove('hidden');
+          }
+      }
+
+      document.querySelectorAll('.tab-link').forEach((btn) => {
+        const active = btn.dataset.tab === target;
+        btn.classList.toggle('active', active);
+        btn.classList.toggle('text-indigo-700', active);
+      });
+      setMobileMenuState(false);
+      
+      if (target === 'export') {
+          renderExportTab();
+          setupExcelEngine();
+          updateCanvasStyle();
+      } else {
+          window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      }
     };
 
     const openOfficialDetailModal = (title = 'Details', bodyHtml = '') => {
@@ -572,6 +658,7 @@
     document.getElementById('official-detail-modal')?.addEventListener('click', (event) => { if (event.target === event.currentTarget) closeOfficialDetailModal(); });
     document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeOfficialDetailModal(); });
 
+    document.querySelectorAll('.tab-link').forEach((btn) => btn.addEventListener('click', (event) => { event.preventDefault(); setTab(btn.dataset.tab); }));
     mobileToggle?.addEventListener('click', (e) => { e.stopPropagation(); setMobileMenuState(!navMenu.classList.contains('active')); });
     document.addEventListener('click', (e) => { if (!navMenu?.contains(e.target) && !mobileToggle?.contains(e.target)) setMobileMenuState(false); });
 
@@ -889,98 +976,6 @@
         });
     };
 
-    const updatePrintStyles = () => {
-        let styleTag = document.getElementById('dynamic-print-margin');
-        if(!styleTag) {
-            styleTag = document.createElement('style');
-            styleTag.id = 'dynamic-print-margin';
-            document.head.appendChild(styleTag);
-        }
-        styleTag.innerHTML = `@media print { @page { size: A4 ${builderConfig.orientation}; margin: ${builderConfig.margin}; } }`;
-    };
-
-    const attachTableFormatListeners = () => {
-        const fInput = document.getElementById('formula-input');
-        if(!fInput) return;
-        
-        const undoBtn = document.getElementById('fmt-undo');
-        const redoBtn = document.getElementById('fmt-redo');
-        if(undoBtn) {
-            const newUndo = undoBtn.cloneNode(true);
-            undoBtn.parentNode.replaceChild(newUndo, undoBtn);
-            newUndo.addEventListener('click', undoBuilder);
-        }
-        if(redoBtn) {
-            const newRedo = redoBtn.cloneNode(true);
-            redoBtn.parentNode.replaceChild(newRedo, redoBtn);
-            newRedo.addEventListener('click', redoBuilder);
-        }
-
-        document.querySelectorAll('.builder-cell').forEach(cell => {
-            const newCell = cell.cloneNode(true);
-            cell.parentNode.replaceChild(newCell, cell);
-            
-            newCell.addEventListener('focus', (e) => {
-                const row = e.target.dataset.row;
-                const col = e.target.dataset.col;
-                if(row !== undefined && col !== undefined) {
-                    const colLetter = String.fromCharCode(65 + parseInt(col));
-                    document.getElementById('active-cell-id').textContent = `${colLetter}${parseInt(row)+1}`;
-                }
-                fInput.value = e.target.innerText;
-            });
-            newCell.addEventListener('input', (e) => {
-                if(e.target.classList.contains('selected')) fInput.value = e.target.innerText;
-            });
-        });
-        
-        const newFInput = fInput.cloneNode(true);
-        fInput.parentNode.replaceChild(newFInput, fInput);
-        newFInput.addEventListener('input', (e) => {
-            const activeCell = document.querySelector('.builder-cell.selected');
-            if(activeCell) activeCell.innerText = e.target.value;
-        });
-    };
-
-    const bindColumnListeners = (thElement) => {
-        const sel = thElement.querySelector('.builder-col-select');
-        sel?.addEventListener('change', (e) => {
-            saveBuilderState();
-            const idx = parseInt(e.target.dataset.colIndex);
-            const fieldId = e.target.value;
-            builderConfig.columns[idx].field = fieldId;
-            const fieldLabel = availableDataFields.find(f => f.id === fieldId)?.label || 'Column';
-            
-            const colHeaderCell = document.querySelector(`.col-header[data-col="${idx}"]`);
-            if(fieldId !== 'CUSTOM') {
-                builderConfig.columns[idx].title = fieldLabel;
-                builderConfig.columns[idx].width = 'auto';
-                if(colHeaderCell) colHeaderCell.style.width = 'auto';
-                
-                const input = thElement.querySelector('.builder-col-title-input');
-                if(input) input.value = fieldLabel;
-                const printHeading = thElement.querySelector('.print-only-heading');
-                if(printHeading) printHeading.textContent = fieldLabel;
-            } else {
-                builderConfig.columns[idx].width = '150px';
-                if(colHeaderCell) colHeaderCell.style.width = '150px';
-            }
-            populateColumnData(idx);
-        });
-
-        const titleInput = thElement.querySelector('.builder-col-title-input');
-        titleInput?.addEventListener('input', (e) => {
-            const idx = parseInt(e.target.dataset.colIndex);
-            builderConfig.columns[idx].title = e.target.value;
-            const heading = e.target.closest('th').querySelector('.print-only-heading');
-            if(heading) heading.textContent = e.target.value;
-        });
-    };
-
-    const rebindAllColumnListeners = () => {
-        document.querySelectorAll('.config-row-th').forEach(th => bindColumnListeners(th));
-    };
-
     const renderExportTab = () => {
       const classOptions = [...new Set(allStudents.map(getStudentClass))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
       let studentRows = builderConfig.classId ? allStudents.filter(s => getStudentClass(s) === builderConfig.classId) : [];
@@ -1257,6 +1252,55 @@
       attachBuilderListeners();
     };
 
+    const updatePrintStyles = () => {
+        let styleTag = document.getElementById('dynamic-print-margin');
+        if(!styleTag) {
+            styleTag = document.createElement('style');
+            styleTag.id = 'dynamic-print-margin';
+            document.head.appendChild(styleTag);
+        }
+        styleTag.innerHTML = `@media print { @page { size: A4 ${builderConfig.orientation}; margin: ${builderConfig.margin}; } }`;
+    };
+
+    const bindColumnListeners = (thElement) => {
+        const sel = thElement.querySelector('.builder-col-select');
+        sel?.addEventListener('change', (e) => {
+            saveBuilderState();
+            const idx = parseInt(e.target.dataset.colIndex);
+            const fieldId = e.target.value;
+            builderConfig.columns[idx].field = fieldId;
+            const fieldLabel = availableDataFields.find(f => f.id === fieldId)?.label || 'Column';
+            
+            const colHeaderCell = document.querySelector(`.col-header[data-col="${idx}"]`);
+            if(fieldId !== 'CUSTOM') {
+                builderConfig.columns[idx].title = fieldLabel;
+                builderConfig.columns[idx].width = 'auto';
+                if(colHeaderCell) colHeaderCell.style.width = 'auto';
+                
+                const input = thElement.querySelector('.builder-col-title-input');
+                if(input) input.value = fieldLabel;
+                const printHeading = thElement.querySelector('.print-only-heading');
+                if(printHeading) printHeading.textContent = fieldLabel;
+            } else {
+                builderConfig.columns[idx].width = '150px';
+                if(colHeaderCell) colHeaderCell.style.width = '150px';
+            }
+            populateColumnData(idx);
+        });
+
+        const titleInput = thElement.querySelector('.builder-col-title-input');
+        titleInput?.addEventListener('input', (e) => {
+            const idx = parseInt(e.target.dataset.colIndex);
+            builderConfig.columns[idx].title = e.target.value;
+            const heading = e.target.closest('th').querySelector('.print-only-heading');
+            if(heading) heading.textContent = e.target.value;
+        });
+    };
+
+    const rebindAllColumnListeners = () => {
+        document.querySelectorAll('.config-row-th').forEach(th => bindColumnListeners(th));
+    };
+
     const attachBuilderListeners = () => {
       document.querySelectorAll('.excel-tab').forEach(tab => tab.addEventListener('click', (e) => {
           document.querySelectorAll('.excel-tab').forEach(t => t.classList.remove('active'));
@@ -1284,7 +1328,6 @@
 
       rebindAllColumnListeners();
 
-      // Cells Insert/Delete Engine
       document.getElementById('btn-insert-col')?.addEventListener('click', () => {
         const selectedTh = document.querySelector('.col-header.selected');
         let insertIdx = builderConfig.columns.length;
@@ -1299,8 +1342,8 @@
 
       document.getElementById('btn-delete-col')?.addEventListener('click', () => {
         const selectedCols = Array.from(document.querySelectorAll('.col-header.selected')).map(th => parseInt(th.dataset.col)).sort((a,b)=>b-a);
-        if(selectedCols.length === 0) { alert("Please click a column letter (A, B, C...) to select and delete it."); return; }
-        if(builderConfig.columns.length - selectedCols.length < 1) { alert("Cannot delete all columns."); return; }
+        if(selectedCols.length === 0) { showMsgToast("Please click a column letter (A, B, C...) to select and delete it."); return; }
+        if(builderConfig.columns.length - selectedCols.length < 1) { showMsgToast("Cannot delete all columns."); return; }
         
         saveBuilderState();
         selectedCols.forEach(idx => builderConfig.columns.splice(idx, 1));
@@ -1324,7 +1367,6 @@
         if (selectedTr) targetTbody.insertBefore(tr, selectedTr);
         else targetTbody.appendChild(tr);
         
-        // Re-number rows
         let rIdx = 0;
         document.querySelectorAll('#builder-table tbody tr').forEach(row => {
             const rowHead = row.querySelector('.row-header');
@@ -1341,7 +1383,7 @@
 
       document.getElementById('btn-delete-row')?.addEventListener('click', () => {
         const selectedRows = Array.from(new Set(Array.from(document.querySelectorAll('.builder-cell.selected, .row-header.selected')).map(el => el.closest('tr'))));
-        if(selectedRows.length === 0) { alert("Please select a row to delete."); return; }
+        if(selectedRows.length === 0) { showMsgToast("Please select a row to delete."); return; }
         
         saveBuilderState();
         selectedRows.forEach(tr => tr.remove());
@@ -1359,7 +1401,6 @@
         });
       });
 
-      // Formatting
       const applyFormat = (styleProp, valueFn) => {
           saveBuilderState();
           document.querySelectorAll('.builder-cell.selected').forEach(td => {
@@ -1398,6 +1439,9 @@
           applyFormat('fontSize', e.target.value + 'px');
       });
 
+      document.getElementById('fmt-undo')?.addEventListener('click', undoBuilder);
+      document.getElementById('fmt-redo')?.addEventListener('click', redoBuilder);
+
       document.getElementById('btn-export-print')?.addEventListener('click', () => {
         document.querySelectorAll('.builder-cell, .col-header, .row-header, .select-all-corner').forEach(c => c.classList.remove('selected'));
         document.body.classList.add('is-printing');
@@ -1418,14 +1462,33 @@
       });
     };
 
-    const updateCanvasStyle = () => {
-      const canvas = document.getElementById('print-canvas');
-      if(canvas) {
-        canvas.dataset.paper = builderConfig.paper;
-        canvas.dataset.orient = builderConfig.orientation;
-        canvas.style.padding = builderConfig.margin;
-      }
-      updatePrintStyles();
+    const attachTableFormatListeners = () => {
+        const fInput = document.getElementById('formula-input');
+        if(!fInput) return;
+        document.querySelectorAll('.builder-cell').forEach(cell => {
+            const newCell = cell.cloneNode(true);
+            cell.parentNode.replaceChild(newCell, cell);
+            
+            newCell.addEventListener('focus', (e) => {
+                const row = e.target.dataset.row;
+                const col = e.target.dataset.col;
+                if(row !== undefined && col !== undefined) {
+                    const colLetter = String.fromCharCode(65 + parseInt(col));
+                    document.getElementById('active-cell-id').textContent = `${colLetter}${parseInt(row)+1}`;
+                }
+                fInput.value = e.target.innerText;
+            });
+            newCell.addEventListener('input', (e) => {
+                if(e.target.classList.contains('selected')) fInput.value = e.target.innerText;
+            });
+        });
+        
+        const newFInput = fInput.cloneNode(true);
+        fInput.parentNode.replaceChild(newFInput, fInput);
+        newFInput.addEventListener('input', (e) => {
+            const activeCell = document.querySelector('.builder-cell.selected');
+            if(activeCell) activeCell.innerText = e.target.value;
+        });
     };
 
     const setupExcelEngine = () => {

@@ -13,12 +13,20 @@
   
   <style>
     /* ==========================================
-       GLOBAL CSS & DASHBOARD STYLES
+       GLOBAL CSS x& DASHBOARD STYLES
        ========================================== */
     :root { 
-        --background-light: #f3f4f6; --text-light: #1f2937; --card-light: #ffffff; --border-light: #e5e7eb; 
-        --primary-light: #3b82f6; --primary: #0f172a; --accent: #3b82f6; --white: #ffffff; 
-        --text-dark: #1e293b; --text-gray: #64748b; --header-height: 70px;
+        --background-light: #f3f4f6; 
+        --text-light: #1f2937; 
+        --card-light: #ffffff; 
+        --border-light: #e5e7eb; 
+        --primary-light: #3b82f6; 
+        --primary: #0f172a; 
+        --accent: #3b82f6; 
+        --white: #ffffff; 
+        --text-dark: #1e293b; 
+        --text-gray: #64748b; 
+        --header-height: 70px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth !important; }
@@ -44,8 +52,8 @@
     input, select, textarea { background-color: #ffffff; border-color: #d1d5db; color: #1f2937; transition: border 0.2s; outline: none; }
     input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
 
-    header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: relative; z-index: 1000; border: 1px solid #f1f5f9; height: var(--header-height); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border-radius: 16px; margin: 15px auto 10px auto; width: calc(100% - 30px); max-width: 1200px; }
-    @media (max-width: 768px) { header { margin: 10px auto; width: calc(100% - 20px); border-radius: 12px; } }
+    header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 15px; z-index: 1000; border: 1px solid #f1f5f9; height: var(--header-height); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border-radius: 16px; margin: 15px auto; width: calc(100% - 30px); max-width: 1200px; }
+    @media (max-width: 768px) { header { margin: 10px; width: calc(100% - 20px); border-radius: 12px; top: 10px; } }
     .nav-container { height: 100%; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; position: relative; }
     .header-logo-box { width: 45px; height: 45px; flex-shrink: 0; z-index: 10; display: flex; align-items: center;}
     .header-logo-box img { max-height: 100%; max-width: 100%; border-radius: 8px; object-fit: contain; opacity: 0; transition: opacity 0.5s ease; }
@@ -123,7 +131,7 @@
     .detail-value{font-size:12px;color:#0f172a;font-weight:600;word-break:break-word}
 
     /* ==========================================
-       EXCEL SPREADSHEET UI STYLES (UPDATED)
+       EXCEL SPREADSHEET UI STYLES
        ========================================== */
 
     .excel-container { display: flex; flex-direction: column; height: 100%; background: #f3f2f1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
@@ -154,9 +162,23 @@
     .excel-btn-small:hover { background: #f3f2f1; border-color: #c8c6c4;}
     .excel-btn-small:active { background: #e1dfdd; transform: scale(0.95);}
 
-    .excel-input-ribbon { border: 1px solid #8a8886; border-radius: 2px; padding: 2px 6px; font-size: 12px; height: 26px; outline: none; color: #323130; background: #fff;}
+    .excel-btn-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 3px 6px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; transition: 0.1s; font-size: 9px; font-weight: 600; white-space: nowrap; min-width: 38px; height: 30px; }
+    .excel-btn-cell i { font-size: 10px; }
+    .excel-btn-cell:hover { border-color: #c8c6c4; background: #f3f2f1; }
+    .excel-btn-cell:active { background: #e1dfdd; transform: scale(0.95); }
+    .excel-btn-cell.cell-del { color: #dc2626; }
+    .excel-btn-cell.cell-del:hover { background: #fef2f2; border-color: #fecaca; }
+    .excel-btn-cell.cell-ins { color: #2563eb; }
+    .excel-btn-cell.cell-ins:hover { background: #eff6ff; border-color: #bfdbfe; }
+    .excel-btn-cell.cell-add { color: #059669; }
+    .excel-btn-cell.cell-add:hover { background: #ecfdf5; border-color: #a7f3d0; }
+
+    .margin-input-row { display: flex; align-items: center; gap: 3px; }
+    .margin-label { font-size: 9px; font-weight: 700; color: #605e5c; width: 10px; text-align: center; }
+    .margin-unit { font-size: 9px; color: #a19f9d; }
+
+    .excel-input-ribbon { border: 1px solid #8a8886; border-radius: 2px; padding: 2px 6px; font-size: 12px; height: 26px; outline: none; color: #323130;}
     .excel-input-ribbon:focus { border-color: #107c41; box-shadow: 0 0 0 1px #107c41; }
-    .excel-input-ribbon:disabled { background: #f3f2f1; color: #a19f9d; border-color: #e1dfdd; cursor: not-allowed; }
 
     .premium-export-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 600; color: #fff; cursor: pointer; transition: 0.2s; border: none; }
     .btn-excel-green { background: #107c41;}
@@ -170,50 +192,43 @@
     .formula-icon { color: #605e5c; font-style: italic; font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 14px;}
     .formula-input { flex-grow: 1; border: none; outline: none; font-size: 13px; color: #000; padding: 2px 5px;}
 
-    .excel-workspace { flex-grow: 1; overflow: auto; padding: 15px; position: relative; background: #e1dfdd; padding-bottom: 100px;}
+    .excel-workspace { flex-grow: 1; overflow: auto; padding: 15px; position: relative; background: #e1dfdd;}
     .excel-workspace::-webkit-scrollbar { width: 12px; height: 12px; }
     .excel-workspace::-webkit-scrollbar-track { background: #f3f2f1; }
     .excel-workspace::-webkit-scrollbar-thumb { background: #c8c6c4; border: 2px solid #f3f2f1; border-radius: 6px; }
     .excel-workspace::-webkit-scrollbar-thumb:hover { background: #a19f9d; }
 
-    /* Strict Canvas bounds */
-    .print-canvas { background: #fff; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: visible; transition: padding 0.2s; border: 1px solid #d4d4d4; box-sizing: border-box;}
-    
-    /* Strict A4 Base dimensions (approx 96dpi) */
-    .print-canvas[data-orient="portrait"] { width: 210mm; min-height: 297mm;}
-    .print-canvas[data-orient="landscape"] { width: 297mm; min-height: 210mm;}
+    .print-canvas { background: #fff; margin: 0 auto; min-height: 600px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: visible; border-right: 2px dashed #ef4444;
+      padding: var(--mg-top, 10mm) var(--mg-right, 10mm) var(--mg-bottom, 10mm) var(--mg-left, 10mm);
+    }
+    .print-canvas[data-paper="A4"][data-orient="portrait"] { width: 210mm; }
+    .print-canvas[data-paper="A4"][data-orient="landscape"] { width: 297mm; }
 
-    .excel-table { border-collapse: collapse; min-width: 100%; table-layout: fixed;}
+    .excel-table { border-collapse: collapse; min-width: 100%; table-layout: auto;}
     .excel-table th, .excel-table td { border: 1px solid #d4d4d4; padding: 4px; font-size: 13px; color: #000; background: #fff; vertical-align: bottom;}
     
-    /* Native Headers Sticky (Freeze Panes) */
     .col-header, .row-header, .select-all-corner { background-color: #e6e6e6 !important; color: #333 !important; text-align: center !important; font-size: 12px !important; font-weight: normal !important; user-select: none; cursor: pointer; padding: 2px !important;}
     .col-header:hover, .row-header:hover, .select-all-corner:hover { background-color: #d4d4d4 !important; }
     .col-header.selected, .row-header.selected, .select-all-corner.selected { background-color: #cacaca !important; color: #107c41 !important; font-weight: bold !important; border-bottom: 2px solid #107c41 !important;}
     .row-header.selected { border-bottom: 1px solid #d4d4d4 !important; border-right: 2px solid #107c41 !important;}
-    
-    /* Freeze Panes CSS */
-    .excel-table thead tr:first-child th { position: sticky; top: 0; z-index: 30; box-shadow: 0 1px 2px rgba(0,0,0,0.1);}
-    .excel-table td.row-header { position: sticky; left: 0; z-index: 25; box-shadow: 1px 0 2px rgba(0,0,0,0.05);}
-    .excel-table th.select-all-corner { position: sticky; top: 0; left: 0; z-index: 40; box-shadow: 1px 1px 2px rgba(0,0,0,0.1);}
 
-    /* Cells */
     .excel-cell { outline: none; transition: 0.1s; white-space: nowrap; overflow: hidden; position: relative;}
     .excel-cell.selected { background-color: #e5f3eb !important; }
     .excel-cell.selected::after { content: ''; position: absolute; inset: -1px; border: 2px solid #107c41; z-index: 10; pointer-events: none; }
     .excel-cell:focus { z-index: 12; }
     .excel-cell:focus::after { content: ''; position: absolute; inset: -1px; border: 2px solid #107c41; z-index: 12; pointer-events: none; }
 
-    /* Config Rows inside grid */
     .config-row th { background: #f8fafc; padding: 4px; border-bottom: none;}
     .grid-select { width: 100%; border: 1px solid #c8c6c4; padding: 2px; font-size: 11px; outline: none; color: #333; border-radius: 2px;}
     .grid-select:focus { border-color: #107c41;}
+    .grid-input { width: 100%; border: 1px solid transparent; padding: 2px 4px; font-size: 12px; font-weight: bold; outline: none; color: #000; border-top: none;}
+    .grid-input:focus { border-color: #c8c6c4;}
+    .grid-input:hover { border-color: #e1dfdd; }
 
     .col-resizer { position: absolute; right: -4px; top: 0; bottom: 0; width: 8px; cursor: col-resize; z-index: 20; }
     .col-resizer:hover { background: rgba(16, 124, 65, 0.5); }
     .builder-th { position: relative; }
 
-    /* Print specific settings */
     .print-only-heading { display: none; }
     .builder-print-header { display: none; }
     .builder-print-header.repeat-header { display: table-header-group; }
@@ -232,11 +247,9 @@
         body.is-printing .builder-print-header { display: table-header-group !important; }
         body.is-printing .excel-cell { white-space: normal; word-break: break-word;}
         .page-break-before { page-break-before: always; break-before: page; }
+        @page { margin: 1cm; }
     }
   </style>
-
-  <!-- Print Margin Injector -->
-  <style id="dynamic-print-margin"></style>
 </head>
 
 <body class="antialiased text-gray-800 collection-shell">
@@ -260,8 +273,8 @@
     </div>
   </div>
 
-  <div id="official-app" class="hidden h-screen flex flex-col bg-slate-50">
-    <header class="no-print shrink-0 relative z-[100] bg-white">
+  <div id="official-app" class="hidden h-screen flex flex-col">
+    <header class="no-print shrink-0">
       <div class="nav-container">
         <div class="header-logo-box">
           <img id="header-logo" src="assets/images/logo.png" alt="Logo" onerror="this.style.display='none'">
@@ -290,20 +303,19 @@
       </div>
     </header>
 
-    <main id="app" class="flex-grow flex flex-col overflow-hidden relative w-full z-0">
-      <div id="page-content" class="h-full overflow-y-auto w-full relative z-0">
-        <section id="official-tab-dashboard" class="official-tab p-4"></section>
-        <section id="official-tab-students" class="official-tab hidden p-4"></section>
-        <section id="official-tab-summary" class="official-tab hidden p-4"></section>
-        <section id="official-tab-staff" class="official-tab hidden p-4"></section>
-        <section id="official-tab-home" class="official-tab hidden p-4"></section>
+    <main id="app" class="flex-grow flex flex-col overflow-hidden relative">
+      <div id="page-content" class="h-full overflow-y-auto">
+        <section id="official-tab-dashboard" class="official-tab page-content p-4"></section>
+        <section id="official-tab-students" class="official-tab page-content hidden p-4"></section>
+        <section id="official-tab-summary" class="official-tab page-content hidden p-4"></section>
+        <section id="official-tab-staff" class="official-tab page-content hidden p-4"></section>
+        <section id="official-tab-home" class="official-tab page-content hidden p-4"></section>
       </div>
       
       <!-- Excel Interface Container -->
-      <section id="official-tab-export" class="official-tab hidden h-full flex-col bg-[#f3f2f1] w-full z-10"></section>
+      <section id="official-tab-export" class="official-tab hidden h-full flex-col bg-[#f3f2f1]"></section>
     </main>
 
-    <!-- Modal details -->
     <div id="official-detail-modal" class="fixed inset-0 z-[1000] hidden items-center justify-center bg-slate-950/60 p-3 no-print" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="official-detail-title">
       <div class="official-detail-dialog w-full max-w-5xl max-h-[90vh] overflow-hidden rounded-3xl bg-white shadow-2xl border border-slate-200">
         <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 bg-slate-50">
@@ -448,25 +460,13 @@
 
     const officialFilters = { studentClass: '', studentGender: 'ALL', studentInfo: 'ALL', studentSearch: '', staffType: 'ALL', staffStatus: 'ALL', staffSearch: '' };
 
-    const showMsgToast = (msg) => {
-        let toast = document.getElementById('excel-toast');
-        if(!toast) {
-            toast = document.createElement('div');
-            toast.id = 'excel-toast';
-            toast.className = 'fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-2 rounded-lg shadow-xl z-[9999] font-semibold text-sm transition-opacity duration-300 pointer-events-none opacity-0';
-            document.body.appendChild(toast);
-        }
-        toast.textContent = msg;
-        toast.style.opacity = '1';
-        setTimeout(() => { toast.style.opacity = '0'; }, 3000);
-    };
-
     // ==========================================
     // EXCEL SPREADSHEET BUILDER CONFIG
     // ==========================================
     let builderConfig = {
-      classId: '', paper: 'A4', orientation: 'portrait', margin: '20px', sortBy: 'name', groupBy: 'mixed',
+      classId: '', paper: 'A4', orientation: 'portrait', sortBy: 'name', groupBy: 'mixed',
       showHeader: false, repeatHeader: false, customTitle: '', activeTab: 'home',
+      margins: { top: 10, right: 10, bottom: 10, left: 10 },
       columns: [
         { id: 'col_sno', field: 'SNO', title: 'S.No', width: 'auto' },
         { id: 'col_name', field: 'name', title: 'Student Name', width: 'auto' },
@@ -478,14 +478,13 @@
 
     let undoStack = [];
     let redoStack = [];
+    let selectedColIndex = -1;
+    let selectedRowIndex = -1;
 
     const saveBuilderState = () => {
         const table = document.getElementById('builder-table');
         if (table) {
-            undoStack.push({
-                html: table.innerHTML,
-                config: JSON.parse(JSON.stringify(builderConfig))
-            });
+            undoStack.push(table.innerHTML);
             if (undoStack.length > 20) undoStack.shift(); 
             redoStack = [];
         }
@@ -494,36 +493,20 @@
     const undoBuilder = () => {
         if (undoStack.length > 0) {
             const table = document.getElementById('builder-table');
-            redoStack.push({
-                html: table.innerHTML,
-                config: JSON.parse(JSON.stringify(builderConfig))
-            });
-            const prevState = undoStack.pop();
-            table.innerHTML = prevState.html;
-            builderConfig = prevState.config;
+            redoStack.push(table.innerHTML);
+            table.innerHTML = undoStack.pop();
             attachTableFormatListeners();
             rebindAllColumnListeners();
-            showMsgToast("Undo Applied");
-        } else {
-            showMsgToast("Nothing to undo.");
         }
     };
 
     const redoBuilder = () => {
         if (redoStack.length > 0) {
             const table = document.getElementById('builder-table');
-            undoStack.push({
-                html: table.innerHTML,
-                config: JSON.parse(JSON.stringify(builderConfig))
-            });
-            const nextState = redoStack.pop();
-            table.innerHTML = nextState.html;
-            builderConfig = nextState.config;
+            undoStack.push(table.innerHTML);
+            table.innerHTML = redoStack.pop();
             attachTableFormatListeners();
             rebindAllColumnListeners();
-            showMsgToast("Redo Applied");
-        } else {
-            showMsgToast("Nothing to redo.");
         }
     };
 
@@ -599,21 +582,15 @@
     const setTab = (tab = 'dashboard') => {
       const requested = document.getElementById(`official-tab-${tab}`) ? tab : 'dashboard';
       const target = document.getElementById(`official-tab-${requested}`) ? requested : 'students';
-      
-      document.querySelectorAll('.official-tab').forEach((el) => {
-          el.classList.add('hidden');
-          el.classList.remove('flex');
-      });
+      document.querySelectorAll('.official-tab').forEach((el) => el.classList.add('hidden'));
       
       const targetEl = document.getElementById(`official-tab-${target}`);
       if(targetEl) {
+          targetEl.classList.remove('hidden');
           if (target === 'export') {
-              document.getElementById('page-content').classList.add('hidden');
-              targetEl.classList.remove('hidden');
               targetEl.classList.add('flex'); 
           } else {
-              document.getElementById('page-content').classList.remove('hidden');
-              targetEl.classList.remove('hidden');
+              document.getElementById('official-tab-export')?.classList.remove('flex');
           }
       }
 
@@ -623,13 +600,11 @@
         btn.classList.toggle('text-indigo-700', active);
       });
       setMobileMenuState(false);
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       
       if (target === 'export') {
           renderExportTab();
           setupExcelEngine();
-          updateCanvasStyle();
-      } else {
-          window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       }
     };
 
@@ -955,6 +930,20 @@
         </div>`;
     };
 
+    const availableDataFields = [
+      { id: 'SNO', label: 'Serial No. (Auto)' },
+      { id: 'name', label: 'Student Name' },
+      { id: 'adm', label: 'Admission No.' },
+      { id: 'class', label: 'Class' },
+      { id: 'gender', label: 'Gender' },
+      { id: 'mobile', label: 'Mobile No.' },
+      { id: 'father', label: 'Father Name' },
+      { id: 'uid', label: 'UID / Roll No.' },
+      { id: 'address', label: 'Address' },
+      { id: 'CUSTOM', label: 'Custom/Blank Space' }
+    ];
+
+    // Targeted DOM update for columns to preserve user edits
     const populateColumnData = (colIndex) => {
         const colConfig = builderConfig.columns[colIndex];
         const fieldId = colConfig.field;
@@ -1008,11 +997,11 @@
       ` : '';
 
       const excelColHeaders = builderConfig.columns.map((col, i) => 
-        `<th class="no-print col-header" data-col="${i}" style="width: ${col.width || '150px'}" title="Select Column ${String.fromCharCode(65 + i)}">${String.fromCharCode(65 + i)}</th>`
+        `<th class="no-print col-header" data-col="${i}" title="Select Column ${String.fromCharCode(65 + i)}">${String.fromCharCode(65 + i)}</th>`
       ).join('');
 
       const colHeadersHtml = builderConfig.columns.map((col, cIndex) => {
-        return `<th class="builder-th group config-row-th">
+        return `<th class="builder-th group config-row-th" style="width: ${col.width || 'auto'}">
           <div class="col-resizer" data-col-index="${cIndex}"></div>
           <div class="no-print mb-1 flex items-center justify-between gap-1">
             <select class="grid-select builder-col-select" data-col-index="${cIndex}">
@@ -1100,12 +1089,19 @@
            </div>
            
            <div class="ribbon-group">
-               <div class="ribbon-row h-full">
-                   <button id="btn-insert-col" class="excel-btn-ribbon text-emerald-700" title="Insert Selected Column"><i class="fas fa-plus"></i><span>Ins Col</span></button>
-                   <button id="btn-delete-col" class="excel-btn-ribbon text-red-600" title="Delete Selected Column"><i class="fas fa-minus"></i><span>Del Col</span></button>
-                   <div class="w-px h-8 bg-slate-300 mx-1"></div>
-                   <button id="btn-insert-row" class="excel-btn-ribbon text-emerald-700" title="Insert Selected Row"><i class="fas fa-plus"></i><span>Ins Row</span></button>
-                   <button id="btn-delete-row" class="excel-btn-ribbon text-red-600" title="Delete Selected Row"><i class="fas fa-minus"></i><span>Del Row</span></button>
+               <div class="flex flex-col gap-1 justify-between h-full">
+                 <div class="ribbon-row gap-1">
+                   <button id="btn-add-col" class="excel-btn-cell cell-add" title="Add Column at End"><i class="fas fa-columns"></i>Add Col</button>
+                   <button id="btn-add-row" class="excel-btn-cell cell-add" title="Add Row at End"><i class="fas fa-table-rows"></i>Add Row</button>
+                 </div>
+                 <div class="ribbon-row gap-1">
+                   <button id="btn-del-col" class="excel-btn-cell cell-del" title="Delete Selected Column"><i class="fas fa-trash-alt"></i>Del Col</button>
+                   <button id="btn-del-row" class="excel-btn-cell cell-del" title="Delete Selected Row"><i class="fas fa-minus-square"></i>Del Row</button>
+                 </div>
+                 <div class="ribbon-row gap-1">
+                   <button id="btn-ins-col" class="excel-btn-cell cell-ins" title="Insert Column After Selected"><i class="fas fa-indent"></i>Ins Col</button>
+                   <button id="btn-ins-row" class="excel-btn-cell cell-ins" title="Insert Row After Selected"><i class="fas fa-level-down-alt"></i>Ins Row</button>
+                 </div>
                </div>
                <span class="ribbon-label">Cells</span>
            </div>
@@ -1138,9 +1134,9 @@
                    <div class="flex flex-col">
                        <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Group By</label>
                        <select id="builder-group" class="excel-input-ribbon w-28">
-                          <option value="mixed" ${builderConfig.groupBy === 'mixed' ? 'selected' : ''}>Mixed (ആൺ & പെൺ)</option>
+                          <option value="mixed" ${builderConfig.groupBy === 'mixed' ? 'selected' : ''}>Mixed</option>
                           <option value="grouped" ${builderConfig.groupBy === 'grouped' ? 'selected' : ''}>Boys First</option>
-                          <option value="separate" ${builderConfig.groupBy === 'separate' ? 'selected' : ''}>Separate Pages</option>
+                          <option value="separate" ${builderConfig.groupBy === 'separate' ? 'selected' : ''}>Page Break</option>
                        </select>
                    </div>
                </div>
@@ -1154,29 +1150,51 @@
             <div class="ribbon-group">
                 <div class="ribbon-row h-full gap-2 items-center">
                    <div class="flex flex-col">
-                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Size</label>
-                       <select disabled class="excel-input-ribbon w-20 bg-slate-100 text-slate-500 cursor-not-allowed">
-                          <option>A4 (Standard)</option>
-                       </select>
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Paper Size</label>
+                       <div class="excel-input-ribbon w-20 flex items-center justify-center bg-slate-100 text-slate-500 font-bold text-xs cursor-not-allowed select-none rounded" style="height:26px;border:1px solid #c8c6c4;">A4 Size</div>
                    </div>
                    <div class="flex flex-col">
                        <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Orientation</label>
-                       <select id="builder-orient" class="excel-input-ribbon w-24">
+                       <select id="builder-orient" class="excel-input-ribbon w-28">
                           <option value="portrait" ${builderConfig.orientation === 'portrait' ? 'selected' : ''}>Portrait</option>
                           <option value="landscape" ${builderConfig.orientation === 'landscape' ? 'selected' : ''}>Landscape</option>
                        </select>
                    </div>
-                   <div class="flex flex-col">
-                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Margins</label>
-                       <select id="builder-margin" class="excel-input-ribbon w-24">
-                          <option value="20px" ${builderConfig.margin === '20px' ? 'selected' : ''}>Normal (20px)</option>
-                          <option value="10px" ${builderConfig.margin === '10px' ? 'selected' : ''}>Narrow (10px)</option>
-                          <option value="40px" ${builderConfig.margin === '40px' ? 'selected' : ''}>Wide (40px)</option>
-                          <option value="0px" ${builderConfig.margin === '0px' ? 'selected' : ''}>None (0px)</option>
-                       </select>
-                   </div>
                 </div>
                 <span class="ribbon-label">Page Setup</span>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-row h-full gap-2 items-start pt-1">
+                  <div class="flex flex-col gap-1">
+                    <label class="text-[10px] font-semibold text-slate-600">Margin Preset</label>
+                    <select id="builder-margin-preset" class="excel-input-ribbon w-28">
+                      <option value="normal">Normal (10mm)</option>
+                      <option value="narrow">Narrow (5mm)</option>
+                      <option value="moderate">Moderate (15mm)</option>
+                      <option value="wide">Wide (25mm)</option>
+                      <option value="custom">Custom</option>
+                    </select>
+                    <div id="margin-custom-box" class="flex flex-col gap-1 mt-1">
+                      <div class="margin-input-row">
+                        <span class="margin-label">T</span>
+                        <input type="number" id="mg-top" class="excel-input-ribbon" style="width:42px;" value="${builderConfig.margins.top}" min="0" max="60">
+                        <span class="margin-unit">mm</span>
+                        <span class="margin-label" style="margin-left:4px">B</span>
+                        <input type="number" id="mg-bottom" class="excel-input-ribbon" style="width:42px;" value="${builderConfig.margins.bottom}" min="0" max="60">
+                        <span class="margin-unit">mm</span>
+                      </div>
+                      <div class="margin-input-row">
+                        <span class="margin-label">L</span>
+                        <input type="number" id="mg-left" class="excel-input-ribbon" style="width:42px;" value="${builderConfig.margins.left}" min="0" max="60">
+                        <span class="margin-unit">mm</span>
+                        <span class="margin-label" style="margin-left:4px">R</span>
+                        <input type="number" id="mg-right" class="excel-input-ribbon" style="width:42px;" value="${builderConfig.margins.right}" min="0" max="60">
+                        <span class="margin-unit">mm</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span class="ribbon-label">Margins</span>
             </div>
             <div class="ribbon-group">
                 <div class="ribbon-row h-full gap-2 items-center">
@@ -1229,7 +1247,7 @@
         </div>
 
         <div class="excel-workspace spreadsheet-container">
-          <div id="print-canvas" class="print-canvas" data-paper="${builderConfig.paper}" data-orient="${builderConfig.orientation}" style="padding: ${builderConfig.margin};">
+          <div id="print-canvas" class="print-canvas" data-paper="${builderConfig.paper}" data-orient="${builderConfig.orientation}">
             <table id="builder-table" class="excel-table">
               ${headerHtml}
               <thead>
@@ -1248,18 +1266,8 @@
         </div>
       `;
 
-      updatePrintStyles();
       attachBuilderListeners();
-    };
-
-    const updatePrintStyles = () => {
-        let styleTag = document.getElementById('dynamic-print-margin');
-        if(!styleTag) {
-            styleTag = document.createElement('style');
-            styleTag.id = 'dynamic-print-margin';
-            document.head.appendChild(styleTag);
-        }
-        styleTag.innerHTML = `@media print { @page { size: A4 ${builderConfig.orientation}; margin: ${builderConfig.margin}; } }`;
+      updateCanvasStyle();
     };
 
     const bindColumnListeners = (thElement) => {
@@ -1271,19 +1279,18 @@
             builderConfig.columns[idx].field = fieldId;
             const fieldLabel = availableDataFields.find(f => f.id === fieldId)?.label || 'Column';
             
-            const colHeaderCell = document.querySelector(`.col-header[data-col="${idx}"]`);
+            const th = e.target.closest('th');
             if(fieldId !== 'CUSTOM') {
                 builderConfig.columns[idx].title = fieldLabel;
                 builderConfig.columns[idx].width = 'auto';
-                if(colHeaderCell) colHeaderCell.style.width = 'auto';
-                
-                const input = thElement.querySelector('.builder-col-title-input');
+                th.style.width = 'auto';
+                const input = th.querySelector('.builder-col-title-input');
                 if(input) input.value = fieldLabel;
-                const printHeading = thElement.querySelector('.print-only-heading');
+                const printHeading = th.querySelector('.print-only-heading');
                 if(printHeading) printHeading.textContent = fieldLabel;
             } else {
                 builderConfig.columns[idx].width = '150px';
-                if(colHeaderCell) colHeaderCell.style.width = '150px';
+                th.style.width = '150px';
             }
             populateColumnData(idx);
         });
@@ -1311,513 +1318,33 @@
           document.getElementById(`ribbon-${targetId}`).classList.add('active');
       }));
 
+      // Dataset changes require full re-render
       document.getElementById('builder-class')?.addEventListener('change', (e) => { builderConfig.classId = e.target.value; renderExportTab(); setupExcelEngine(); });
       document.getElementById('builder-sort')?.addEventListener('change', (e) => { builderConfig.sortBy = e.target.value; renderExportTab(); setupExcelEngine();});
       document.getElementById('builder-group')?.addEventListener('change', (e) => { builderConfig.groupBy = e.target.value; renderExportTab(); setupExcelEngine();});
-      document.getElementById('builder-margin')?.addEventListener('change', (e) => { builderConfig.margin = e.target.value; updateCanvasStyle(); });
       document.getElementById('builder-orient')?.addEventListener('change', (e) => { builderConfig.orientation = e.target.value; updateCanvasStyle(); });
-      
-      document.getElementById('builder-custom-title')?.addEventListener('input', (e) => { 
-          builderConfig.customTitle = e.target.value; 
-          const el = document.querySelector('.print-custom-title');
-          if(el) el.textContent = e.target.value;
-      });
-      
       document.getElementById('builder-show-header')?.addEventListener('change', (e) => { builderConfig.showHeader = e.target.checked; renderExportTab(); setupExcelEngine();});
       document.getElementById('builder-repeat-header')?.addEventListener('change', (e) => { builderConfig.repeatHeader = e.target.checked; renderExportTab(); setupExcelEngine();});
 
-      rebindAllColumnListeners();
-
-      document.getElementById('btn-insert-col')?.addEventListener('click', () => {
-        const selectedTh = document.querySelector('.col-header.selected');
-        let insertIdx = builderConfig.columns.length;
-        if(selectedTh) insertIdx = parseInt(selectedTh.dataset.col);
-
-        saveBuilderState();
-        const newCol = { id: `col_${Date.now()}`, field: 'CUSTOM', title: 'New Column', width: '150px' };
-        builderConfig.columns.splice(insertIdx, 0, newCol);
-        renderExportTab();
-        setupExcelEngine();
-      });
-
-      document.getElementById('btn-delete-col')?.addEventListener('click', () => {
-        const selectedCols = Array.from(document.querySelectorAll('.col-header.selected')).map(th => parseInt(th.dataset.col)).sort((a,b)=>b-a);
-        if(selectedCols.length === 0) { showMsgToast("Please click a column letter (A, B, C...) to select and delete it."); return; }
-        if(builderConfig.columns.length - selectedCols.length < 1) { showMsgToast("Cannot delete all columns."); return; }
-        
-        saveBuilderState();
-        selectedCols.forEach(idx => builderConfig.columns.splice(idx, 1));
-        renderExportTab();
-        setupExcelEngine();
-      });
-
-      document.getElementById('btn-insert-row')?.addEventListener('click', () => {
-        const selectedTr = document.querySelector('.builder-cell.selected')?.parentElement;
-        const tbodys = document.querySelectorAll('#builder-table tbody');
-        if(tbodys.length === 0) return;
-        const targetTbody = selectedTr ? selectedTr.parentElement : tbodys[tbodys.length - 1]; 
-        
-        saveBuilderState();
-        const colsCount = builderConfig.columns.length;
-        const tr = document.createElement('tr');
-        tr.dataset.studentId = ""; 
-        tr.innerHTML = `<td class="no-print row-header">-</td>` + 
-                       Array.from({ length: colsCount }).map((_, cIndex) => `<td class="excel-cell builder-cell" contenteditable="true" data-col="${cIndex}"></td>`).join('');
-        
-        if (selectedTr) targetTbody.insertBefore(tr, selectedTr);
-        else targetTbody.appendChild(tr);
-        
-        let rIdx = 0;
-        document.querySelectorAll('#builder-table tbody tr').forEach(row => {
-            const rowHead = row.querySelector('.row-header');
-            if(rowHead && rowHead.textContent !== '-') {
-                rowHead.textContent = rIdx + 1;
-                rowHead.dataset.row = rIdx;
-                row.dataset.index = rIdx;
-                row.querySelectorAll('.builder-cell').forEach(c => c.dataset.row = rIdx);
-                rIdx++;
-            }
-        });
-        attachTableFormatListeners();
-      });
-
-      document.getElementById('btn-delete-row')?.addEventListener('click', () => {
-        const selectedRows = Array.from(new Set(Array.from(document.querySelectorAll('.builder-cell.selected, .row-header.selected')).map(el => el.closest('tr'))));
-        if(selectedRows.length === 0) { showMsgToast("Please select a row to delete."); return; }
-        
-        saveBuilderState();
-        selectedRows.forEach(tr => tr.remove());
-
-        let rIdx = 0;
-        document.querySelectorAll('#builder-table tbody tr').forEach(row => {
-            const rowHead = row.querySelector('.row-header');
-            if(rowHead && rowHead.textContent !== '-') {
-                rowHead.textContent = rIdx + 1;
-                rowHead.dataset.row = rIdx;
-                row.dataset.index = rIdx;
-                row.querySelectorAll('.builder-cell').forEach(c => c.dataset.row = rIdx);
-                rIdx++;
-            }
-        });
-      });
-
-      const applyFormat = (styleProp, valueFn) => {
-          saveBuilderState();
-          document.querySelectorAll('.builder-cell.selected').forEach(td => {
-              td.style[styleProp] = typeof valueFn === 'function' ? valueFn(td.style[styleProp]) : valueFn;
-          });
+      // Margin preset handler
+      const MARGIN_PRESETS = {
+        normal: { top: 10, right: 10, bottom: 10, left: 10 },
+        narrow: { top: 5, right: 5, bottom: 5, left: 5 },
+        moderate: { top: 15, right: 15, bottom: 15, left: 15 },
+        wide: { top: 25, right: 25, bottom: 25, left: 25 }
       };
-      
-      const getActiveFontSize = () => parseInt(document.getElementById('fmt-size-input').value) || 13;
-      const toggleStyle = (prop, val1, val2) => (currentVal) => currentVal === val1 ? val2 : val1;
-
-      document.getElementById('fmt-bold')?.addEventListener('click', () => applyFormat('fontWeight', toggleStyle('fontWeight', 'bold', 'normal')));
-      document.getElementById('fmt-italic')?.addEventListener('click', () => applyFormat('fontStyle', toggleStyle('fontStyle', 'italic', 'normal')));
-      
-      document.getElementById('fmt-color')?.addEventListener('input', (e) => {
-          const indicator = e.target.parentElement.querySelector('.indicator-color');
-          if(indicator) indicator.style.backgroundColor = e.target.value;
-          applyFormat('color', e.target.value);
+      const applyMarginPreset = (preset) => {
+        const m = MARGIN_PRESETS[preset];
+        if (!m) return;
+        builderConfig.margins = { ...m };
+        ['top','bottom','left','right'].forEach(side => {
+          const el = document.getElementById(`mg-${side}`);
+          if (el) el.value = m[side];
+        });
+        updateCanvasStyle();
+      };
+      document.getElementById('builder-margin-preset')?.addEventListener('change', (e) => {
+        if (e.target.value !== 'custom') applyMarginPreset(e.target.value);
       });
-      document.getElementById('fmt-bg')?.addEventListener('input', (e) => {
-          const indicator = e.target.parentElement.querySelector('.indicator-bg');
-          if(indicator) indicator.style.backgroundColor = e.target.value;
-          applyFormat('backgroundColor', e.target.value);
-      });
-      
-      document.getElementById('fmt-size-plus')?.addEventListener('click', () => {
-          let size = getActiveFontSize() + 1;
-          document.getElementById('fmt-size-input').value = size;
-          applyFormat('fontSize', size + 'px');
-      });
-      document.getElementById('fmt-size-minus')?.addEventListener('click', () => {
-          let size = Math.max(8, getActiveFontSize() - 1);
-          document.getElementById('fmt-size-input').value = size;
-          applyFormat('fontSize', size + 'px');
-      });
-      document.getElementById('fmt-size-input')?.addEventListener('change', (e) => {
-          applyFormat('fontSize', e.target.value + 'px');
-      });
-
-      document.getElementById('fmt-undo')?.addEventListener('click', undoBuilder);
-      document.getElementById('fmt-redo')?.addEventListener('click', redoBuilder);
-
-      document.getElementById('btn-export-print')?.addEventListener('click', () => {
-        document.querySelectorAll('.builder-cell, .col-header, .row-header, .select-all-corner').forEach(c => c.classList.remove('selected'));
-        document.body.classList.add('is-printing');
-        window.print();
-        setTimeout(() => document.body.classList.remove('is-printing'), 500);
-      });
-
-      document.getElementById('btn-export-excel')?.addEventListener('click', () => {
-        if(typeof XLSX === 'undefined') { alert("Excel library loading, please try again."); return; }
-        const tableClone = document.getElementById('builder-table').cloneNode(true);
-        tableClone.querySelectorAll('.no-print').forEach(el => el.remove());
-        tableClone.querySelectorAll('th').forEach(th => {
-           const heading = th.querySelector('.print-only-heading');
-           if(heading) th.textContent = heading.textContent;
-        });
-        const wb = XLSX.utils.table_to_book(tableClone, {sheet: "Report"});
-        XLSX.writeFile(wb, `${builderConfig.classId ? 'Class_'+builderConfig.classId : 'Report'}_${formatDate(new Date())}.xlsx`);
-      });
-    };
-
-    const attachTableFormatListeners = () => {
-        const fInput = document.getElementById('formula-input');
-        if(!fInput) return;
-        document.querySelectorAll('.builder-cell').forEach(cell => {
-            const newCell = cell.cloneNode(true);
-            cell.parentNode.replaceChild(newCell, cell);
-            
-            newCell.addEventListener('focus', (e) => {
-                const row = e.target.dataset.row;
-                const col = e.target.dataset.col;
-                if(row !== undefined && col !== undefined) {
-                    const colLetter = String.fromCharCode(65 + parseInt(col));
-                    document.getElementById('active-cell-id').textContent = `${colLetter}${parseInt(row)+1}`;
-                }
-                fInput.value = e.target.innerText;
-            });
-            newCell.addEventListener('input', (e) => {
-                if(e.target.classList.contains('selected')) fInput.value = e.target.innerText;
-            });
-        });
-        
-        const newFInput = fInput.cloneNode(true);
-        fInput.parentNode.replaceChild(newFInput, fInput);
-        newFInput.addEventListener('input', (e) => {
-            const activeCell = document.querySelector('.builder-cell.selected');
-            if(activeCell) activeCell.innerText = e.target.value;
-        });
-    };
-
-    const setupExcelEngine = () => {
-        const table = document.getElementById('builder-table');
-        if (!table) return;
-
-        attachTableFormatListeners();
-
-        let resizingCol = null;
-        let startX = 0;
-        let startWidth = 0;
-
-        document.addEventListener('mousedown', (e) => {
-            if (e.target.classList.contains('col-resizer')) {
-                saveBuilderState();
-                resizingCol = e.target.closest('th');
-                startX = e.pageX;
-                
-                const colIdx = resizingCol.querySelector('.col-resizer').dataset.colIndex;
-                const headerTh = document.querySelector(`.col-header[data-col="${colIdx}"]`);
-                startWidth = headerTh ? headerTh.offsetWidth : resizingCol.offsetWidth;
-                e.preventDefault();
-            }
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (resizingCol) {
-                const newWidth = startWidth + (e.pageX - startX);
-                if (newWidth > 30) {
-                    const colIndex = resizingCol.querySelector('.col-resizer').dataset.colIndex;
-                    const headerTh = document.querySelector(`.col-header[data-col="${colIndex}"]`);
-                    if(headerTh) headerTh.style.width = newWidth + 'px';
-                    if(builderConfig.columns[colIndex]) {
-                        builderConfig.columns[colIndex].width = newWidth + 'px';
-                    }
-                }
-            }
-        });
-
-        document.addEventListener('mouseup', () => { resizingCol = null; });
-
-        let isSelecting = false;
-        let startCell = null;
-
-        const getCellCoords = (td) => {
-            return { row: parseInt(td.dataset.row), col: parseInt(td.dataset.col) };
-        };
-
-        const clearSelection = () => document.querySelectorAll('.builder-cell, .col-header, .row-header, .select-all-corner').forEach(c => c.classList.remove('selected'));
-
-        table.addEventListener('mousedown', (e) => {
-            if (e.target.classList.contains('col-resizer')) return; 
-            
-            const colHeader = e.target.closest('th.col-header');
-            if (colHeader) {
-                clearSelection();
-                colHeader.classList.add('selected');
-                document.querySelectorAll(`.builder-cell[data-col="${colHeader.dataset.col}"]`).forEach(c => c.classList.add('selected'));
-                return;
-            }
-            
-            const rowHeader = e.target.closest('td.row-header');
-            if (rowHeader) {
-                clearSelection();
-                rowHeader.classList.add('selected');
-                document.querySelectorAll(`.builder-cell[data-row="${rowHeader.dataset.row}"]`).forEach(c => c.classList.add('selected'));
-                return;
-            }
-            
-            const selectAll = e.target.closest('.select-all-corner');
-            if (selectAll) {
-                clearSelection();
-                selectAll.classList.add('selected');
-                document.querySelectorAll('.builder-cell, .col-header, .row-header').forEach(c => c.classList.add('selected'));
-                return;
-            }
-
-            const td = e.target.closest('td.builder-cell');
-            if (td) {
-                isSelecting = true;
-                startCell = getCellCoords(td);
-                clearSelection();
-                td.classList.add('selected');
-            }
-        });
-
-        table.addEventListener('mouseover', (e) => {
-            if (isSelecting) {
-                const td = e.target.closest('td.builder-cell');
-                if (td && startCell && td.dataset.row !== undefined && td.dataset.col !== undefined) {
-                    const endCell = getCellCoords(td);
-                    const minR = Math.min(startCell.row, endCell.row);
-                    const maxR = Math.max(startCell.row, endCell.row);
-                    const minC = Math.min(startCell.col, endCell.col);
-                    const maxC = Math.max(startCell.col, endCell.col);
-                    
-                    document.querySelectorAll('.builder-cell').forEach(cell => {
-                        if(cell.dataset.row !== undefined && cell.dataset.col !== undefined){
-                            const r = parseInt(cell.dataset.row);
-                            const c = parseInt(cell.dataset.col);
-                            if (r >= minR && r <= maxR && c >= minC && c <= maxC) {
-                                cell.classList.add('selected');
-                            } else {
-                                cell.classList.remove('selected');
-                            }
-                        }
-                    });
-                }
-            }
-        });
-
-        document.addEventListener('mouseup', () => isSelecting = false);
-        
-        table.addEventListener('focusin', (e) => {
-            if(e.target.classList.contains('builder-cell')) e.target.dataset.original = e.target.innerHTML;
-        });
-        table.addEventListener('focusout', (e) => {
-            if(e.target.classList.contains('builder-cell')) {
-                if(e.target.dataset.original !== e.target.innerHTML) saveBuilderState();
-            }
-        });
-
-        document.addEventListener('copy', (e) => {
-            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
-            if (builderConfig.activeTab !== 'home' && builderConfig.activeTab !== 'data' && builderConfig.activeTab !== 'layout') return;
-            const selected = document.querySelectorAll('.builder-cell.selected');
-            if (selected.length === 0) return;
-
-            const rowMap = new Map();
-            selected.forEach(td => {
-                const tr = td.parentElement;
-                if(!rowMap.has(tr)) rowMap.set(tr, []);
-                rowMap.get(tr).push(td.innerText.trim());
-            });
-
-            const tsv = Array.from(rowMap.values()).map(row => row.join('\t')).join('\n');
-            e.clipboardData.setData('text/plain', tsv);
-            e.preventDefault();
-        });
-
-        document.addEventListener('paste', (e) => {
-            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
-            if (builderConfig.activeTab !== 'home' && builderConfig.activeTab !== 'data' && builderConfig.activeTab !== 'layout') return;
-            
-            const activeCell = document.querySelector('.builder-cell.selected') || document.activeElement.closest('td.builder-cell');
-            if (activeCell) {
-                saveBuilderState();
-                e.preventDefault();
-                const text = e.clipboardData.getData('text/plain');
-                const rowsData = text.split(/\r?\n/).map(r => r.split('\t'));
-                
-                const startR = parseInt(activeCell.dataset.row);
-                const startC = parseInt(activeCell.dataset.col);
-                
-                rowsData.forEach((rowData, i) => {
-                    let tr = document.querySelector(`.builder-cell[data-row="${startR + i}"]`)?.parentElement;
-                    if (!tr) {
-                        const targetTbody = document.querySelector('#builder-table tbody:last-child');
-                        if(targetTbody) {
-                            tr = document.createElement('tr');
-                            const nextRowIdx = startR + i;
-                            tr.dataset.index = nextRowIdx;
-                            tr.innerHTML = `<td class="no-print row-header" data-row="${nextRowIdx}">${nextRowIdx + 1}</td>` + 
-                                           Array.from({ length: builderConfig.columns.length }).map((_, cIndex) => `<td class="excel-cell builder-cell" contenteditable="true" data-row="${nextRowIdx}" data-col="${cIndex}"></td>`).join('');
-                            targetTbody.appendChild(tr);
-                            attachTableFormatListeners();
-                        }
-                    }
-                    
-                    if(tr) {
-                        rowData.forEach((val, j) => {
-                            const td = tr.querySelector(`.builder-cell[data-col="${startC + j}"]`);
-                            if (td) td.textContent = val;
-                        });
-                    }
-                });
-            }
-        });
-    };
-
-    const renderAll = () => {
-      renderDashboard();
-      renderStudents();
-      buildClassSummary();
-      renderStaffTab();
-      if(document.getElementById('official-tab-export')?.classList.contains('flex')) {
-          renderExportTab();
-          setupExcelEngine();
-          updateCanvasStyle();
-      }
-      renderHome();
-    };
-
-    const loadData = async () => {
-      const [studentsSnap, staffSnap, groupsSnap, dirSnap, contentSnap, configSnap, authConfigSnap, pageAccessSnap] = await Promise.all([
-        getDocs(collection(db, `${BASE_PATH}/students`)),
-        getDocs(collection(db, `${BASE_PATH}/staff`)),
-        getDocs(collection(db, `${BASE_PATH}/studentGroups`)),
-        getDocs(collection(db, `${BASE_PATH}/publicDirectory`)),
-        getDoc(doc(db, `${BASE_PATH}/settings`, 'content')),
-        getDoc(doc(db, `${BASE_PATH}/settings`, 'config')),
-        getDoc(doc(db, `${BASE_PATH}/settings`, 'categoryAuthConfig')),
-        getDoc(doc(db, `${BASE_PATH}/settings`, 'pageAccess'))
-      ]);
-      allStudents = studentsSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
-      allStaff = staffSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
-      studentGroups = groupsSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
-      directoryEntries = dirSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
-      const content = contentSnap.exists() ? contentSnap.data() : {};
-      directoryCategories = Array.isArray(content.directoryCategories) ? content.directoryCategories : [];
-      categoryAuthConfig = authConfigSnap.exists() ? { categories: {}, ...(authConfigSnap.data() || {}) } : { categories: {} };
-      pageAccessConfig = pageAccessSnap.exists() ? { categories: {}, overrides: {}, ...(pageAccessSnap.data() || {}) } : { categories: {}, overrides: {} };
-      const conf = configSnap.exists() ? configSnap.data() : {};
-      applyOfficialBranding(conf);
-    };
-
-    const preloadOfficialBranding = async () => {
-      try {
-        const configSnap = await getDoc(doc(db, `${BASE_PATH}/settings`, 'config'));
-        if (!configSnap.exists()) return;
-        applyOfficialBranding(configSnap.data() || {});
-      } catch (_error) {}
-    };
-
-    const showApp = () => {
-      document.getElementById('official-login-screen').classList.add('hidden');
-      document.getElementById('official-app').classList.remove('hidden');
-      renderAll();
-      setTab('dashboard');
-    };
-
-    const tryLogin = async () => {
-      if (!authReady) return showMsg('Initializing authentication... please try again.');
-      const username = String(document.getElementById('official-username').value || '').trim();
-      const password = String(document.getElementById('official-password').value || '').trim();
-      if (!username || !password) return showMsg('Username, password required');
-      showMsg('');
-      const uname = username.toLowerCase();
-      const passHash = await hashCredentialValue(password);
-      let session = null;
-
-      if (uname.includes('@')) {
-        try {
-          const cred = await signInWithEmailAndPassword(auth, username, password);
-          if (cred?.user?.email && String(cred.user.email).toLowerCase() === uname) {
-            session = { name: 'Super Admin', username: cred.user.email, type: 'Admin', source: 'firebase', photo: 'assets/images/logo.png' };
-          }
-        } catch (_error) {}
-      }
-
-      const adminAuthSnap = await getDoc(doc(db, `${BASE_PATH}/settings`, 'adminAuth'));
-      const adminAuth = adminAuthSnap.exists() ? adminAuthSnap.data() : {};
-      if (!session && String(adminAuth.email || '').toLowerCase() === uname && String(adminAuth.password || '').trim() === password) {
-        session = { name: 'Super Admin', username, type: 'Admin', source: 'legacy-admin', photo: 'assets/images/logo.png' };
-      }
-
-      if (!session) {
-        const staffSnap = await getDocs(collection(db, `${BASE_PATH}/staff`));
-        const staff = staffSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() })).find((item) => item.isActive !== false && (((item.email || '').toLowerCase() === uname) || ((item.username || '').toLowerCase() === uname)) && String(item.password || '').trim() === password);
-        if (staff) session = { ...staff, name: staff.name || 'Staff', username, type: staff.type || 'Staff', source: 'staff', photo: staff.photo || '' };
-      }
-
-      if (!session) {
-        const dirSnap = await getDocs(collection(db, `${BASE_PATH}/publicDirectory`));
-        const directoryUser = dirSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() })).find((entry) => {
-          const meta = entry.authMeta || {};
-          return String(meta.username || '').toLowerCase() === uname && String(meta.passwordHash || '') === passHash;
-        });
-        if (directoryUser) session = { id: directoryUser.id, ...(directoryUser.values || {}), name: String(directoryUser.values?.name || 'Directory User'), username, type: 'Category User', source: 'directory', categoryId: directoryUser.categoryId, photo: String(directoryUser.values?.photo || directoryUser.values?.image || '') };
-      }
-
-      if (!session) return showMsg('Invalid credentials / access denied');
-      userSession = session;
-      await loadData();
-      localStorage.setItem(OFFICIAL_SESSION_KEY, JSON.stringify(userSession));
-      showApp();
-    };
-
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) await signInAnonymously(auth);
-      authReady = true;
-    });
-
-    document.getElementById('official-login-btn').addEventListener('click', tryLogin);
-    document.getElementById('official-password').addEventListener('keydown', (event) => { if (event.key === 'Enter') tryLogin(); });
-    document.getElementById('official-username').addEventListener('keydown', (event) => { if (event.key === 'Enter') tryLogin(); });
-    document.getElementById('official-toggle-password').addEventListener('click', () => {
-      const input = document.getElementById('official-password');
-      const isPassword = input.type === 'password';
-      input.type = isPassword ? 'text' : 'password';
-      document.getElementById('official-toggle-password').className = isPassword ? 'fas fa-eye-slash trailing-icon' : 'fas fa-eye trailing-icon';
-    });
-    document.getElementById('official-logout-btn').addEventListener('click', () => {
-      localStorage.removeItem(OFFICIAL_SESSION_KEY);
-      window.location.reload();
-    });
-
-    const restoreOfficialSession = async () => {
-      try {
-        if (window.AppSession && window.AppSession.isFresh()) {
-          const role = window.AppSession.getRole();
-          if (role === 'admin' || role === 'staff') {
-            const stateKey = role === 'admin' ? 'app_session_admin_state' : 'app_session_staff_state';
-            const rawState = localStorage.getItem(stateKey);
-            const state = rawState ? JSON.parse(rawState) : {};
-            
-            userSession = {
-              name: state.name || (role === 'admin' ? 'Super Admin' : 'Staff'),
-              username: state.email || 'admin',
-              type: role === 'admin' ? 'Admin' : 'Staff',
-              source: role === 'admin' ? 'firebase' : 'staff'
-            };
-            await loadData();
-            showApp();
-            return; 
-          }
-        }
-        const raw = localStorage.getItem(OFFICIAL_SESSION_KEY);
-        if (!raw) return;
-        const parsed = JSON.parse(raw);
-        if (!parsed?.username) return;
-        userSession = parsed;
-        await loadData();
-        showApp();
-      } catch (_error) {}
-    };
-
-    preloadOfficialBranding();
-    restoreOfficialSession();
-  </script>
-</body>
-</html>
+      ['top','bottom','left','right'].forEach(side => {
+        document.getElementById(`mg-${side}`)?.

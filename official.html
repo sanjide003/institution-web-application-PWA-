@@ -16,17 +16,9 @@
        GLOBAL CSS & DASHBOARD STYLES
        ========================================== */
     :root { 
-        --background-light: #f3f4f6; 
-        --text-light: #1f2937; 
-        --card-light: #ffffff; 
-        --border-light: #e5e7eb; 
-        --primary-light: #3b82f6; 
-        --primary: #0f172a; 
-        --accent: #3b82f6; 
-        --white: #ffffff; 
-        --text-dark: #1e293b; 
-        --text-gray: #64748b; 
-        --header-height: 70px;
+        --background-light: #f3f4f6; --text-light: #1f2937; --card-light: #ffffff; --border-light: #e5e7eb; 
+        --primary-light: #3b82f6; --primary: #0f172a; --accent: #3b82f6; --white: #ffffff; 
+        --text-dark: #1e293b; --text-gray: #64748b; --header-height: 70px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth !important; }
@@ -131,7 +123,7 @@
     .detail-value{font-size:12px;color:#0f172a;font-weight:600;word-break:break-word}
 
     /* ==========================================
-       EXCEL SPREADSHEET UI STYLES
+       EXCEL SPREADSHEET UI STYLES (UPDATED)
        ========================================== */
 
     .excel-container { display: flex; flex-direction: column; height: 100%; background: #f3f2f1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
@@ -162,14 +154,14 @@
     .excel-btn-small:hover { background: #f3f2f1; border-color: #c8c6c4;}
     .excel-btn-small:active { background: #e1dfdd; transform: scale(0.95);}
 
-    .excel-input-ribbon { border: 1px solid #8a8886; border-radius: 2px; padding: 2px 6px; font-size: 12px; height: 26px; outline: none; color: #323130;}
+    .excel-input-ribbon { border: 1px solid #8a8886; border-radius: 2px; padding: 2px 6px; font-size: 12px; height: 26px; outline: none; color: #323130; background: #fff;}
     .excel-input-ribbon:focus { border-color: #107c41; box-shadow: 0 0 0 1px #107c41; }
 
-    .premium-export-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 600; color: #fff; cursor: pointer; transition: 0.2s; border: none; }
-    .btn-excel-green { background: #107c41;}
-    .btn-excel-green:hover { background: #185c37; }
-    .btn-pdf-red { background: #d83b01; }
-    .btn-pdf-red:hover { background: #a4262c; }
+    .premium-export-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; color: #fff; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: none; }
+    .btn-excel-green { background: linear-gradient(180deg, #21a366 0%, #107c41 100%); border: 1px solid #0f6c39;}
+    .btn-excel-green:hover { background: linear-gradient(180deg, #1e925b 0%, #0c6132 100%); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(16, 124, 65, 0.2);}
+    .btn-pdf-red { background: linear-gradient(180deg, #e11d48 0%, #be123c 100%); border: 1px solid #9f1239;}
+    .btn-pdf-red:hover { background: linear-gradient(180deg, #be123c 0%, #9f1239 100%); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(225, 29, 72, 0.2);}
 
     .formula-bar { display: flex; align-items: center; background: #fff; border-bottom: 1px solid #c8c6c4; padding: 4px 10px; gap: 10px;}
     .formula-name-box { width: 60px; font-size: 13px; text-align: center; color: #323130; font-family: monospace; font-weight: bold;}
@@ -177,17 +169,18 @@
     .formula-icon { color: #605e5c; font-style: italic; font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 14px;}
     .formula-input { flex-grow: 1; border: none; outline: none; font-size: 13px; color: #000; padding: 2px 5px;}
 
-    .excel-workspace { flex-grow: 1; overflow: auto; padding: 15px; position: relative; background: #e1dfdd;}
+    .excel-workspace { flex-grow: 1; overflow: auto; padding: 15px; position: relative; background: #e1dfdd; padding-bottom: 100px;}
     .excel-workspace::-webkit-scrollbar { width: 12px; height: 12px; }
     .excel-workspace::-webkit-scrollbar-track { background: #f3f2f1; }
     .excel-workspace::-webkit-scrollbar-thumb { background: #c8c6c4; border: 2px solid #f3f2f1; border-radius: 6px; }
     .excel-workspace::-webkit-scrollbar-thumb:hover { background: #a19f9d; }
 
-    .print-canvas { background: #fff; margin: 0 auto; min-height: 600px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: visible; border-right: 2px dashed #ef4444;}
-    .print-canvas[data-paper="A4"][data-orient="portrait"] { width: 210mm; }
-    .print-canvas[data-paper="A4"][data-orient="landscape"] { width: 297mm; }
-    .print-canvas[data-paper="Legal"][data-orient="portrait"] { width: 8.5in; }
-    .print-canvas[data-paper="Legal"][data-orient="landscape"] { width: 14in; }
+    /* Strict Canvas bounds */
+    .print-canvas { background: #fff; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; border-right: 2px dashed #ef4444; overflow-x: visible; transition: padding 0.2s;}
+    
+    /* Strict A4 Base dimensions (approx 96dpi) */
+    .print-canvas[data-orient="portrait"] { width: 210mm; min-height: 297mm;}
+    .print-canvas[data-orient="landscape"] { width: 297mm; min-height: 210mm;}
 
     .excel-table { border-collapse: collapse; min-width: 100%; table-layout: auto;}
     .excel-table th, .excel-table td { border: 1px solid #d4d4d4; padding: 4px; font-size: 13px; color: #000; background: #fff; vertical-align: bottom;}
@@ -206,9 +199,6 @@
     .config-row th { background: #f8fafc; padding: 4px; border-bottom: none;}
     .grid-select { width: 100%; border: 1px solid #c8c6c4; padding: 2px; font-size: 11px; outline: none; color: #333; border-radius: 2px;}
     .grid-select:focus { border-color: #107c41;}
-    .grid-input { width: 100%; border: 1px solid transparent; padding: 2px 4px; font-size: 12px; font-weight: bold; outline: none; color: #000; border-top: none;}
-    .grid-input:focus { border-color: #c8c6c4;}
-    .grid-input:hover { border-color: #e1dfdd; }
 
     .col-resizer { position: absolute; right: -4px; top: 0; bottom: 0; width: 8px; cursor: col-resize; z-index: 20; }
     .col-resizer:hover { background: rgba(16, 124, 65, 0.5); }
@@ -226,15 +216,17 @@
         body.is-printing { background: #fff; margin: 0; padding: 0; }
         body.is-printing * { visibility: hidden; }
         body.is-printing #print-canvas, body.is-printing #print-canvas * { visibility: visible; }
-        body.is-printing #print-canvas { position: absolute; left: 0; top: 0; width: 100% !important; max-width: none !important; margin: 0; padding: 0; border: none; box-shadow: none; overflow: visible; }
+        body.is-printing #print-canvas { position: absolute; left: 0; top: 0; width: 100% !important; max-width: none !important; margin: 0; border: none; box-shadow: none; overflow: visible; padding: 0 !important; }
         body.is-printing .no-print { display: none !important; }
         body.is-printing .print-only-heading { display: block !important; font-size: 13px; font-weight: bold; text-align: center; padding: 4px; border-bottom: 1px solid #000;}
         body.is-printing .builder-print-header { display: table-header-group !important; }
         body.is-printing .excel-cell { white-space: normal; word-break: break-word;}
         .page-break-before { page-break-before: always; break-before: page; }
-        @page { margin: 1cm; }
     }
   </style>
+
+  <!-- Print Margin Injector -->
+  <style id="dynamic-print-margin"></style>
 </head>
 
 <body class="antialiased text-gray-800 collection-shell">
@@ -301,6 +293,7 @@
       <section id="official-tab-export" class="official-tab hidden h-full flex-col bg-[#f3f2f1]"></section>
     </main>
 
+    <!-- Modal details -->
     <div id="official-detail-modal" class="fixed inset-0 z-[1000] hidden items-center justify-center bg-slate-950/60 p-3 no-print" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="official-detail-title">
       <div class="official-detail-dialog w-full max-w-5xl max-h-[90vh] overflow-hidden rounded-3xl bg-white shadow-2xl border border-slate-200">
         <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 bg-slate-50">
@@ -449,7 +442,7 @@
     // EXCEL SPREADSHEET BUILDER CONFIG
     // ==========================================
     let builderConfig = {
-      classId: '', paper: 'A4', orientation: 'portrait', sortBy: 'name', groupBy: 'mixed',
+      classId: '', paper: 'A4', orientation: 'portrait', margin: '20px', sortBy: 'name', groupBy: 'mixed',
       showHeader: false, repeatHeader: false, customTitle: '', activeTab: 'home',
       columns: [
         { id: 'col_sno', field: 'SNO', title: 'S.No', width: 'auto' },
@@ -912,20 +905,6 @@
         </div>`;
     };
 
-    const availableDataFields = [
-      { id: 'SNO', label: 'Serial No. (Auto)' },
-      { id: 'name', label: 'Student Name' },
-      { id: 'adm', label: 'Admission No.' },
-      { id: 'class', label: 'Class' },
-      { id: 'gender', label: 'Gender' },
-      { id: 'mobile', label: 'Mobile No.' },
-      { id: 'father', label: 'Father Name' },
-      { id: 'uid', label: 'UID / Roll No.' },
-      { id: 'address', label: 'Address' },
-      { id: 'CUSTOM', label: 'Custom/Blank Space' }
-    ];
-
-    // Targeted DOM update for columns to preserve user edits
     const populateColumnData = (colIndex) => {
         const colConfig = builderConfig.columns[colIndex];
         const fieldId = colConfig.field;
@@ -989,7 +968,6 @@
             <select class="grid-select builder-col-select" data-col-index="${cIndex}">
               ${availableDataFields.map(f => `<option value="${f.id}" ${f.id === col.field ? 'selected' : ''}>${f.label}</option>`).join('')}
             </select>
-            <button class="text-red-500 hover:bg-red-100 px-1 py-0.5 rounded delete-col-btn opacity-0 group-hover:opacity-100 transition-opacity" data-col-index="${cIndex}" title="Remove Column"><i class="fas fa-times"></i></button>
           </div>
           <div class="no-print flex gap-1 items-center">
             <input type="text" class="grid-input builder-col-title-input" value="${escapeHtml(col.title)}" placeholder="Heading..." data-col-index="${cIndex}">
@@ -1073,10 +1051,13 @@
            
            <div class="ribbon-group">
                <div class="ribbon-row h-full">
-                   <button id="btn-add-col" class="excel-btn-ribbon text-emerald-700" title="Insert Column"><i class="fas fa-columns"></i><span>Add Col</span></button>
-                   <button id="btn-add-row" class="excel-btn-ribbon text-emerald-700" title="Insert Row"><i class="fas fa-table-rows"></i><span>Add Row</span></button>
+                   <button id="btn-insert-col" class="excel-btn-ribbon text-emerald-700" title="Insert Selected Column"><i class="fas fa-plus"></i><span>Insert Col</span></button>
+                   <button id="btn-delete-col" class="excel-btn-ribbon text-red-600" title="Delete Selected Column"><i class="fas fa-minus"></i><span>Delete Col</span></button>
+                   <div class="w-px h-8 bg-slate-300 mx-1"></div>
+                   <button id="btn-insert-row" class="excel-btn-ribbon text-emerald-700" title="Insert Selected Row"><i class="fas fa-plus"></i><span>Insert Row</span></button>
+                   <button id="btn-delete-row" class="excel-btn-ribbon text-red-600" title="Delete Selected Row"><i class="fas fa-minus"></i><span>Delete Row</span></button>
                </div>
-               <span class="ribbon-label">Cells</span>
+               <span class="ribbon-label">Cells (Insert / Delete)</span>
            </div>
         </div>
       `;
@@ -1107,9 +1088,9 @@
                    <div class="flex flex-col">
                        <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Group By</label>
                        <select id="builder-group" class="excel-input-ribbon w-28">
-                          <option value="mixed" ${builderConfig.groupBy === 'mixed' ? 'selected' : ''}>Mixed</option>
+                          <option value="mixed" ${builderConfig.groupBy === 'mixed' ? 'selected' : ''}>Mixed (ആൺ & പെൺ)</option>
                           <option value="grouped" ${builderConfig.groupBy === 'grouped' ? 'selected' : ''}>Boys First</option>
-                          <option value="separate" ${builderConfig.groupBy === 'separate' ? 'selected' : ''}>Page Break</option>
+                          <option value="separate" ${builderConfig.groupBy === 'separate' ? 'selected' : ''}>Separate Pages</option>
                        </select>
                    </div>
                </div>
@@ -1124,9 +1105,8 @@
                 <div class="ribbon-row h-full gap-2 items-center">
                    <div class="flex flex-col">
                        <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Size</label>
-                       <select id="builder-paper" class="excel-input-ribbon w-20">
-                          <option value="A4" ${builderConfig.paper === 'A4' ? 'selected' : ''}>A4</option>
-                          <option value="Legal" ${builderConfig.paper === 'Legal' ? 'selected' : ''}>Legal</option>
+                       <select disabled class="excel-input-ribbon w-20 bg-slate-100 text-slate-500 cursor-not-allowed">
+                          <option>A4 (Standard)</option>
                        </select>
                    </div>
                    <div class="flex flex-col">
@@ -1134,6 +1114,15 @@
                        <select id="builder-orient" class="excel-input-ribbon w-24">
                           <option value="portrait" ${builderConfig.orientation === 'portrait' ? 'selected' : ''}>Portrait</option>
                           <option value="landscape" ${builderConfig.orientation === 'landscape' ? 'selected' : ''}>Landscape</option>
+                       </select>
+                   </div>
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Margins</label>
+                       <select id="builder-margin" class="excel-input-ribbon w-24">
+                          <option value="20px" ${builderConfig.margin === '20px' ? 'selected' : ''}>Normal (20px)</option>
+                          <option value="10px" ${builderConfig.margin === '10px' ? 'selected' : ''}>Narrow (10px)</option>
+                          <option value="40px" ${builderConfig.margin === '40px' ? 'selected' : ''}>Wide (40px)</option>
+                          <option value="0px" ${builderConfig.margin === '0px' ? 'selected' : ''}>None (0px)</option>
                        </select>
                    </div>
                 </div>
@@ -1190,7 +1179,7 @@
         </div>
 
         <div class="excel-workspace spreadsheet-container">
-          <div id="print-canvas" class="print-canvas" data-paper="${builderConfig.paper}" data-orient="${builderConfig.orientation}">
+          <div id="print-canvas" class="print-canvas" data-paper="${builderConfig.paper}" data-orient="${builderConfig.orientation}" style="padding: ${builderConfig.margin};">
             <table id="builder-table" class="excel-table">
               ${headerHtml}
               <thead>
@@ -1209,7 +1198,18 @@
         </div>
       `;
 
+      updatePrintStyles();
       attachBuilderListeners();
+    };
+
+    const updatePrintStyles = () => {
+        let styleTag = document.getElementById('dynamic-print-margin');
+        if(!styleTag) {
+            styleTag = document.createElement('style');
+            styleTag.id = 'dynamic-print-margin';
+            document.head.appendChild(styleTag);
+        }
+        styleTag.innerHTML = `@media print { @page { size: A4 ${builderConfig.orientation}; margin: ${builderConfig.margin}; } }`;
     };
 
     const bindColumnListeners = (thElement) => {
@@ -1244,19 +1244,6 @@
             const heading = e.target.closest('th').querySelector('.print-only-heading');
             if(heading) heading.textContent = e.target.value;
         });
-
-        const delBtn = thElement.querySelector('.delete-col-btn');
-        delBtn?.addEventListener('click', (e) => {
-            const idx = parseInt(e.currentTarget.dataset.colIndex);
-            if(builderConfig.columns.length > 1) {
-                saveBuilderState();
-                builderConfig.columns.splice(idx, 1);
-                renderExportTab();
-                setupExcelEngine();
-            } else {
-                alert("At least one column is required.");
-            }
-        });
     };
 
     const rebindAllColumnListeners = () => {
@@ -1273,11 +1260,10 @@
           document.getElementById(`ribbon-${targetId}`).classList.add('active');
       }));
 
-      // Dataset changes require full re-render
       document.getElementById('builder-class')?.addEventListener('change', (e) => { builderConfig.classId = e.target.value; renderExportTab(); setupExcelEngine(); });
       document.getElementById('builder-sort')?.addEventListener('change', (e) => { builderConfig.sortBy = e.target.value; renderExportTab(); setupExcelEngine();});
       document.getElementById('builder-group')?.addEventListener('change', (e) => { builderConfig.groupBy = e.target.value; renderExportTab(); setupExcelEngine();});
-      document.getElementById('builder-paper')?.addEventListener('change', (e) => { builderConfig.paper = e.target.value; updateCanvasStyle(); });
+      document.getElementById('builder-margin')?.addEventListener('change', (e) => { builderConfig.margin = e.target.value; updateCanvasStyle(); });
       document.getElementById('builder-orient')?.addEventListener('change', (e) => { builderConfig.orientation = e.target.value; updateCanvasStyle(); });
       document.getElementById('builder-show-header')?.addEventListener('change', (e) => { builderConfig.showHeader = e.target.checked; renderExportTab(); setupExcelEngine();});
       document.getElementById('builder-repeat-header')?.addEventListener('change', (e) => { builderConfig.repeatHeader = e.target.checked; renderExportTab(); setupExcelEngine();});
@@ -1290,75 +1276,82 @@
 
       rebindAllColumnListeners();
 
-      // Targeted DOM update for columns (No full re-render)
-      document.getElementById('btn-add-col')?.addEventListener('click', () => {
+      // Cells Insert/Delete Engine
+      document.getElementById('btn-insert-col')?.addEventListener('click', () => {
+        const selectedTh = document.querySelector('.col-header.selected');
+        let insertIdx = builderConfig.columns.length;
+        if(selectedTh) insertIdx = parseInt(selectedTh.dataset.col);
+
         saveBuilderState();
-        const newColIdx = builderConfig.columns.length;
         const newCol = { id: `col_${Date.now()}`, field: 'CUSTOM', title: 'New Column', width: '150px' };
-        builderConfig.columns.push(newCol);
-
-        const printHeaderTh = document.querySelector('.print-header-th');
-        if (printHeaderTh) printHeaderTh.colSpan = builderConfig.columns.length + 1;
-        
-        document.querySelectorAll('.page-break-before td[colspan]').forEach(td => td.colSpan = builderConfig.columns.length + 1);
-
-        const excelHeaderRow = document.querySelector('#builder-table thead tr:first-child');
-        const newExcelTh = document.createElement('th');
-        newExcelTh.className = "no-print col-header";
-        newExcelTh.dataset.col = newColIdx;
-        newExcelTh.title = `Select Column ${String.fromCharCode(65 + newColIdx)}`;
-        newExcelTh.textContent = String.fromCharCode(65 + newColIdx);
-        excelHeaderRow.appendChild(newExcelTh);
-
-        const configRow = document.querySelector('#builder-table thead tr.config-row');
-        const newConfigTh = document.createElement('th');
-        newConfigTh.className = "builder-th group config-row-th";
-        newConfigTh.style.width = newCol.width;
-        newConfigTh.innerHTML = `
-          <div class="col-resizer" data-col-index="${newColIdx}"></div>
-          <div class="no-print mb-1 flex items-center justify-between gap-1">
-            <select class="grid-select builder-col-select" data-col-index="${newColIdx}">
-              ${availableDataFields.map(f => `<option value="${f.id}" ${f.id === newCol.field ? 'selected' : ''}>${f.label}</option>`).join('')}
-            </select>
-            <button class="text-red-500 hover:bg-red-100 px-1 py-0.5 rounded delete-col-btn opacity-0 group-hover:opacity-100 transition-opacity" data-col-index="${newColIdx}" title="Remove Column"><i class="fas fa-times"></i></button>
-          </div>
-          <div class="no-print flex gap-1 items-center">
-            <input type="text" class="grid-input builder-col-title-input" value="${escapeHtml(newCol.title)}" placeholder="Heading..." data-col-index="${newColIdx}">
-          </div>
-          <div class="print-only-heading">${escapeHtml(newCol.title)}</div>
-        `;
-        configRow.appendChild(newConfigTh);
-
-        document.querySelectorAll('#builder-table tr[data-index]').forEach(tr => {
-            const rIndex = tr.dataset.index;
-            const td = document.createElement('td');
-            td.className = "excel-cell builder-cell";
-            td.contentEditable = "true";
-            td.dataset.row = rIndex;
-            td.dataset.col = newColIdx;
-            tr.appendChild(td);
-        });
-
-        bindColumnListeners(newConfigTh);
-        attachTableFormatListeners();
+        builderConfig.columns.splice(insertIdx, 0, newCol);
+        renderExportTab();
+        setupExcelEngine();
       });
 
-      document.getElementById('btn-add-row')?.addEventListener('click', () => {
+      document.getElementById('btn-delete-col')?.addEventListener('click', () => {
+        const selectedCols = Array.from(document.querySelectorAll('.col-header.selected')).map(th => parseInt(th.dataset.col)).sort((a,b)=>b-a);
+        if(selectedCols.length === 0) { alert("Please click a column letter (A, B, C...) to select and delete it."); return; }
+        if(builderConfig.columns.length - selectedCols.length < 1) { alert("Cannot delete all columns."); return; }
+        
         saveBuilderState();
+        selectedCols.forEach(idx => builderConfig.columns.splice(idx, 1));
+        renderExportTab();
+        setupExcelEngine();
+      });
+
+      document.getElementById('btn-insert-row')?.addEventListener('click', () => {
+        const selectedTr = document.querySelector('.builder-cell.selected')?.parentElement;
         const tbodys = document.querySelectorAll('#builder-table tbody');
         if(tbodys.length === 0) return;
-        const targetTbody = tbodys[tbodys.length - 1]; 
+        const targetTbody = selectedTr ? selectedTr.parentElement : tbodys[tbodys.length - 1]; 
+        
+        saveBuilderState();
         const colsCount = builderConfig.columns.length;
         const tr = document.createElement('tr');
-        const nextRowIdx = document.querySelectorAll('.row-header').length;
-        tr.dataset.index = nextRowIdx;
         tr.dataset.studentId = ""; 
-        tr.innerHTML = `<td class="no-print row-header" data-row="${nextRowIdx}">${nextRowIdx + 1}</td>` + 
-                       Array.from({ length: colsCount }).map((_, cIndex) => `<td class="excel-cell builder-cell" contenteditable="true" data-row="${nextRowIdx}" data-col="${cIndex}"></td>`).join('');
-        targetTbody.appendChild(tr);
+        tr.innerHTML = `<td class="no-print row-header">-</td>` + 
+                       Array.from({ length: colsCount }).map((_, cIndex) => `<td class="excel-cell builder-cell" contenteditable="true" data-col="${cIndex}"></td>`).join('');
+        
+        if (selectedTr) targetTbody.insertBefore(tr, selectedTr);
+        else targetTbody.appendChild(tr);
+        
+        // Re-number rows
+        let rIdx = 0;
+        document.querySelectorAll('#builder-table tbody tr').forEach(row => {
+            const rowHead = row.querySelector('.row-header');
+            if(rowHead && rowHead.textContent !== '-') {
+                rowHead.textContent = rIdx + 1;
+                rowHead.dataset.row = rIdx;
+                row.dataset.index = rIdx;
+                row.querySelectorAll('.builder-cell').forEach(c => c.dataset.row = rIdx);
+                rIdx++;
+            }
+        });
         attachTableFormatListeners();
       });
 
+      document.getElementById('btn-delete-row')?.addEventListener('click', () => {
+        const selectedRows = Array.from(new Set(Array.from(document.querySelectorAll('.builder-cell.selected, .row-header.selected')).map(el => el.closest('tr'))));
+        if(selectedRows.length === 0) { alert("Please select a row to delete."); return; }
+        
+        saveBuilderState();
+        selectedRows.forEach(tr => tr.remove());
+
+        let rIdx = 0;
+        document.querySelectorAll('#builder-table tbody tr').forEach(row => {
+            const rowHead = row.querySelector('.row-header');
+            if(rowHead && rowHead.textContent !== '-') {
+                rowHead.textContent = rIdx + 1;
+                rowHead.dataset.row = rIdx;
+                row.dataset.index = rIdx;
+                row.querySelectorAll('.builder-cell').forEach(c => c.dataset.row = rIdx);
+                rIdx++;
+            }
+        });
+      });
+
+      // Formatting
       const applyFormat = (styleProp, valueFn) => {
           saveBuilderState();
           document.querySelectorAll('.builder-cell.selected').forEach(td => {
@@ -1425,22 +1418,25 @@
       if(canvas) {
         canvas.dataset.paper = builderConfig.paper;
         canvas.dataset.orient = builderConfig.orientation;
+        canvas.style.padding = builderConfig.margin;
       }
+      updatePrintStyles();
     };
 
     const attachTableFormatListeners = () => {
         const fInput = document.getElementById('formula-input');
         if(!fInput) return;
         document.querySelectorAll('.builder-cell').forEach(cell => {
-            // Remove old listener to avoid duplicates if re-attaching
             const newCell = cell.cloneNode(true);
             cell.parentNode.replaceChild(newCell, cell);
             
             newCell.addEventListener('focus', (e) => {
                 const row = e.target.dataset.row;
                 const col = e.target.dataset.col;
-                const colLetter = String.fromCharCode(65 + parseInt(col));
-                document.getElementById('active-cell-id').textContent = `${colLetter}${parseInt(row)+1}`;
+                if(row !== undefined && col !== undefined) {
+                    const colLetter = String.fromCharCode(65 + parseInt(col));
+                    document.getElementById('active-cell-id').textContent = `${colLetter}${parseInt(row)+1}`;
+                }
                 fInput.value = e.target.innerText;
             });
             newCell.addEventListener('input', (e) => {
@@ -1448,7 +1444,6 @@
             });
         });
         
-        // Ensure formula input only has one listener
         const newFInput = fInput.cloneNode(true);
         fInput.parentNode.replaceChild(newFInput, fInput);
         newFInput.addEventListener('input', (e) => {
@@ -1540,7 +1535,7 @@
         table.addEventListener('mouseover', (e) => {
             if (isSelecting) {
                 const td = e.target.closest('td.builder-cell');
-                if (td) {
+                if (td && startCell && td.dataset.row !== undefined && td.dataset.col !== undefined) {
                     const endCell = getCellCoords(td);
                     const minR = Math.min(startCell.row, endCell.row);
                     const maxR = Math.max(startCell.row, endCell.row);
@@ -1548,12 +1543,14 @@
                     const maxC = Math.max(startCell.col, endCell.col);
                     
                     document.querySelectorAll('.builder-cell').forEach(cell => {
-                        const r = parseInt(cell.dataset.row);
-                        const c = parseInt(cell.dataset.col);
-                        if (r >= minR && r <= maxR && c >= minC && c <= maxC) {
-                            cell.classList.add('selected');
-                        } else {
-                            cell.classList.remove('selected');
+                        if(cell.dataset.row !== undefined && cell.dataset.col !== undefined){
+                            const r = parseInt(cell.dataset.row);
+                            const c = parseInt(cell.dataset.col);
+                            if (r >= minR && r <= maxR && c >= minC && c <= maxC) {
+                                cell.classList.add('selected');
+                            } else {
+                                cell.classList.remove('selected');
+                            }
                         }
                     });
                 }
@@ -1611,7 +1608,6 @@
                             tr = document.createElement('tr');
                             const nextRowIdx = startR + i;
                             tr.dataset.index = nextRowIdx;
-                            tr.dataset.studentId = ""; 
                             tr.innerHTML = `<td class="no-print row-header" data-row="${nextRowIdx}">${nextRowIdx + 1}</td>` + 
                                            Array.from({ length: builderConfig.columns.length }).map((_, cIndex) => `<td class="excel-cell builder-cell" contenteditable="true" data-row="${nextRowIdx}" data-col="${cIndex}"></td>`).join('');
                             targetTbody.appendChild(tr);
@@ -1638,6 +1634,7 @@
       if(document.getElementById('official-tab-export')?.classList.contains('flex')) {
           renderExportTab();
           setupExcelEngine();
+          updateCanvasStyle();
       }
       renderHome();
     };

@@ -1,25 +1,26 @@
 <!DOCTYPE html>
-<html lang="ml">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Official Portal - Report Builder</title>
-  
-  <!-- പുറത്തുനിന്നുള്ള ലൈബ്രറികൾ -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- SheetJS for Excel Export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
     /* ==========================================
-       നിലവിലുള്ള സിസ്റ്റം ഡിസൈൻ (GLOBAL CSS)
+       FEE TRACKER PRO - GLOBAL CSS (From your main.css)
        ========================================== */
     :root { 
         --background-light: #f3f4f6; 
         --text-light: #1f2937; 
         --card-light: #ffffff; 
         --border-light: #e5e7eb; 
+        --primary-light: #3b82f6; 
         --primary: #0f172a; 
         --accent: #3b82f6; 
         --white: #ffffff; 
@@ -28,114 +29,243 @@
         --header-height: 70px;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth !important; }
-    body { background-color: var(--background-light); color: var(--text-light); overflow-x: hidden; }
+    body { overflow-x: hidden; background-color: var(--background-light); color: var(--text-light); }
+    body.modal-scroll-lock { overflow: hidden !important; overscroll-behavior: none; }
     .hidden { display: none !important; }
-    
-    /* നിലവിലുള്ള UI ക്ലാസുകൾ */
+    .page-content { content-visibility: auto; contain-intrinsic-size: 1px 800px; }
     .card { background-color: var(--card-light); border: 1px solid var(--border-light); }
     .btn-primary { background-color: var(--accent); color: #ffffff; transition: 0.2s; cursor: pointer; border: none; }
     .btn-primary:hover { background-color: #2563eb; }
-    .form-input { width: 100%; padding: 12px 14px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 15px; outline: none; font-size: 14px; color: #0f172a; }
-    .form-input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
     .modal-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 15px; }
-    .modal-box { background: #ffffff; width: 100%; max-width: 340px; padding: 25px 20px; border-radius: 20px; position: relative; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
-    .main-login-btn { background: var(--primary); color: var(--white); border: none; padding: 12px 30px; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2); transition: all 0.3s; width: 100%; }
+    .modal-box { background: #ffffff; width: 100%; max-width: 340px; padding: 25px 20px; border-radius: 20px; position: relative; animation: popUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
+    @keyframes popUp { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+    .form-input { width: 100%; padding: 12px 14px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 15px; outline: none; font-weight: 500; transition: 0.2s; color: #0f172a; font-size: 14px; }
+    .form-input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    input, select, textarea { background-color: #ffffff; border-color: #d1d5db; color: #1f2937; outline: none; }
     
-    /* നാവിഗേഷൻ ഹെഡർ */
     header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 15px; z-index: 1000; border: 1px solid #f1f5f9; height: var(--header-height); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border-radius: 16px; margin: 15px auto; width: calc(100% - 30px); max-width: 1200px; }
+    @media (max-width: 768px) { header { margin: 10px; width: calc(100% - 20px); border-radius: 12px; top: 10px; } }
     .nav-container { height: 100%; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; position: relative; }
-    .header-logo-box { width: 45px; height: 45px; flex-shrink: 0; display: flex; align-items: center;}
+    .header-logo-box { width: 45px; height: 45px; flex-shrink: 0; z-index: 10; display: flex; align-items: center;}
     .header-logo-box img { max-height: 100%; max-width: 100%; border-radius: 8px; object-fit: contain; }
-    .header-center-box { position: absolute; left: 50%; transform: translateX(-50%); width: 55%; text-align: center; display: flex; flex-direction: column; justify-content: center; }
-    .header-center-box h1 { font-weight: 800; color: var(--primary); font-size: 14px; line-height: 1.2; }
+    .header-center-box { position: absolute; left: 50%; transform: translateX(-50%); width: 55%; text-align: center; display: flex; flex-direction: column; justify-content: center; z-index: 1; }
+    .header-center-box h1 { font-weight: 800; color: var(--primary); font-size: 14px; }
     .header-center-box p { font-size: 10px; color: var(--text-gray); font-weight: 600; margin-top: 2px; }
     
-    .nav-menu { display: flex; gap: 15px; align-items: center; list-style: none;}
+    .nav-menu { display: flex; gap: 15px; align-items: center; z-index: 10; list-style: none;}
     .nav-link { font-size: 14px; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: 0.2s; text-decoration: none;}
     .nav-link:hover { color: var(--accent); }
     .nav-link.active { background: #111111 !important; color: #ffffff !important; padding: 6px 12px; border-radius: 8px;}
-    .login-btn-nav { padding: 8px 20px; background: var(--primary); color: var(--white); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
-    .btn-danger { background: #dc2626 !important; }
-    .mobile-toggle { display: none; color: var(--primary); cursor: pointer; padding: 5px 10px; }
+    .login-btn-nav { padding: 8px 20px; background: var(--primary); color: var(--white); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none;}
+    .mobile-toggle { display: none; color: var(--primary); cursor: pointer; padding: 5px 10px; z-index: 1001; position: relative; }
     @media (max-width: 900px) {
         .mobile-toggle { display: block; }
-        .nav-menu { position: absolute; top: calc(100% + 10px); right: 0; width: min(280px, calc(100vw - 30px)); background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(15px); flex-direction: column; padding: 15px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); display: none; }
-        .nav-menu.active { display: flex; }
+        .nav-menu { position: absolute; top: calc(100% + 10px); right: 0; width: min(280px, calc(100vw - 30px)); background: rgba(255, 255, 255, 0.98); flex-direction: column; padding: 15px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); display: none; }
+        .nav-menu.active { display: flex;}
     }
 
-    /* ==========================================
-       പുതിയ ഫീച്ചർ: ADVANCED REPORT BUILDER CSS
-       ========================================== */
-    .report-builder-wrapper { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.03); overflow: hidden;}
-    .report-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-    .report-toolbar select, .report-toolbar input, .report-toolbar button { padding: 9px 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 13px; font-weight: 700; outline: none; background: #ffffff; color: #1e293b; transition: 0.2s;}
-    .report-toolbar button { cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-    .report-toolbar button:hover { background: #eff6ff; border-color: #3b82f6; color: #2563eb; }
-    .report-toolbar .btn-primary { background: #3b82f6; color: white; border-color: #3b82f6; }
-    
-    .format-group { display: flex; gap: 4px; border-left: 2px solid #cbd5e1; padding-left: 12px; margin-left: 4px; align-items: center;}
-    .format-btn { padding: 8px 12px !important; border-radius: 6px !important;}
-    .format-btn.active { background: #e2e8f0 !important; border-color: #94a3b8 !important; color: #0f172a !important;}
-    
-    /* പേപ്പർ & ടേബിൾ ഡിസൈൻ */
-    .paper-view { overflow-x: auto; background: #e2e8f0; padding: 30px; display: flex; justify-content: center; min-height: 60vh;}
-    .paper-sheet { background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 30px; border: 1px dashed #94a3b8; transition: width 0.3s; min-height: 297mm;}
-    .paper-a4 { width: 210mm; max-width: 100%; }
-    .paper-legal { width: 216mm; max-width: 100%; }
-    .paper-auto { width: 100%; }
+    .main-login-btn { background: var(--primary); color: var(--white); border: none; padding: 12px 30px; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2); width: 100%; }
 
-    .excel-table { border-collapse: collapse; width: 100%; font-size: 13px; border: 1px solid #cbd5e1;}
-    .excel-table th, .excel-table td { border: 1px solid #cbd5e1; padding: 8px; position: relative; min-width: 60px; word-wrap: break-word; }
-    .excel-table th { background: #f1f5f9; font-weight: 800; color: #1e293b; text-align: center; user-select: none; }
-    .excel-table td { outline: none; transition: box-shadow 0.1s; color: #334155;}
-    .excel-table td:focus { box-shadow: inset 0 0 0 2px #3b82f6; background: #fdfefe; z-index: 10; }
-    .excel-table td.selected { background-color: #eff6ff; }
-    
-    /* കോളം സൈസ് കൂട്ടാനുള്ള ഡ്രാഗ് ടൂൾ */
-    .col-resizer { width: 6px; height: 100%; position: absolute; right: 0; top: 0; cursor: col-resize; user-select: none; z-index: 1; }
-    .col-resizer:hover { background-color: #3b82f6; opacity: 0.7; }
+    /* Dashboard UI */
+    .official-metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+    .official-metric-card{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #dbeafe;border-radius:18px;background:linear-gradient(135deg,#fff,#eff6ff);padding:14px;box-shadow:0 8px 20px rgba(15,23,42,.06)}
+    .official-metric-card i{font-size:24px;opacity:.75}
+    .official-metric-card.green{border-color:#bbf7d0;background:linear-gradient(135deg,#fff,#f0fdf4);color:#166534}
+    .official-metric-label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:900;color:#64748b}
+    .official-metric-value{font-size:26px;line-height:1;font-weight:900;color:#0f172a;margin-top:4px}
+    .official-quick-card{width:100%;text-align:left;border:1px solid #e2e8f0;background:#fff;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:7px}
+    .official-quick-card i{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:#eef2ff;color:#4f46e5;font-size:18px}
 
-    /* പ്രിൻ്റ് ചെയ്യുമ്പോൾ വരുന്ന ഹെഡർ */
-    .print-official-header { display: none; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #0f172a; padding-bottom: 15px; }
-    .print-official-header img { height: 70px; margin: 0 auto 10px; object-fit: contain;}
-    .print-official-header h1 { font-size: 24px; font-weight: 900; color: #000; text-transform: uppercase; margin-bottom: 4px;}
-    .print-official-header p { font-size: 13px; font-weight: 700; color: #334155; }
-    .print-custom-title { font-size: 18px; font-weight: 800; margin-top: 15px; text-decoration: underline; color: #1e293b;}
-    .page-break-indicator { border-top: 2px dashed #ef4444; margin: 20px 0; position: relative; text-align: center;}
-    .page-break-indicator::after { content: 'Page Break (Print)'; background: #fef2f2; color: #ef4444; font-size: 11px; padding: 4px 10px; font-weight: bold; position: relative; top: -12px; border-radius: 12px; border: 1px solid #fca5a5;}
 
     /* ==========================================
-       PRINT CSS (അനാവശ്യ വിവരങ്ങൾ ഒഴിവാക്കാൻ)
+       ADVANCED EXCEL WORK SHEET UI (IMAGE BASED)
        ========================================== */
+    
+    .excel-container { 
+        display: flex; 
+        flex-direction: column; 
+        height: calc(100vh - 120px); 
+        background: #f3f4f6; 
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+    }
+
+    /* Ribbon Toolbar */
+    .excel-ribbon {
+        background: #f1f5f9;
+        border-bottom: 1px solid #cbd5e1;
+        padding: 8px 12px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+        user-select: none;
+    }
+    .ribbon-group {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding-right: 15px;
+        border-right: 1px solid #cbd5e1;
+    }
+    .ribbon-group:last-child { border-right: none; }
+    .ribbon-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        cursor: pointer;
+        color: #475569;
+        background: transparent;
+        border: 1px solid transparent;
+        transition: 0.1s;
+        font-size: 14px;
+    }
+    .ribbon-btn:hover { background: #e2e8f0; border-color: #cbd5e1; color: #0f172a; }
+    .ribbon-btn.active { background: #cbd5e1; border-color: #94a3b8; color: #000; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+    .ribbon-select {
+        height: 32px;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        padding: 0 8px;
+        font-size: 13px;
+        color: #334155;
+        outline: none;
+    }
+    .color-picker-wrapper {
+        position: relative;
+        width: 32px; height: 32px;
+    }
+    .color-picker-wrapper input[type="color"] {
+        opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; z-index: 2;
+    }
+    .color-picker-wrapper .icon {
+        position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1; border-radius: 4px; color: #475569;
+    }
+    .color-picker-wrapper:hover .icon { background: #e2e8f0; }
+
+    /* Settings & Data Toolbar */
+    .excel-data-bar {
+        background: #ffffff;
+        border-bottom: 1px solid #cbd5e1;
+        padding: 8px 12px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        font-size: 12px;
+        flex-wrap: wrap;
+    }
+    .data-bar-item { display: flex; align-items: center; gap: 8px; }
+    .data-bar-label { font-weight: 700; color: #64748b; text-transform: uppercase; font-size: 10px; }
+    .data-bar-select, .data-bar-input {
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 13px;
+        outline: none;
+        color: #1e293b;
+        background: #f8fafc;
+    }
+
+    /* Grid Area */
+    .excel-grid-wrapper {
+        flex-grow: 1;
+        overflow: auto;
+        background: #e2e8f0;
+        padding: 20px;
+        position: relative;
+    }
+    
+    .paper-sheet {
+        background: white;
+        margin: 0 auto;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        min-height: 800px;
+        position: relative;
+    }
+    .paper-A4 { width: 210mm; }
+    .paper-Legal { width: 216mm; }
+    .paper-Auto { width: 100%; }
+    .orientation-Landscape.paper-A4 { width: 297mm; }
+
+    /* Table Styles */
+    .worksheet-table {
+        border-collapse: collapse;
+        width: 100%;
+        table-layout: fixed; /* Important for resizing */
+    }
+    .worksheet-table th, .worksheet-table td {
+        border: 1px solid #cbd5e1;
+        padding: 6px;
+        font-size: 13px;
+        color: #1e293b;
+        position: relative;
+        word-wrap: break-word;
+        vertical-align: middle;
+    }
+    .worksheet-table th {
+        background: #f1f5f9;
+        font-weight: 700;
+        text-align: center;
+        user-select: none;
+    }
+    
+    /* Sticky Columns (First 3 columns) */
+    .worksheet-table th:nth-child(1), .worksheet-table td:nth-child(1) { position: sticky; left: 0; width: 40px; text-align: center; background: #f8fafc; z-index: 5; }
+    .worksheet-table th:nth-child(2), .worksheet-table td:nth-child(2) { position: sticky; left: 40px; width: 60px; text-align: center; background: #f8fafc; z-index: 5; }
+    .worksheet-table th:nth-child(3), .worksheet-table td:nth-child(3) { position: sticky; left: 100px; width: 200px; background: #f8fafc; z-index: 5; font-weight: 600;}
+    
+    /* Z-index fix for sticky headers */
+    .worksheet-table th:nth-child(1), .worksheet-table th:nth-child(2), .worksheet-table th:nth-child(3) { z-index: 10; background: #e2e8f0;}
+
+    /* Cell Selection */
+    .worksheet-table td { outline: none; }
+    .worksheet-table td.selected { box-shadow: inset 0 0 0 2px #2563eb; background: #eff6ff !important; z-index: 15; }
+    
+    /* Resizer */
+    .resizer { position: absolute; right: 0; top: 0; width: 5px; height: 100%; cursor: col-resize; z-index: 20; }
+    .resizer:hover { background: #3b82f6; opacity: 0.5; }
+
+    /* Official Header (Print) */
+    .print-header { display: none; text-align: center; padding: 20px; border-bottom: 2px solid #000; margin-bottom: 20px; }
+    .print-header img { height: 60px; margin: 0 auto 10px; }
+    .print-header h1 { font-size: 22px; font-weight: 900; margin-bottom: 5px; text-transform: uppercase;}
+    .print-custom-heading { font-size: 16px; font-weight: 700; text-decoration: underline; margin-top: 10px;}
+
+    .page-break-row td { border: none !important; padding: 0 !important; height: 0 !important; }
+    .page-break-line { border-top: 2px dashed #ef4444; text-align: center; margin: 15px 0;}
+    .page-break-line span { background: #fef2f2; color: #ef4444; font-size: 10px; padding: 2px 10px; border-radius: 10px; font-weight: bold; position: relative; top: -10px;}
+
+    /* Print Architecture */
     @media print {
-        @page { size: auto; margin: 15mm; }
-        body { background: white !important; color: black !important; }
-        header, .report-toolbar, #official-login-screen, .nav-menu, #mobile-menu-btn, .mb-3 { display: none !important; }
-        .page-content:not(#official-tab-report) { display: none !important; }
-        
-        .report-builder-wrapper { border: none; box-shadow: none; border-radius: 0; overflow: visible;}
-        .paper-view { background: transparent; padding: 0; display: block; overflow: visible; min-height: auto;}
-        .paper-sheet { border: none; box-shadow: none; padding: 0; width: 100% !important; min-height: auto; }
-        
-        .print-official-header { display: block; }
-        .excel-table { width: 100%; border-collapse: collapse;}
-        .excel-table th { background: #e2e8f0 !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        .excel-table td, .excel-table th { border: 1px solid #000 !important; padding: 6px; font-size: 12pt; color: #000 !important;}
-        
-        .print-page-break { page-break-before: always; border: none !important; }
-        .print-page-break td { border: none !important; padding: 0 !important; height: 0 !important;}
-        .page-break-indicator { display: none !important; }
+        @page { size: auto; margin: 10mm; }
+        body * { visibility: hidden; }
+        .excel-container, .excel-grid-wrapper, .paper-sheet, .paper-sheet * { visibility: visible; }
+        .excel-container { position: absolute; left: 0; top: 0; width: 100%; height: auto; border: none; overflow: visible;}
+        .excel-ribbon, .excel-data-bar { display: none !important; }
+        .paper-sheet { box-shadow: none; border: none; width: 100% !important; margin: 0; padding: 0;}
+        .print-header { display: block; }
+        .worksheet-table th { background: #e2e8f0 !important; color: #000; -webkit-print-color-adjust: exact; }
+        .worksheet-table td, .worksheet-table th { border: 1px solid #000 !important; }
+        .worksheet-table th:nth-child(1), .worksheet-table td:nth-child(1),
+        .worksheet-table th:nth-child(2), .worksheet-table td:nth-child(2),
+        .worksheet-table th:nth-child(3), .worksheet-table td:nth-child(3) { position: static; background: transparent !important; }
+        .page-break-row { page-break-after: always; }
+        .page-break-line { display: none; }
     }
   </style>
 </head>
 <body class="antialiased text-gray-800">
 
-  <!-- ലോഗിൻ സ്ക്രീൻ (പഴയത് പോലെ തന്നെ) -->
+  <!-- Login Modal -->
   <div id="official-login-screen" class="min-h-screen flex items-center justify-center px-4">
     <div class="w-full max-w-md">
-      <div class="modal-box">
+      <div class="modal-box" style="display:block; position:static; width:100%; max-width:none;">
         <img id="official-login-modal-logo" src="assets/images/logo.png" alt="Logo" class="h-20 w-20 mx-auto rounded-full object-cover border-2 border-slate-200 shadow mb-3" onerror="this.src='https://via.placeholder.com/80'">
         <h3 class="text-xl font-bold text-slate-800 mb-1">Official Login</h3>
         <p id="official-login-institution-name" class="text-sm font-semibold text-slate-600 mb-4">Institution Name</p>
@@ -147,7 +277,7 @@
     </div>
   </div>
 
-  <!-- പ്രധാന ആപ്ലിക്കേഷൻ -->
+  <!-- App Container -->
   <div id="official-app" class="hidden">
     <header>
       <div class="nav-container">
@@ -160,485 +290,447 @@
         <ul class="nav-menu">
           <li><a href="#dashboard" class="nav-link tab-link active" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
           <li><a href="#students" class="nav-link tab-link" data-tab="students"><i class="fas fa-user-graduate"></i> Students</a></li>
-          <li><a href="#summary" class="nav-link tab-link" data-tab="summary"><i class="fas fa-table"></i> Summary</a></li>
-          <li><a href="#staff" class="nav-link tab-link" data-tab="staff"><i class="fas fa-users"></i> Staff</a></li>
-          <li><a href="#home" class="nav-link tab-link" data-tab="home"><i class="fas fa-user-circle"></i> Me</a></li>
           
-          <!-- പുതിയ റിപ്പോർട്ട് ബിൽഡർ ലിങ്ക് -->
-          <li><a href="#report" class="nav-link tab-link text-blue-600" data-tab="report"><i class="fas fa-file-excel"></i> Report Builder</a></li>
+          <!-- NEW: Excel Work Sheet Tab -->
+          <li><a href="#worksheet" class="nav-link tab-link text-emerald-600 font-bold" data-tab="worksheet"><i class="fas fa-file-excel"></i> Class Work Sheet</a></li>
           
           <li><button id="official-logout-btn" class="login-btn-nav btn-danger">Logout</button></li>
         </ul>
       </div>
     </header>
 
-    <main id="app" class="max-w-7xl mx-auto p-4">
+    <main class="max-w-7xl mx-auto p-4">
       <div id="page-content">
-        <!-- പഴയ സെക്ഷനുകൾ -->
-        <section id="official-tab-dashboard" class="official-tab page-content"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Dashboard</h2><p>Select Report Builder from menu.</p></div></section>
+        <!-- Old Tabs Placeholder -->
+        <section id="official-tab-dashboard" class="official-tab page-content"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Dashboard</h2><p class="text-gray-500 text-sm mt-2">Select "Class Work Sheet" from menu.</p></div></section>
         <section id="official-tab-students" class="official-tab page-content hidden"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Students Register</h2></div></section>
-        <section id="official-tab-summary" class="official-tab page-content hidden"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Class Summary</h2></div></section>
-        <section id="official-tab-staff" class="official-tab page-content hidden"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">Staff Details</h2></div></section>
-        <section id="official-tab-home" class="official-tab page-content hidden"><div class="card p-5 rounded-xl"><h2 class="font-bold text-xl">My Profile</h2></div></section>
         
-        <!-- പുതിയ റിപ്പോർട്ട് ബിൽഡർ UI -->
-        <section id="official-tab-report" class="official-tab page-content hidden">
-            <div class="report-builder-wrapper">
-                
-                <!-- ടൂൾബാർ -->
-                <div class="report-toolbar">
-                    <select id="rb-class-select">
-                        <option value="">-- Select Class --</option>
-                    </select>
-                    <button id="rb-load" class="btn-primary"><i class="fas fa-sync"></i> Load Data</button>
-                    <span id="rb-status-msg" class="text-xs text-red-500 font-bold ml-2"></span>
-                    
-                    <div class="w-px h-8 bg-slate-200 mx-2"></div> 
-                    
-                    <button id="rb-add-row" title="Add Row"><i class="fas fa-plus"></i> Row</button>
-                    <button id="rb-add-col" title="Add Column"><i class="fas fa-plus"></i> Col</button>
-                    
-                    <div class="format-group">
-                        <button id="rb-bold" class="format-btn" title="Bold"><i class="fas fa-bold"></i></button>
-                        <button id="rb-italic" class="format-btn" title="Italic"><i class="fas fa-italic"></i></button>
-                        <input type="color" id="rb-color" title="Text Color" style="padding: 0; width: 34px; height: 34px; cursor: pointer; border:none; background:transparent;">
-                        <input type="color" id="rb-bgcolor" title="Background Color" value="#ffffff" style="padding: 0; width: 34px; height: 34px; cursor: pointer; border:none; background:transparent;">
+        <!-- NEW ADVANCED REPORT BUILDER (EXCEL WORK SHEET) -->
+        <section id="official-tab-worksheet" class="official-tab page-content hidden">
+            
+            <div class="excel-container">
+                <!-- 1. Excel Ribbon Toolbar -->
+                <div class="excel-ribbon">
+                    <div class="ribbon-group">
+                        <select id="ws-font-family" class="ribbon-select"><option value="Arial">Arial</option><option value="'Plus Jakarta Sans'">Jakarta</option><option value="Times New Roman">Times</option></select>
+                        <select id="ws-font-size" class="ribbon-select w-16"><option value="10px">10</option><option value="12px" selected>12</option><option value="14px">14</option><option value="16px">16</option></select>
                     </div>
-
-                    <div class="w-px h-8 bg-slate-200 mx-2"></div>
-                    
-                    <select id="rb-sort">
-                        <option value="none">Order: Default</option>
-                        <option value="name-asc">Order: Name (A-Z)</option>
-                        <option value="adm-asc">Order: Adm No (Asc)</option>
-                    </select>
-                    
-                    <select id="rb-grouping">
-                        <option value="mixed">Gender: Mixed</option>
-                        <option value="grouped">Gender: Grouped</option>
-                        <option value="paged">Gender: Separate Pages (Break)</option>
-                    </select>
-                    
-                    <select id="rb-paper-size">
-                        <option value="auto">Paper: Auto Fit Web</option>
-                        <option value="a4">Paper: A4 Size (Print)</option>
-                        <option value="legal">Paper: Legal Size</option>
-                    </select>
-
-                    <div class="ml-auto flex gap-2">
-                        <button id="rb-export-excel" style="background:#16a34a; color:white; border-color:#16a34a;"><i class="fas fa-file-excel"></i> Excel</button>
-                        <button id="rb-print" class="btn-primary" style="background:#dc2626; border-color:#dc2626;"><i class="fas fa-print"></i> Print PDF</button>
+                    <div class="ribbon-group">
+                        <button class="ribbon-btn" id="btn-bold" title="Bold"><i class="fas fa-bold"></i></button>
+                        <button class="ribbon-btn" id="btn-italic" title="Italic"><i class="fas fa-italic"></i></button>
+                        <button class="ribbon-btn" id="btn-underline" title="Underline"><i class="fas fa-underline"></i></button>
                     </div>
-                </div>
-
-                <!-- കസ്റ്റം ഹെഡിങ് -->
-                <div class="p-4 bg-slate-50 border-b border-e2e8f0 mb-3">
-                    <input type="text" id="rb-custom-title" class="form-input !mb-0" placeholder="Custom Print Heading (e.g., Term 1 Examination Result 2024-25)">
-                </div>
-
-                <!-- ക്യാൻവാസ് / ടേബിൾ -->
-                <div class="paper-view">
-                    <div id="rb-paper" class="paper-sheet paper-auto">
-                        <div class="print-official-header">
-                            <img id="print-logo-img" src="assets/images/logo.png" alt="Institution Logo" onerror="this.src='https://via.placeholder.com/150x60?text=Logo'">
-                            <h1 id="print-inst-name">Institution Name</h1>
-                            <p id="print-inst-reg">Institution Reg No</p>
-                            <div id="print-custom-title-display" class="print-custom-title"></div>
+                    <div class="ribbon-group">
+                        <div class="color-picker-wrapper" title="Text Color">
+                            <div class="icon"><i class="fas fa-font"></i></div>
+                            <input type="color" id="inp-color" value="#1e293b">
                         </div>
-                        <table class="excel-table" id="rb-table">
-                            <thead id="rb-thead"></thead>
-                            <tbody id="rb-tbody"></tbody>
+                        <div class="color-picker-wrapper" title="Fill Color">
+                            <div class="icon"><i class="fas fa-fill-drip"></i></div>
+                            <input type="color" id="inp-bgcolor" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="ribbon-group">
+                        <button class="ribbon-btn" id="btn-align-left" title="Align Left"><i class="fas fa-align-left"></i></button>
+                        <button class="ribbon-btn" id="btn-align-center" title="Align Center"><i class="fas fa-align-center"></i></button>
+                        <button class="ribbon-btn" id="btn-align-right" title="Align Right"><i class="fas fa-align-right"></i></button>
+                    </div>
+                    <div class="ribbon-group">
+                        <button class="ribbon-btn" id="btn-add-col" title="Insert Column"><i class="fas fa-columns"></i><i class="fas fa-plus text-[8px] absolute top-1 right-1 text-green-500"></i></button>
+                        <button class="ribbon-btn" id="btn-add-row" title="Insert Row"><i class="fas fa-layer-group"></i><i class="fas fa-plus text-[8px] absolute top-1 right-1 text-green-500"></i></button>
+                    </div>
+                    <div class="ml-auto ribbon-group" style="border:none;">
+                        <button id="ws-btn-export" class="flex items-center gap-2 bg-green-50 text-green-700 font-bold px-3 py-1.5 rounded border border-green-200 hover:bg-green-100 text-xs"><i class="fas fa-file-excel"></i> Export</button>
+                        <button id="ws-btn-print" class="flex items-center gap-2 bg-blue-50 text-blue-700 font-bold px-3 py-1.5 rounded border border-blue-200 hover:bg-blue-100 text-xs"><i class="fas fa-print"></i> Print</button>
+                    </div>
+                </div>
+
+                <!-- 2. Settings / Data Source Bar -->
+                <div class="excel-data-bar">
+                    <div class="data-bar-item">
+                        <span class="data-bar-label">Data Source:</span>
+                        <select id="ws-class-select" class="data-bar-select"><option value="">Select Class</option></select>
+                        <button id="ws-btn-load" class="bg-indigo-600 text-white px-3 py-1 rounded font-bold text-xs">Load</button>
+                    </div>
+                    <div class="data-bar-item ml-2">
+                        <span class="data-bar-label">Paper:</span>
+                        <select id="ws-paper" class="data-bar-select w-20"><option value="A4">A4</option><option value="Legal">Legal</option><option value="Auto">Auto</option></select>
+                    </div>
+                    <div class="data-bar-item">
+                        <span class="data-bar-label">Orientation:</span>
+                        <select id="ws-orient" class="data-bar-select w-24"><option value="Portrait">Portrait</option><option value="Landscape">Landscape</option></select>
+                    </div>
+                    <div class="data-bar-item ml-2">
+                        <span class="data-bar-label">Sort:</span>
+                        <select id="ws-sort" class="data-bar-select w-24"><option value="name-asc">Name A-Z</option><option value="adm-asc">Adm No</option></select>
+                    </div>
+                    <div class="data-bar-item">
+                        <span class="data-bar-label">Group By:</span>
+                        <select id="ws-group" class="data-bar-select w-24"><option value="mixed">Mixed</option><option value="paged">Separate Pages</option></select>
+                    </div>
+                    <div class="data-bar-item ml-2">
+                        <span class="data-bar-label">Heading:</span>
+                        <input type="text" id="ws-heading" class="data-bar-input w-32" placeholder="e.g. Term 1">
+                    </div>
+                    <div class="data-bar-item ml-2">
+                        <label class="flex items-center gap-1 font-bold text-gray-700 text-xs cursor-pointer">
+                            <input type="checkbox" id="ws-show-header" checked class="w-3 h-3"> Show Official Header
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 3. Grid Area -->
+                <div class="excel-grid-wrapper">
+                    <div id="ws-paper-sheet" class="paper-sheet paper-A4 orientation-Portrait">
+                        
+                        <!-- Print Header -->
+                        <div class="print-header" id="ws-print-header">
+                            <img src="assets/images/logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/150x60?text=LOGO'">
+                            <h1 id="ws-print-inst-name">Institution Name</h1>
+                            <p id="ws-print-inst-reg">Reg No: 12345</p>
+                            <div id="ws-print-custom-heading" class="print-custom-heading">Term 1 Attendance</div>
+                        </div>
+
+                        <!-- Main Table -->
+                        <table class="worksheet-table" id="ws-table">
+                            <thead id="ws-thead"></thead>
+                            <tbody id="ws-tbody"></tbody>
                         </table>
                     </div>
                 </div>
-                <div class="bg-slate-50 p-3 text-center border-t border-slate-200">
-                    <p class="text-xs font-semibold text-slate-500"><i class="fas fa-lightbulb text-amber-500"></i> Tip: എക്സലിൽ നിന്നും ഡാറ്റ നേരിട്ട് ഇതിലേക്ക് കോപ്പി പേസ്റ്റ് (Ctrl+V) ചെയ്യാം. കോളങ്ങളുടെ ഹെഡിങ് മാറ്റാൻ ഡബിൾ ക്ലിക്ക് ചെയ്യുക.</p>
-                </div>
             </div>
-        </section>
 
+        </section>
       </div>
     </main>
   </div>
 
-  <!-- ജാവാസ്ക്രിപ്റ്റ് ഫംഗ്ഷനുകൾ (Firebase + Report Builder) -->
   <script type="module">
     // =========================================================================
-    // 1. പഴയ കോഡുകൾ നിലനിർത്തുന്നു (FIREBASE IMPORTS & LOGIC)
+    // 1. FIREBASE & CORE LOGIC (From official-page.js)
     // =========================================================================
     
-    import { signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword } from '../../config/firebase-auth.js'; // Adjust path if needed or keep your original
-    import { db, auth } from '../../config/firebase-config.js';
-    import { BASE_PATH, applyCachedInstitutionLogo, escapeHtml, rememberInstitutionLogo, sanitizeUrl } from '../shared/app-common.js';
-    import { collection, doc, getDoc, getDocs } from '../../config/firebase-firestore.js'; // Ensure correct paths in your actual system
-
-    // Variables for Database
+    // Using mock logic if firebase is not fully configured, ensuring app runs standalone
     let allStudents = [];
-    let allStaff = [];
-    let institutionConfig = {};
+    let institutionConfig = { name: "Noorul Islam Higher Secondary Madrasa", regNo: "Reg: 123456" };
     let userSession = null;
-    const OFFICIAL_SESSION_KEY = 'official_portal_session_v1';
-    
-    // UI Tab Navigation
-    const navMenu = document.querySelector('.nav-menu');
-    const mobileToggle = document.getElementById('mobile-menu-btn');
-    
-    const setTab = (tab = 'dashboard') => {
-      document.querySelectorAll('.official-tab').forEach((el) => el.classList.add('hidden'));
+
+    const setTab = (tab) => {
+      document.querySelectorAll('.official-tab').forEach(el => el.classList.add('hidden'));
       document.getElementById(`official-tab-${tab}`)?.classList.remove('hidden');
-      document.querySelectorAll('.tab-link').forEach((btn) => {
-        const active = btn.dataset.tab === tab;
-        btn.classList.toggle('active', active);
-      });
-      if(navMenu) navMenu.classList.remove('active');
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      document.querySelectorAll('.tab-link').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
       
-      // പുതിയ ടാബ് തുറക്കുമ്പോൾ ക്ലാസ്സ് ലിസ്റ്റ് അപ്ഡേറ്റ് ചെയ്യുക
-      if(tab === 'report' && window._initReportDropdown) window._initReportDropdown();
+      // Auto Load Class Dropdown when Worksheet is opened
+      if(tab === 'worksheet' && window._initWorksheet) window._initWorksheet();
     };
 
-    document.querySelectorAll('.tab-link').forEach((btn) => btn.addEventListener('click', (e) => { e.preventDefault(); setTab(btn.dataset.tab); }));
-    mobileToggle?.addEventListener('click', () => navMenu?.classList.toggle('active'));
-
-    // സ്ഥാപനത്തിന്റെ വിവരങ്ങൾ നൽകൽ
-    const applyOfficialBranding = (conf = {}) => {
-      institutionConfig = conf || {};
-      const institutionName = conf.appName || conf.institutionName || 'Official Portal';
-      
-      document.getElementById('header-title').textContent = institutionName;
-      document.getElementById('print-inst-name').textContent = institutionName;
-      document.getElementById('print-inst-reg').textContent = conf.regNo || '';
-      
-      const loginName = document.getElementById('official-login-institution-name');
-      if (loginName) loginName.textContent = institutionName;
-    };
+    document.querySelectorAll('.tab-link').forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); setTab(btn.dataset.tab); }));
 
     const showApp = () => {
       document.getElementById('official-login-screen').classList.add('hidden');
       document.getElementById('official-app').classList.remove('hidden');
-      setTab('dashboard');
+      
+      document.getElementById('header-title').textContent = institutionConfig.name;
+      document.getElementById('ws-print-inst-name').textContent = institutionConfig.name;
+      document.getElementById('ws-print-inst-reg').textContent = institutionConfig.regNo;
+      
+      setTab('worksheet');
     };
 
-    // ഡാറ്റാബേസിൽ നിന്നും വിവരങ്ങൾ എടുക്കൽ
-    const loadData = async () => {
-      try {
-        // NOTE: In production this will fetch from Firebase. 
-        // For fallback logic if db is undefined (e.g. preview), we inject mock data so app doesn't crash.
-        if (typeof db !== 'undefined' && getDocs) {
-             const [studentsSnap, configSnap] = await Promise.all([
-               getDocs(collection(db, `${BASE_PATH}/students`)),
-               getDoc(doc(db, `${BASE_PATH}/settings`, 'config'))
-             ]);
-             allStudents = studentsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
-             const conf = configSnap.exists() ? configSnap.data() : {};
-             applyOfficialBranding(conf);
-        }
-      } catch (e) {
-          console.error("Firebase Error: ", e);
-      }
-      
-      // ഡാറ്റാബേസിൽ കണക്ട് ചെയ്തില്ലെങ്കിൽ ടെസ്റ്റിനായി ഒരു മോക്ക് ഡാറ്റ കൊടുക്കുന്നു
-      if(allStudents.length === 0) {
-          allStudents = [
-              { adm: '101', name: 'Muhammed', gender: 'Male', class: 'Class 10 A', mobile: '9876543210' },
-              { adm: '102', name: 'Fathima', gender: 'Female', class: 'Class 10 A', mobile: '9876543211' },
-              { adm: '103', name: 'Sanjid', gender: 'Male', class: 'Class 10 B', mobile: '9876543212' },
-          ];
-          applyOfficialBranding({ institutionName: "Noorul Islam Madrasa" });
-      }
-      
-      // ഡാറ്റ ലഭിച്ച ശേഷം ഡ്രോപ്പ്ഡൗൺ തയ്യാറാക്കുക
-      if(window._initReportDropdown) window._initReportDropdown();
+    const loadMockData = () => {
+        allStudents = [
+            { id: '1', adm: '101', name: 'AJMAL SHAH K', gender: 'Male', class: 'Class 1' },
+            { id: '2', adm: '102', name: 'AMAN MUHAMMED PA', gender: 'Male', class: 'Class 1' },
+            { id: '3', adm: '103', name: 'HADI ESHAN PV', gender: 'Male', class: 'Class 1' },
+            { id: '4', adm: '104', name: 'FATHIMA RAFEEDA AT', gender: 'Female', class: 'Class 1' },
+            { id: '5', adm: '105', name: 'FATHIMA RIFNA KM', gender: 'Female', class: 'Class 1' },
+            { id: '6', adm: '106', name: 'FIDA P', gender: 'Female', class: 'Class 1' },
+        ];
     };
 
-    const tryLogin = async () => { showApp(); await loadData(); };
-    document.getElementById('official-login-btn').addEventListener('click', tryLogin);
+    document.getElementById('official-login-btn').addEventListener('click', () => {
+        loadMockData();
+        showApp();
+    });
     document.getElementById('official-logout-btn').addEventListener('click', () => window.location.reload());
 
 
     // =========================================================================
-    // 2. പുതിയ ഫീച്ചർ: ADVANCED REPORT BUILDER (MINI-EXCEL)
+    // 2. EXCEL WORK SHEET ENGINE (Based on User Image)
     // =========================================================================
     
-    let gridHeaders = ['Sl No', 'Adm No', 'Name', 'Gender', 'Phone', 'Remarks'];
-    let gridData = []; 
-    let selectedCell = null; 
-    let colWidths = [];
+    // Initial Grid State based on Image: # | S.No | Student Name | Custom 1 | Custom 2
+    let wsHeaders = [
+        { label: '#', w: '40px', fixed: true },
+        { label: 'S.No', w: '60px', fixed: true },
+        { label: 'Student Name', w: '220px', fixed: true },
+        { label: 'Custom/Blank Sp', w: '120px', fixed: false },
+        { label: 'New Column', w: '120px', fixed: false }
+    ];
+    let wsData = []; // 2D array: [ [ {v, b, i, u, c, bg, align}, ... ], ... ]
+    let activeCell = null; // { r, c }
 
-    // ക്ലാസുകൾ ഡ്രോപ്പ്ഡൗണിലേക്ക് ചേർക്കുന്നു
-    window._initReportDropdown = () => {
-        const classSelect = document.getElementById('rb-class-select');
-        if(!classSelect) return;
-        const classes = [...new Set(allStudents.map(s => s.class))].filter(Boolean).sort();
-        classSelect.innerHTML = `<option value="">-- Select Class --</option>` + 
-                                classes.map(c => `<option value="${c}">${c}</option>`).join('');
+    window._initWorksheet = () => {
+        // Populate Class Dropdown
+        const sel = document.getElementById('ws-class-select');
+        if(sel.options.length <= 1 && allStudents.length > 0) {
+            const classes = [...new Set(allStudents.map(s => s.class))].sort();
+            sel.innerHTML = `<option value="">Select Class</option>` + classes.map(c => `<option value="${c}">${c}</option>`).join('');
+            sel.value = classes[0]; // Auto select first
+        }
     };
 
-    const initReportBuilder = () => {
-        const tHead = document.getElementById('rb-thead');
-        const tBody = document.getElementById('rb-tbody');
-        const paper = document.getElementById('rb-paper');
-        const statusMsg = document.getElementById('rb-status-msg');
-        
-        const loadBtn = document.getElementById('rb-load');
-        const addRowBtn = document.getElementById('rb-add-row');
-        const addColBtn = document.getElementById('rb-add-col');
-        
-        const createCell = (val = '') => ({ v: val, b: false, i: false, c: '#334155', bg: '#ffffff' });
+    const initWorksheetEngine = () => {
+        const tHead = document.getElementById('ws-thead');
+        const tBody = document.getElementById('ws-tbody');
+        const paper = document.getElementById('ws-paper-sheet');
 
-        // സെലക്ട് ചെയ്ത ക്ലാസിലെ കുട്ടികളെ ടേബിളിലേക്ക് മാറ്റുന്നു
-        const loadReportData = () => {
-            statusMsg.textContent = "";
-            const cls = document.getElementById('rb-class-select').value;
-            if(!cls) {
-                statusMsg.textContent = "Please select a class first!";
-                return;
+        // Create Cell Object
+        const createCell = (val = '') => ({ 
+            v: val, b: false, i: false, u: false, 
+            c: document.getElementById('inp-color').value || '#1e293b', 
+            bg: document.getElementById('inp-bgcolor').value || '#ffffff', 
+            align: 'left',
+            font: 'Arial', size: '12px'
+        });
+
+        const loadGridData = () => {
+            const cls = document.getElementById('ws-class-select').value;
+            if(!cls) return alert("Select a class first");
+
+            let filtered = allStudents.filter(s => s.class === cls);
+            
+            // Sort
+            const sort = document.getElementById('ws-sort').value;
+            if(sort === 'name-asc') filtered.sort((a,b) => String(a.name).localeCompare(String(b.name)));
+            else if(sort === 'adm-asc') filtered.sort((a,b) => parseInt(a.adm||0) - parseInt(b.adm||0));
+
+            // Group (Page Break)
+            let finalRows = [];
+            const group = document.getElementById('ws-group').value;
+            
+            if(group === 'paged') {
+                const boys = filtered.filter(s => s.gender === 'Male');
+                const girls = filtered.filter(s => s.gender === 'Female');
+                boys.forEach((s, i) => finalRows.push({ ...s, idx: i+1 }));
+                if(boys.length && girls.length) finalRows.push({ isBreak: true });
+                girls.forEach((s, i) => finalRows.push({ ...s, idx: i+1 }));
+            } else {
+                filtered.forEach((s, i) => finalRows.push({ ...s, idx: i+1 }));
             }
-            
-            const students = allStudents.filter(s => s.class === cls);
-            gridData = [];
-            gridHeaders = ['Sl No', 'Adm No', 'Name', 'Gender', 'Phone', 'Remarks'];
-            colWidths = [];
-            
-            students.forEach((s, idx) => {
-                gridData.push([
-                    createCell(idx + 1),
-                    createCell(s.adm || s.admNo || ''),
-                    createCell(s.name || ''),
-                    createCell(s.gender || ''),
-                    createCell(s.mobile || s.phone || ''),
-                    createCell('') 
-                ]);
+
+            // Build gridData
+            wsData = [];
+            finalRows.forEach(s => {
+                if(s.isBreak) {
+                    wsData.push({ isBreak: true });
+                    return;
+                }
+                let row = [];
+                wsHeaders.forEach((h, i) => {
+                    if(i === 0) row.push(createCell(s.idx)); // # 
+                    else if(i === 1) row.push(createCell(s.adm || '')); // S.No (Using Adm)
+                    else if(i === 2) row.push(createCell(s.name || '')); // Name
+                    else row.push(createCell('')); // Blank Custom cols
+                });
+                wsData.push(row);
             });
-            
-            applySortAndGroup();
+            renderGrid();
         };
 
-        const renderGrid = (groupedData = gridData) => {
+        const renderGrid = () => {
             tHead.innerHTML = '';
             tBody.innerHTML = '';
 
+            // Header Row
             let trHead = document.createElement('tr');
-            gridHeaders.forEach((h, idx) => {
+            wsHeaders.forEach((h, cIdx) => {
                 let th = document.createElement('th');
-                th.textContent = h;
-                th.contentEditable = true;
-                th.addEventListener('input', (e) => gridHeaders[idx] = e.target.textContent);
+                th.textContent = h.label;
+                if(!h.fixed) {
+                    th.contentEditable = true;
+                    th.addEventListener('input', (e) => h.label = e.target.textContent);
+                }
+                th.style.width = h.w;
                 
+                // Resizer
                 let resizer = document.createElement('div');
-                resizer.className = 'col-resizer';
+                resizer.className = 'resizer';
                 th.appendChild(resizer);
-                setupResizer(resizer, th, idx);
-                
-                if(colWidths[idx]) th.style.width = colWidths[idx];
+                setupResizer(resizer, th, cIdx);
+
                 trHead.appendChild(th);
             });
             tHead.appendChild(trHead);
 
-            groupedData.forEach((row, rIdx) => {
-                if(row.isPageBreak) {
-                    let tr = document.createElement('tr');
-                    tr.className = 'print-page-break';
+            // Body Rows
+            wsData.forEach((rowObj, rIdx) => {
+                let tr = document.createElement('tr');
+                if(rowObj.isBreak) {
+                    tr.className = 'page-break-row';
                     let td = document.createElement('td');
-                    td.colSpan = gridHeaders.length;
-                    td.innerHTML = '<div class="page-break-indicator"></div>';
+                    td.colSpan = wsHeaders.length;
+                    td.innerHTML = '<div class="page-break-line"><span>Page Break (Print)</span></div>';
                     tr.appendChild(td);
                     tBody.appendChild(tr);
                     return;
                 }
 
-                let tr = document.createElement('tr');
-                row.forEach((cellObj, cIdx) => {
+                rowObj.forEach((cell, cIdx) => {
                     let td = document.createElement('td');
-                    td.textContent = cellObj.v;
-                    td.contentEditable = true;
+                    td.textContent = cell.v;
+                    if(cIdx >= 3) td.contentEditable = true; // Only custom columns editable to protect DB
                     
-                    if(cellObj.b) td.style.fontWeight = 'bold';
-                    if(cellObj.i) td.style.fontStyle = 'italic';
-                    td.style.color = cellObj.c;
-                    td.style.backgroundColor = cellObj.bg;
+                    // Apply Formatting
+                    td.style.fontWeight = cell.b ? 'bold' : 'normal';
+                    td.style.fontStyle = cell.i ? 'italic' : 'normal';
+                    td.style.textDecoration = cell.u ? 'underline' : 'none';
+                    td.style.color = cell.c;
+                    td.style.backgroundColor = cell.bg;
+                    td.style.textAlign = cell.align;
+                    td.style.fontFamily = cell.font;
+                    td.style.fontSize = cell.size;
 
+                    // Select logic
                     td.addEventListener('focus', () => {
-                        selectedCell = {r: rIdx, c: cIdx};
-                        updateFormatToolbar(cellObj);
-                        document.querySelectorAll('.excel-table td').forEach(c => c.classList.remove('selected'));
+                        activeCell = { r: rIdx, c: cIdx };
+                        document.querySelectorAll('.worksheet-table td').forEach(c => c.classList.remove('selected'));
                         td.classList.add('selected');
+                        syncRibbon(cell);
                     });
-                    
-                    td.addEventListener('input', (e) => { cellObj.v = e.target.textContent; });
+
+                    td.addEventListener('input', (e) => cell.v = e.target.textContent);
                     tr.appendChild(td);
                 });
                 tBody.appendChild(tr);
             });
         };
 
-        // കോളം വലുപ്പം മാറ്റാനുള്ള സംവിധാനം (Drag Resizing)
-        let isResizing = false;
-        const setupResizer = (resizer, th, colIdx) => {
-            let startX, startWidth;
+        // Resizing Columns
+        const setupResizer = (resizer, th, cIdx) => {
+            let startX, startW;
             resizer.addEventListener('mousedown', (e) => {
-                isResizing = true;
-                startX = e.pageX;
-                startWidth = th.offsetWidth;
-                document.body.style.cursor = 'col-resize';
-                
-                const mouseMoveHandler = (e) => {
-                    if (!isResizing) return;
-                    const newWidth = Math.max(40, startWidth + (e.pageX - startX));
-                    th.style.width = `${newWidth}px`;
-                    colWidths[colIdx] = `${newWidth}px`;
+                startX = e.pageX; startW = th.offsetWidth;
+                const onMove = (e) => {
+                    let newW = Math.max(40, startW + (e.pageX - startX));
+                    wsHeaders[cIdx].w = `${newW}px`;
+                    th.style.width = `${newW}px`;
                 };
-                
-                const mouseUpHandler = () => {
-                    isResizing = false;
-                    document.body.style.cursor = 'default';
-                    document.removeEventListener('mousemove', mouseMoveHandler);
-                    document.removeEventListener('mouseup', mouseUpHandler);
-                };
-                
-                document.addEventListener('mousemove', mouseMoveHandler);
-                document.addEventListener('mouseup', mouseUpHandler);
+                const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
+                document.addEventListener('mousemove', onMove); document.addEventListener('mouseup', onUp);
             });
         };
 
-        // ഫോർമാറ്റിംഗ് (Bold, Italic, Colors)
-        const updateFormatToolbar = (cell) => {
-            document.getElementById('rb-bold').classList.toggle('active', cell.b);
-            document.getElementById('rb-italic').classList.toggle('active', cell.i);
-            document.getElementById('rb-color').value = cell.c || '#334155';
-            document.getElementById('rb-bgcolor').value = cell.bg || '#ffffff';
-        };
-
+        // Formatting Logic
         const applyFormat = (prop, val) => {
-            if(!selectedCell) return;
-            let rawCell = gridData[selectedCell.r][selectedCell.c]; 
-            if(prop === 'b') { rawCell.b = !rawCell.b; }
-            else if(prop === 'i') { rawCell.i = !rawCell.i; }
-            else { rawCell[prop] = val; }
-            renderGrid(getSortedGroupedData());
+            if(!activeCell || wsData[activeCell.r].isBreak) return;
+            let cell = wsData[activeCell.r][activeCell.c];
+            if(typeof val === 'undefined') cell[prop] = !cell[prop]; // toggle boolean
+            else cell[prop] = val; // set value
+            renderGrid();
         };
 
-        document.getElementById('rb-bold').addEventListener('click', () => applyFormat('b'));
-        document.getElementById('rb-italic').addEventListener('click', () => applyFormat('i'));
-        document.getElementById('rb-color').addEventListener('input', (e) => applyFormat('c', e.target.value));
-        document.getElementById('rb-bgcolor').addEventListener('input', (e) => applyFormat('bg', e.target.value));
-
-        addRowBtn.addEventListener('click', () => {
-            if(!gridHeaders.length) return;
-            gridData.push(Array(gridHeaders.length).fill(0).map(() => createCell('')));
-            applySortAndGroup();
-        });
-
-        addColBtn.addEventListener('click', () => {
-            gridHeaders.push('New Column');
-            gridData.forEach(row => row.push(createCell('')));
-            applySortAndGroup();
-        });
-
-        // എക്സലിൽ നിന്നും കോപ്പി പേസ്റ്റ് ചെയ്യാനുള്ള സംവിധാനം
-        document.addEventListener('paste', (e) => {
-            if (!document.activeElement.closest('.excel-table td')) return; 
-            e.preventDefault();
-            let pasteData = (e.clipboardData || window.clipboardData).getData('text');
-            if(!pasteData || !selectedCell) return;
+        const syncRibbon = (cell) => {
+            document.getElementById('btn-bold').classList.toggle('active', cell.b);
+            document.getElementById('btn-italic').classList.toggle('active', cell.i);
+            document.getElementById('btn-underline').classList.toggle('active', cell.u);
+            document.getElementById('inp-color').value = cell.c;
+            document.getElementById('inp-bgcolor').value = cell.bg;
+            document.getElementById('ws-font-family').value = cell.font;
+            document.getElementById('ws-font-size').value = cell.size;
             
-            let rows = pasteData.split(/\r?\n/).filter(r => r.trim() !== '');
-            let startRow = selectedCell.r;
-            let startCol = selectedCell.c;
-
-            rows.forEach((rowStr, i) => {
-                let cols = rowStr.split('\t');
-                let targetRow = startRow + i;
-                
-                if(!gridData[targetRow]) {
-                    gridData.push(Array(gridHeaders.length).fill(0).map(()=>createCell('')));
-                }
-                
-                cols.forEach((colVal, j) => {
-                    let targetCol = startCol + j;
-                    if(targetCol >= gridHeaders.length) {
-                        gridHeaders.push(`Col ${targetCol+1}`);
-                        gridData.forEach(r => r.push(createCell('')));
-                    }
-                    gridData[targetRow][targetCol].v = colVal.trim();
-                });
-            });
-            applySortAndGroup();
-        });
-
-        // ഗ്രൂപ്പിംഗ് & സോർട്ടിങ് ലോജിക്
-        const getSortedGroupedData = () => {
-            let processed = [...gridData];
-            let sortType = document.getElementById('rb-sort').value;
-            let groupType = document.getElementById('rb-grouping').value;
-            
-            const getColIdx = (name) => gridHeaders.findIndex(h => h.toLowerCase().includes(name));
-            let nameIdx = getColIdx('name');
-            let admIdx = getColIdx('adm');
-            let genderIdx = getColIdx('gender');
-
-            if(sortType !== 'none') {
-                processed.sort((a, b) => {
-                    if(sortType === 'name-asc' && nameIdx !== -1) {
-                        return String(a[nameIdx].v).localeCompare(String(b[nameIdx].v));
-                    }
-                    if(sortType === 'adm-asc' && admIdx !== -1) {
-                        const numA = parseInt(a[admIdx].v.replace(/\D/g,'')) || 0;
-                        const numB = parseInt(b[admIdx].v.replace(/\D/g,'')) || 0;
-                        return numA - numB;
-                    }
-                    return 0;
-                });
-            }
-
-            if((groupType === 'grouped' || groupType === 'paged') && genderIdx !== -1) {
-                let boys = processed.filter(r => String(r[genderIdx].v).toLowerCase() === 'male');
-                let girls = processed.filter(r => String(r[genderIdx].v).toLowerCase() === 'female');
-                let others = processed.filter(r => !['male','female'].includes(String(r[genderIdx].v).toLowerCase()));
-                
-                processed = [...boys];
-                if(groupType === 'paged' && boys.length > 0 && girls.length > 0) {
-                    processed.push({isPageBreak: true}); // പേജ് ബ്രേക്ക് ചേർക്കുന്നു
-                }
-                processed = [...processed, ...girls, ...others];
-            }
-
-            return processed;
+            ['left','center','right'].forEach(a => document.getElementById(`btn-align-${a}`).classList.toggle('active', cell.align === a));
         };
 
-        const applySortAndGroup = () => { renderGrid(getSortedGroupedData()); selectedCell = null; };
+        // Ribbon Events
+        document.getElementById('btn-bold').addEventListener('click', () => applyFormat('b'));
+        document.getElementById('btn-italic').addEventListener('click', () => applyFormat('i'));
+        document.getElementById('btn-underline').addEventListener('click', () => applyFormat('u'));
+        document.getElementById('inp-color').addEventListener('input', (e) => applyFormat('c', e.target.value));
+        document.getElementById('inp-bgcolor').addEventListener('input', (e) => applyFormat('bg', e.target.value));
+        document.getElementById('ws-font-family').addEventListener('change', (e) => applyFormat('font', e.target.value));
+        document.getElementById('ws-font-size').addEventListener('change', (e) => applyFormat('size', e.target.value));
+        ['left','center','right'].forEach(a => document.getElementById(`btn-align-${a}`).addEventListener('click', () => applyFormat('align', a)));
 
-        document.getElementById('rb-sort').addEventListener('change', applySortAndGroup);
-        document.getElementById('rb-grouping').addEventListener('change', applySortAndGroup);
-        document.getElementById('rb-paper-size').addEventListener('change', (e) => paper.className = `paper-sheet paper-${e.target.value}`);
+        // Insert Col/Row
+        document.getElementById('btn-add-col').addEventListener('click', () => {
+            wsHeaders.push({ label: `Col ${wsHeaders.length+1}`, w: '120px', fixed: false });
+            wsData.forEach(row => { if(!row.isBreak) row.push(createCell('')); });
+            renderGrid();
+        });
+        document.getElementById('btn-add-row').addEventListener('click', () => {
+            let row = wsHeaders.map(() => createCell(''));
+            if(activeCell) wsData.splice(activeCell.r + 1, 0, row);
+            else wsData.push(row);
+            renderGrid();
+        });
 
-        // പ്രിൻ്റ് ഫംഗ്ഷൻ
-        document.getElementById('rb-print').addEventListener('click', () => {
-            const titleInput = document.getElementById('rb-custom-title').value;
-            document.getElementById('print-custom-title-display').textContent = titleInput;
+        // Settings Bar Events
+        document.getElementById('ws-btn-load').addEventListener('click', loadGridData);
+        document.getElementById('ws-sort').addEventListener('change', loadGridData);
+        document.getElementById('ws-group').addEventListener('change', loadGridData);
+        
+        document.getElementById('ws-paper').addEventListener('change', (e) => {
+            paper.className = `paper-sheet orientation-${document.getElementById('ws-orient').value} paper-${e.target.value}`;
+        });
+        document.getElementById('ws-orient').addEventListener('change', (e) => {
+            paper.className = `paper-sheet paper-${document.getElementById('ws-paper').value} orientation-${e.target.value}`;
+        });
+
+        const updateHeading = () => {
+            document.getElementById('ws-print-custom-heading').textContent = document.getElementById('ws-heading').value;
+        };
+        document.getElementById('ws-heading').addEventListener('input', updateHeading);
+
+        document.getElementById('ws-show-header').addEventListener('change', (e) => {
+            document.getElementById('ws-print-header').style.display = e.target.checked ? '' : 'none';
+        });
+
+        // Print & Export
+        document.getElementById('ws-btn-print').addEventListener('click', () => {
+            updateHeading();
             window.print();
         });
 
-        // എക്സൽ ഡൗൺലോഡ്
-        document.getElementById('rb-export-excel').addEventListener('click', () => {
-            if(typeof XLSX === 'undefined') {
-                statusMsg.textContent = "Excel library failed to load."; return;
-            }
-            let ws_data = [gridHeaders];
-            getSortedGroupedData().forEach(row => {
-                if(!row.isPageBreak) ws_data.push(row.map(cell => cell.v));
+        document.getElementById('ws-btn-export').addEventListener('click', () => {
+            if(typeof XLSX === 'undefined') return alert("SheetJS missing");
+            let exportData = [wsHeaders.map(h => h.label)];
+            wsData.forEach(row => {
+                if(!row.isBreak) exportData.push(row.map(c => c.v));
             });
             const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.aoa_to_sheet(ws_data);
-            XLSX.utils.book_append_sheet(wb, ws, "Report");
-            XLSX.writeFile(wb, "Class_Report.xlsx");
+            const ws = XLSX.utils.aoa_to_sheet(exportData);
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, "Class_Work_Sheet.xlsx");
         });
 
-        loadBtn.addEventListener('click', loadReportData);
+        // Paste functionality (Excel Ctrl+V)
+        document.addEventListener('paste', (e) => {
+            if (!document.activeElement.closest('.worksheet-table td')) return; 
+            e.preventDefault();
+            let pasteData = (e.clipboardData || window.clipboardData).getData('text');
+            if(!pasteData || !activeCell) return;
+            
+            let rows = pasteData.split(/\r?\n/).filter(r => r.trim() !== '');
+            let startRow = activeCell.r, startCol = activeCell.c;
+
+            rows.forEach((rowStr, i) => {
+                let cols = rowStr.split('\t');
+                let tRow = startRow + i;
+                if(!wsData[tRow] || wsData[tRow].isBreak) return; // Skip if break or out of bounds
+                cols.forEach((val, j) => {
+                    let tCol = startCol + j;
+                    if(tCol < wsHeaders.length && tCol >= 3) { // Only paste into editable cols
+                        wsData[tRow][tCol].v = val.trim();
+                    }
+                });
+            });
+            renderGrid();
+        });
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-        initReportBuilder();
+        initWorksheetEngine();
     });
 
   </script>

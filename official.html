@@ -11,12 +11,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
   
-  <!-- ==========================================
-       ALL CSS STYLES (Original + Spreadsheet)
-       ========================================== -->
   <style>
     /* ==========================================
-       FEE TRACKER PRO - GLOBAL CSS
+       GLOBAL CSS & DASHBOARD STYLES
        ========================================== */
     :root { 
         --background-light: #f3f4f6; 
@@ -33,15 +30,8 @@
     }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth !important; }
-    body { overflow-x: hidden; }
+    body { overflow-x: hidden; background-color: var(--background-light); color: var(--text-light); }
     body.modal-scroll-lock { overflow: hidden !important; overscroll-behavior: none; }
-    .skip-link { position: absolute; left: -9999px; top: 8px; z-index: 10000; background: #1d4ed8; color: #fff; padding: 8px 12px; border-radius: 8px; font-weight: 700; }
-    .skip-link:focus { left: 8px; }
-    :focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
-    .input-error { border-color: #dc2626 !important; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15) !important; }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
-
-    body { background-color: var(--background-light); color: var(--text-light); }
     a { text-decoration: none; color: inherit; transition: 0.2s; }
     ul { list-style: none; }
     img { display: block; max-width: 100%; }
@@ -51,7 +41,6 @@
     .card { background-color: var(--card-light); border: 1px solid var(--border-light); }
     .btn-primary { background-color: var(--accent); color: #ffffff; transition: 0.2s; cursor: pointer; border: none; }
     .btn-primary:hover { background-color: #2563eb; }
-    .btn-primary:disabled { background-color: #9ca3af; cursor: not-allowed; }
 
     .popup-overlay { background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); z-index: 5000; }
     .modal-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 15px; }
@@ -60,104 +49,8 @@
 
     .form-input { width: 100%; padding: 12px 14px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 15px; outline: none; font-weight: 500; transition: 0.2s; color: #0f172a; font-size: 14px; }
     .form-input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-
-    .suggestions-box { position: absolute; width: 100%; max-height: 160px; overflow-y: auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; z-index: 10; top: 100%; left: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: left; display: none; padding: 5px; }
-    .suggestions-box.active { display: block; }
-    .suggestion-item { padding: 12px 10px; cursor: pointer; border-radius: 8px; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; color: var(--text-dark);}
-    .suggestion-item:hover { background: #f1f5f9; color: var(--accent); }
-
-    #img-modal .modal-box { background: transparent; padding: 0; max-width: none; width: auto; box-shadow: none; border: none; }
-    #img-modal img { max-height: 85vh; max-width: 95vw; border-radius: 16px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
-    .gallery-modal-box { position: relative; z-index: 2; }
-    .gallery-modal-nav { position: fixed; top: 50%; transform: translateY(-50%); z-index: 5002; width: 48px; height: 48px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.6); background: rgba(15,23,42,0.55); color: #ffffff; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 14px 28px rgba(0,0,0,0.25); backdrop-filter: blur(6px); transition: 0.2s ease; }
-    .gallery-modal-nav:hover { background: rgba(37,99,235,0.85); transform: translateY(-50%) scale(1.05); }
-    .gallery-modal-prev { left: max(14px, env(safe-area-inset-left)); }
-    .gallery-modal-next { right: max(14px, env(safe-area-inset-right)); }
-    @media (max-width: 640px) { .gallery-modal-nav { width: 42px; height: 42px; font-size: 18px; } }
-
-    .mandatory-star { color: #ef4444; font-weight: bold; margin-left: 2px; }
-    .sortable-ghost { opacity: 0.4; background: #f3f4f6; border: 2px dashed #9ca3af; }
-    .drag-handle { cursor: grab; color: #9ca3af; }
-    .drag-handle:active { cursor: grabbing; }
-
     input, select, textarea { background-color: #ffffff; border-color: #d1d5db; color: #1f2937; transition: border 0.2s; outline: none; }
     input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
-    .smart-select-wrapper { position: relative; }
-    .smart-select-native-hidden { position: absolute !important; opacity: 0 !important; pointer-events: none !important; width: 1px !important; height: 1px !important; }
-    .smart-select-list { display: none; max-height: 220px; overflow-y: auto; z-index: 25; }
-    .smart-select-list.active { display: block; }
-    .smart-selected-option { background: #eff6ff; color: #1d4ed8; }
-    .table-header { background-color: #f8fafc; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-
-    body.collection-shell input:not([type="checkbox"]):not([type="radio"]),
-    body.collection-shell select,
-    body.collection-shell textarea { border: 1.5px solid #cbd5e1; background: #ffffff; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04); border-radius: 14px; }
-    body.collection-shell input:not([type="checkbox"]):not([type="radio"]):focus,
-    body.collection-shell select:focus,
-    body.collection-shell textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12); background: #fdfefe; }
-    body.collection-shell label { color: #334155; }
-    body.collection-shell #student-suggestions, body.collection-shell #history-content-container, body.collection-shell #monthly-collected-container > div, body.collection-shell #stu-info-list > div, body.collection-shell .card { border-color: #dbe4f0; }
-
-    body.collection-shell .fee-item-paid-elsewhere { background: #f1f5f9 !important; border-color: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; }
-    body.collection-shell .fee-item-editing-yellow { background: #eab308 !important; border-color: #ca8a04 !important; color: #ffffff !important; }
-    body.collection-shell .fee-item-new-green { background: #16a34a !important; border-color: #15803d !important; color: #ffffff !important; }
-
-    #side-drawer { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .drawer-link.active { background-color: #eff6ff; color: #2563eb; font-weight: 600; border-right: 4px solid #2563eb; }
-    .drawer-link { color: #4b5563; }
-    .drawer-link:hover { background-color: #f1f5f9; }
-    .drawer-link-result { background-color: #eff6ff; color: #1d4ed8; border-left: 4px solid #2563eb; }
-    .drawer-link-result:hover { background-color: #dbeafe; color: #1e40af; }
-    .drawer-heading { font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: #94a3b8; padding: 1.2rem 1rem 0.5rem 1rem; letter-spacing: 0.05em; }
-
-    .upload-area { border: 2px dashed #cbd5e1; border-radius: 12px; padding: 30px; text-align: center; transition: 0.3s; background: #f8fafc; cursor: pointer; }
-    .upload-area:hover, .upload-area.dragover { border-color: var(--accent); background: #eff6ff; }
-    .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-top: 10px; display: none; }
-    .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
-    .toggle-checkbox:checked { right: 0; border-color: #68D391; }
-    .toggle-checkbox:checked + .toggle-label { background-color: #68D391; }
-
-    #auth-loader { position: fixed; inset: 0; background: #f3f4f6; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    #admin-app { display: none; }
-
-    .dash-card { transition: transform 0.2s; }
-    .dash-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-
-    .result-publish-readiness-card { background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%); border: 1px solid #dbeafe; border-radius: 14px; padding: 14px; }
-    .result-publish-readiness-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .result-publish-title { font-size: 0.95rem; font-weight: 800; color: #1e3a8a; }
-    .result-publish-subtitle { font-size: 0.73rem; color: #64748b; font-weight: 600; }
-    .result-publish-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 10px; }
-    .result-readiness-pill { border-radius: 999px; padding: 5px 10px; font-size: 11px; font-weight: 800; border: 1px solid transparent; }
-    .result-readiness-pass { background: #dcfce7; color: #166534; border-color: #86efac; }
-    .result-readiness-pending { background: #f1f5f9; color: #334155; border-color: #cbd5e1; }
-    .result-readiness-fail { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
-    .result-readiness-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-    .result-readiness-item { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; }
-    .result-readiness-label { font-size: 11px; color: #64748b; font-weight: 700; margin-bottom: 4px; }
-    .result-readiness-value { font-size: 1.15rem; font-weight: 900; color: #1e293b; }
-    .result-readiness-notes { margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 10px; font-size: 12px; color: #475569; font-weight: 600; }
-
-    .published-summary-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-    .published-summary-card { background: #ffffff; border: 1px solid #dbeafe; border-radius: 12px; padding: 10px 12px; }
-    .published-summary-label { font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
-    .published-summary-value { font-size: 1.2rem; color: #1e3a8a; font-weight: 900; line-height: 1.2; margin-top: 4px; }
-    @media (max-width: 860px) {
-        .result-publish-controls { grid-template-columns: 1fr; }
-        .result-readiness-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .published-summary-strip { grid-template-columns: 1fr; }
-    }
-
-    #splash-screen { position: fixed; inset: 0; height: 100vh; width: 100vw; background: #ffffff; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s ease, visibility 0.5s; }
-    #loading-screen { position: fixed; inset: 0; background-color: #ffffff; z-index: 9999; transition: opacity 0.3s ease; display: flex; align-items: center; justify-content: center; }
-    .loader-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-    .logo-container { position: relative; width: 130px; height: 130px; margin: auto; display: flex; align-items: center; justify-content: center; }
-    .logo-container img { width: 105px; height: 105px; object-fit: contain; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; animation: logoPulse 2.5s ease-in-out infinite; }
-    .circle-loader { width: 130px; height: 130px; border-radius: 50%; border: 3px solid rgba(0,0,0,0.05); border-top-color: var(--primary); animation: spin 1.5s linear infinite; position: absolute; top: 0; left: 0; }
-    .loading-text { margin-top: 25px; font-size: 14px; font-weight: 600; letter-spacing: 1px; color: var(--text-gray); animation: textFade 2s ease-in-out infinite; text-transform: uppercase; text-align: center;}
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes logoPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.05); } }
-    @keyframes textFade { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
     header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 15px; z-index: 1000; border: 1px solid #f1f5f9; height: var(--header-height); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border-radius: 16px; margin: 15px auto; width: calc(100% - 30px); max-width: 1200px; }
     @media (max-width: 768px) { header { margin: 10px; width: calc(100% - 20px); border-radius: 12px; top: 10px; } }
@@ -167,16 +60,13 @@
     .header-center-box { position: absolute; left: 50%; transform: translateX(-50%); width: 55%; text-align: center; display: flex; flex-direction: column; justify-content: center; z-index: 1; }
     .header-center-box h1 { font-weight: 800; color: var(--primary); white-space: normal; line-height: 1.2; width: 100%; margin: 0 auto; font-size: 14px; word-wrap: break-word; }
     .header-center-box p { font-size: 10px; color: var(--text-gray); font-weight: 600; white-space: nowrap; opacity: 0.8; margin-top: 2px; }
-
+    
     .nav-menu { display: flex; gap: 15px; align-items: center; z-index: 10; }
     .nav-link { font-size: 14px; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: 0.2s; }
     .nav-link:hover { color: var(--accent); }
     .nav-link.active { background: #111111 !important; color: #ffffff !important; }
     .login-btn-nav { padding: 8px 20px; background: var(--primary); color: var(--white); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: transform 0.2s; border: none; box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);}
     .login-btn-nav:hover { transform: translateY(-2px); }
-
-    .install-btn-nav { padding: 8px 16px; background: #eff6ff; color: var(--accent); border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 1px solid #bfdbfe; display: inline-flex; align-items: center; gap: 6px; }
-    .install-btn-nav:hover { background: #dbeafe; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(59, 130, 246, 0.15); }
 
     .mobile-toggle { display: block; color: var(--primary); cursor: pointer; padding: 5px 10px; z-index: 1001; position: relative; }
     .menu-icon-wrapper { width: 24px; height: 24px; position: relative; display: flex; align-items: center; justify-content: center; }
@@ -190,21 +80,7 @@
     .nav-menu.active { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
     .nav-link { font-size: 14px; width: 100%; display: flex; align-items: center; gap: 10px; padding: 12px 15px; text-align: left; border-radius: 10px; }
     .nav-link:hover { background: #f8fafc; }
-    .login-btn-nav, .install-btn-nav { width: 100%; text-align: center; justify-content: center; padding: 10px; margin-top: 5px; }
-
-    /* DESIGN SYSTEM HARDENING */
-    :root {
-        --ds-primary: #2563eb;
-        --ds-primary-dark: #1d4ed8;
-        --ds-danger: #dc2626;
-        --ds-danger-dark: #b91c1c;
-        --ds-text-muted: #64748b;
-        --ds-ring: 0 0 0 3px rgba(37, 99, 235, 0.2);
-    }
-    .mobile-toggle { background: transparent; border: none; }
-    .btn-danger { background: var(--ds-danger); color: #fff; border: none; }
-    .btn-danger:hover { background: var(--ds-danger-dark); }
-    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; box-shadow: var(--ds-ring); }
+    .login-btn-nav { width: 100%; text-align: center; justify-content: center; padding: 10px; margin-top: 5px; }
 
     .official-metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
     .official-metric-card{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #dbeafe;border-radius:18px;background:linear-gradient(135deg,#fff,#eff6ff);padding:14px;box-shadow:0 8px 20px rgba(15,23,42,.06)}
@@ -216,6 +92,7 @@
     .official-metric-card.purple{border-color:#e9d5ff;background:linear-gradient(135deg,#fff,#faf5ff);color:#7e22ce}
     .official-metric-label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:900;color:#64748b}
     .official-metric-value{font-size:26px;line-height:1;font-weight:900;color:#0f172a;margin-top:4px}
+    
     .official-quick-card,.official-card-button,.official-student-card{width:100%;text-align:left;border:1px solid #e2e8f0;background:#fff;border-radius:18px;padding:14px;box-shadow:0 8px 20px rgba(15,23,42,.05);transition:transform .2s,box-shadow .2s,border-color .2s}
     .official-quick-card:hover,.official-card-button:hover,.official-student-card:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(15,23,42,.09);border-color:#93c5fd}
     .official-quick-card{display:flex;flex-direction:column;gap:7px}
@@ -225,11 +102,11 @@
     .official-card-button{padding:0;margin-bottom:10px}
     .official-card-button .official-profile-card{border:0;box-shadow:none;width:100%;min-height:auto}
     .official-student-card{display:none;margin-bottom:10px}
-    .official-detail-dialog{animation:modalIn .18s ease-out}
     .official-profile-card{width:100%;min-height:auto}
-    .official-student-row:focus,.official-student-card:focus,.official-card-button:focus,.official-quick-card:focus{outline:3px solid rgba(59,130,246,.35);outline-offset:2px}
+    
     @media (max-width: 767px){.official-mobile-card-list{display:block}.official-student-card{display:block}.official-tab table{font-size:11px}}
     @media (min-width: 768px){.official-mobile-card-list{display:none}}
+    
     .official-me-card{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 45%,#ec4899 100%);border:1px solid rgba(255,255,255,.35)}
     .official-me-hero{background:radial-gradient(circle at top left,rgba(255,255,255,.28),transparent 35%),radial-gradient(circle at bottom right,rgba(34,211,238,.26),transparent 38%)}
     .official-me-photo{width:154px;height:154px;border-radius:34px;object-fit:cover;border:5px solid rgba(255,255,255,.72);box-shadow:0 24px 45px rgba(15,23,42,.26)}
@@ -254,70 +131,103 @@
     .detail-value{font-size:12px;color:#0f172a;font-weight:600;word-break:break-word}
 
     /* ==========================================
-       EXCEL-LIKE SPREADSHEET BUILDER (NEW)
+       EXCEL SPREADSHEET UI STYLES (NEW)
        ========================================== */
 
-    .excel-ui-header { background: #f3f2f1; border-bottom: 1px solid #c8c6c4; display: flex; flex-direction: column; }
-    .excel-tabs { display: flex; gap: 2px; padding: 4px 10px 0; border-bottom: 1px solid #e1dfdd; background: #ffffff;}
-    .excel-tab { padding: 6px 14px; font-size: 13px; color: #323130; background: transparent; border: 1px solid transparent; border-bottom: none; cursor: pointer; transition: 0.2s; margin-bottom: -1px; }
-    .excel-tab:hover { background: #f3f2f1; }
-    .excel-tab.active { background: #f3f2f1; border-color: #e1dfdd; color: #107c41; font-weight: bold; border-bottom: 1px solid #f3f2f1; z-index: 10; }
-    .excel-primary-btn { padding: 4px 12px; border-radius: 4px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; margin-bottom: 4px;}
-
-    .excel-ribbon-container { background: #f3f2f1; min-height: 80px; position: relative; }
-    .ribbon-panel { display: none; padding: 8px 12px; height: 100%; align-items: center; }
-    .ribbon-panel.active { display: flex; }
-
-    .excel-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; overflow-x: auto;}
-    .toolbar-group { display: flex; align-items: center; gap: 2px; }
-    .toolbar-divider { width: 1px; height: 36px; background: #c8c6c4; margin: 0 4px; }
-
-    .excel-btn { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: 1px solid transparent; border-radius: 4px; color: #323130; cursor: pointer; transition: 0.1s; }
-    .excel-btn:hover { background: #e1dfdd; border-color: #c8c6c4; }
-    .excel-btn:active { background: #c8c6c4; transform: scale(0.95); }
-
-    .excel-input { border: 1px solid #8a8886; border-radius: 2px; padding: 4px 6px; font-size: 12px; color: #323130; outline: none; }
-    .excel-input:focus { border-color: #107c41; box-shadow: 0 0 0 1px #107c41; }
-
-    .excel-color-picker { opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer;}
-    .excel-color-indicator { width: 14px; height: 4px; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); border-radius: 2px; pointer-events: none;}
-
-    .excel-formula-bar { display: flex; align-items: center; background: #ffffff; border-top: 1px solid #c8c6c4; border-bottom: 1px solid #c8c6c4; padding: 2px 10px; gap: 10px; }
-    .formula-cell-id { width: 60px; font-size: 13px; font-family: monospace; font-weight: bold; color: #323130; text-align: center; }
-    .formula-divider { width: 1px; height: 20px; background: #c8c6c4; }
-    .formula-input-field { flex-grow: 1; border: none; outline: none; font-size: 13px; font-family: sans-serif; color: #323130; padding: 4px; }
-
-    .builder-table { border-collapse: collapse; min-width: 100%; background: #fff; table-layout: auto;}
-    .builder-table th, .builder-table td { border: 1px solid #d4d4d4; padding: 4px 6px; text-align: left; font-size: 13px; color: #000; vertical-align: bottom; }
-    .col-header, .row-header, .select-all-btn { background-color: #e6e6e6 !important; color: #333 !important; font-size: 12px !important; text-align: center !important; font-weight: normal; cursor: pointer; user-select: none; }
-    .col-header:hover, .row-header:hover, .select-all-btn:hover { background-color: #d4d4d4 !important; }
-    .col-header.selected, .row-header.selected, .select-all-btn.selected { background-color: #cacaca !important; color: #107c41 !important; font-weight: bold; border-bottom: 2px solid #107c41 !important;}
+    .excel-container { display: flex; flex-direction: column; height: 100%; background: #f3f2f1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
     
-    .builder-cell { outline: none; position: relative; }
-    .builder-cell.selected { background-color: #e5f3eb !important; }
-    .builder-cell.selected::after { content: ''; position: absolute; inset: -1px; border: 2px solid #107c41; z-index: 10; pointer-events: none; }
-    .builder-cell:focus { z-index: 12; }
-    .builder-cell:focus::after { content: ''; position: absolute; inset: -1px; border: 2px solid #107c41; z-index: 12; pointer-events: none; }
+    /* Top Ribbon Area */
+    .excel-ribbon-wrapper { background: #f3f2f1; border-bottom: 1px solid #c8c6c4; padding-top: 4px;}
+    .excel-tabs { display: flex; gap: 2px; padding: 0 10px; border-bottom: 1px solid #c8c6c4;}
+    .excel-tab { padding: 4px 12px; font-size: 13px; color: #323130; cursor: pointer; border: 1px solid transparent; border-bottom: none; border-radius: 4px 4px 0 0; position: relative; bottom: -1px;}
+    .excel-tab:hover { background: #e1dfdd; }
+    .excel-tab.active { background: #ffffff; color: #107c41; font-weight: 600; border-color: #c8c6c4; border-bottom-color: #ffffff; z-index: 10; }
+    
+    .excel-ribbon { background: #ffffff; display: flex; padding: 6px 10px; gap: 16px; align-items: center; overflow-x: auto; min-height: 80px;}
+    .excel-tool-group { display: flex; align-items: center; gap: 4px; border-right: 1px solid #e1dfdd; padding-right: 16px; height: 100%;}
+    .excel-tool-group:last-child { border-right: none; }
+    
+    .excel-btn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 4px; color: #323130; cursor: pointer; transition: 0.1s; border: 1px solid transparent; background: transparent; }
+    .excel-btn:hover { background: #f3f2f1; border-color: #c8c6c4; }
+    .excel-btn:active { background: #e1dfdd; transform: scale(0.96); }
+    
+    .excel-select { border: 1px solid #8a8886; border-radius: 2px; padding: 4px; font-size: 12px; color: #323130; outline: none; background: #fff;}
+    .excel-select:focus { border-color: #107c41; outline: 1px solid #107c41; }
+    
+    .excel-color-picker-wrap { position: relative; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid transparent; cursor: pointer;}
+    .excel-color-picker-wrap:hover { background: #f3f2f1; border-color: #c8c6c4; }
+    .excel-color-indicator { position: absolute; bottom: 4px; left: 6px; right: 6px; height: 4px; background: #000; pointer-events: none;}
+    .excel-color-input { opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; }
 
-    .builder-th { position: relative; }
-    .col-resizer { position: absolute; right: -4px; top: 0; bottom: 0; width: 8px; cursor: col-resize; z-index: 20; transition: background 0.2s; }
-    .col-resizer:hover { background: rgba(16, 124, 65, 0.5); }
+    /* Custom App Filters (Below Ribbon) */
+    .excel-app-filters { display: flex; flex-wrap: wrap; gap: 12px; padding: 8px 15px; background: #f8f8f8; border-bottom: 1px solid #c8c6c4; align-items: flex-end;}
+    .excel-filter-item { display: flex; flex-direction: column; gap: 4px; }
+    .excel-filter-label { font-size: 10px; font-weight: 700; color: #605e5c; text-transform: uppercase; letter-spacing: 0.5px;}
 
-    .builder-col-select, .builder-col-title-input { border: 1px solid #c8c6c4; border-radius: 2px; padding: 2px 4px; font-size: 11px; width: 100%; outline: none; margin-top: 2px;}
+    /* Premium Export Buttons */
+    .premium-export-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; color: #fff; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: none; }
+    .btn-excel-green { background: linear-gradient(180deg, #21a366 0%, #107c41 100%); border: 1px solid #0f6c39;}
+    .btn-excel-green:hover { background: linear-gradient(180deg, #1e925b 0%, #0c6132 100%); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(16, 124, 65, 0.2);}
+    .btn-pdf-red { background: linear-gradient(180deg, #e11d48 0%, #be123c 100%); border: 1px solid #9f1239;}
+    .btn-pdf-red:hover { background: linear-gradient(180deg, #be123c 0%, #9f1239 100%); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(225, 29, 72, 0.2);}
 
-    .print-only-heading { display: none; }
-    .builder-print-header { display: none; }
-    .builder-print-header.repeat-header { display: table-header-group; }
-    .print-header-content { text-align: center; padding-bottom: 12px; margin-bottom: 8px; border-bottom: 2px solid #333; }
-    .print-inst-name { font-size: 22px; font-weight: bold; text-transform: uppercase; margin: 0; }
-    .print-inst-sub { font-size: 13px; font-weight: normal; margin: 2px 0; }
-    .print-custom-title { font-size: 16px; font-weight: bold; margin-top: 6px; }
+    /* Formula Bar */
+    .formula-bar { display: flex; align-items: center; background: #fff; border-bottom: 1px solid #c8c6c4; padding: 4px 10px; gap: 10px;}
+    .formula-name-box { width: 60px; font-size: 13px; text-align: center; color: #323130; font-family: monospace;}
+    .formula-divider { width: 1px; height: 18px; background: #c8c6c4; }
+    .formula-icon { color: #605e5c; font-style: italic; font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 14px;}
+    .formula-input { flex-grow: 1; border: none; outline: none; font-size: 13px; color: #000; padding: 2px 5px;}
 
-    .print-canvas { min-height: 500px; padding: 0; background: white; border-right: 2px dashed #ef4444; }
+    /* Workspace & Canvas */
+    .excel-workspace { flex-grow: 1; overflow: auto; padding: 15px; position: relative;}
+    .excel-workspace::-webkit-scrollbar { width: 12px; height: 12px; }
+    .excel-workspace::-webkit-scrollbar-track { background: #f3f2f1; }
+    .excel-workspace::-webkit-scrollbar-thumb { background: #c8c6c4; border: 2px solid #f3f2f1; border-radius: 6px; }
+    .excel-workspace::-webkit-scrollbar-thumb:hover { background: #a19f9d; }
+
+    /* The Print Canvas & Boundary */
+    .print-canvas { background: #fff; margin: 0 auto; min-height: 600px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: visible; border-right: 2px dashed #ef4444;}
     .print-canvas[data-paper="A4"][data-orient="portrait"] { width: 210mm; }
     .print-canvas[data-paper="A4"][data-orient="landscape"] { width: 297mm; }
     .print-canvas[data-paper="Legal"][data-orient="portrait"] { width: 8.5in; }
     .print-canvas[data-paper="Legal"][data-orient="landscape"] { width: 14in; }
+
+    /* The Spreadsheet Table */
+    .excel-table { border-collapse: collapse; min-width: 100%; table-layout: auto;}
+    .excel-table th, .excel-table td { border: 1px solid #d4d4d4; padding: 4px; font-size: 13px; color: #000; background: #fff; vertical-align: bottom;}
+    
+    /* Native Headers (A, B, C / 1, 2, 3) */
+    .col-header, .row-header, .select-all-corner { background-color: #e6e6e6 !important; color: #333 !important; text-align: center !important; font-size: 12px !important; font-weight: normal !important; user-select: none; cursor: pointer; padding: 2px !important;}
+    .col-header:hover, .row-header:hover, .select-all-corner:hover { background-color: #d4d4d4 !important; }
+    .col-header.selected, .row-header.selected, .select-all-corner.selected { background-color: #cacaca !important; color: #107c41 !important; font-weight: bold !important; border-bottom: 2px solid #107c41 !important;}
+    .row-header.selected { border-bottom: 1px solid #d4d4d4 !important; border-right: 2px solid #107c41 !important;}
+
+    /* Cells */
+    .excel-cell { outline: none; transition: 0.1s; white-space: nowrap; overflow: hidden; position: relative;}
+    .excel-cell.selected { background-color: #e5f3eb !important; }
+    .excel-cell.selected::after { content: ''; position: absolute; inset: -1px; border: 2px solid #107c41; z-index: 10; pointer-events: none; }
+    .excel-cell:focus { z-index: 12; }
+    .excel-cell:focus::after { content: ''; position: absolute; inset: -1px; border: 2px solid #107c41; z-index: 12; pointer-events: none; }
+
+    /* Config Rows inside grid */
+    .config-row th { background: #f8fafc; padding: 4px; border-bottom: none;}
+    .grid-select { width: 100%; border: 1px solid #c8c6c4; padding: 2px; font-size: 11px; outline: none; color: #333;}
+    .grid-select:focus { border-color: #107c41;}
+    .grid-input { width: 100%; border: 1px solid #c8c6c4; padding: 2px 4px; font-size: 12px; font-weight: bold; outline: none; color: #000; border-top: none;}
+    .grid-input:focus { border-color: #107c41;}
+
+    .col-resizer { position: absolute; right: -4px; top: 0; bottom: 0; width: 8px; cursor: col-resize; z-index: 20; }
+    .col-resizer:hover { background: rgba(16, 124, 65, 0.5); }
+    .builder-th { position: relative; }
+
+    /* Print specific settings */
+    .print-only-heading { display: none; }
+    .builder-print-header { display: none; }
+    .builder-print-header.repeat-header { display: table-header-group; }
+    .print-header-content { text-align: center; padding-bottom: 12px; margin-bottom: 8px; border-bottom: 2px solid #333; }
+    .print-inst-name { font-size: 24px; font-weight: 900; text-transform: uppercase; color: #0f172a; margin: 0; }
+    .print-inst-sub { font-size: 14px; font-weight: 600; color: #334155; margin: 2px 0; }
+    .print-custom-title { font-size: 18px; font-weight: 800; color: #1e3a8a; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
 
     @media print {
         body.is-printing { background: #fff; margin: 0; padding: 0; }
@@ -325,16 +235,12 @@
         body.is-printing #print-canvas, body.is-printing #print-canvas * { visibility: visible; }
         body.is-printing #print-canvas { position: absolute; left: 0; top: 0; width: 100% !important; max-width: none !important; margin: 0; padding: 0; border: none; box-shadow: none; overflow: visible; }
         body.is-printing .no-print { display: none !important; }
-        body.is-printing .print-only-heading { display: block !important; font-weight: bold; font-size: 12px;}
+        body.is-printing .print-only-heading { display: block !important; font-size: 13px; font-weight: bold; text-align: center; padding: 4px; border-bottom: 1px solid #000;}
         body.is-printing .builder-print-header { display: table-header-group !important; }
+        body.is-printing .excel-cell { white-space: normal; word-break: break-word;}
         .page-break-before { page-break-before: always; break-before: page; }
         @page { margin: 1cm; }
     }
-    
-    .spreadsheet-container::-webkit-scrollbar { height: 10px; width: 10px; }
-    .spreadsheet-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px;}
-    .spreadsheet-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
-    .spreadsheet-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
 
@@ -382,7 +288,7 @@
           <li><a href="#dashboard" class="nav-link tab-link active" data-tab="dashboard"><i class="fas fa-chart-pie text-lg w-6"></i> Dashboard</a></li>
           <li><a href="#students" class="nav-link tab-link" data-tab="students"><i class="fas fa-user-graduate text-lg w-6"></i> Students</a></li>
           <li><a href="#summary" class="nav-link tab-link" data-tab="summary"><i class="fas fa-table text-lg w-6"></i> Class Summary</a></li>
-          <li><a href="#staff" class="nav-link tab-link" data-tab="staff"><i class="fas fa-users text-lg w-6"></i> Staff & Categories</a></li>
+          <li><a href="#staff" class="nav-link tab-link" data-tab="staff"><i class="fas fa-users text-lg w-6"></i> Staff</a></li>
           <li><a href="#export" class="nav-link tab-link font-bold text-emerald-700" data-tab="export"><i class="fas fa-file-excel text-lg w-6"></i> Class WorkSheet</a></li>
           <li><a href="#home" class="nav-link tab-link" data-tab="home"><i class="fas fa-user-circle text-lg w-6"></i> Me</a></li>
           <div class="border-t border-gray-100 my-1"></div>
@@ -404,6 +310,7 @@
       <section id="official-tab-export" class="official-tab hidden h-full flex-col bg-[#f3f2f1]"></section>
     </main>
 
+    <!-- Modal details -->
     <div id="official-detail-modal" class="fixed inset-0 z-[1000] hidden items-center justify-center bg-slate-950/60 p-3 no-print" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="official-detail-title">
       <div class="official-detail-dialog w-full max-w-5xl max-h-[90vh] overflow-hidden rounded-3xl bg-white shadow-2xl border border-slate-200">
         <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 bg-slate-50">
@@ -453,9 +360,7 @@
             const idle = now() - Number(state.lastActiveAt);
             const maxAgeMs = Number(policy.maxAgeMs || 0);
             const idleMs = Number(policy.idleMs || 0);
-            const ageOk = maxAgeMs <= 0 || age <= maxAgeMs;
-            const idleOk = idleMs <= 0 || idle <= idleMs;
-            return ageOk && idleOk;
+            return (maxAgeMs <= 0 || age <= maxAgeMs) && (idleMs <= 0 || idle <= idleMs);
         };
 
         const getStaffState = () => readJson(STAFF_STATE_KEY);
@@ -622,20 +527,20 @@
     
     applyCachedInstitutionLogo(['header-logo', 'header-logo-right', 'official-login-modal-logo']);
 
-    const officialFilters = {
-      studentClass: '', studentGender: 'ALL', studentInfo: 'ALL', studentSearch: '',
-      staffType: 'ALL', staffStatus: 'ALL', staffSearch: ''
-    };
+    const officialFilters = { studentClass: '', studentGender: 'ALL', studentInfo: 'ALL', studentSearch: '', staffType: 'ALL', staffStatus: 'ALL', staffSearch: '' };
 
-    // SPREADSHEET BUILDER STATE
+    // ==========================================
+    // EXCEL BUILDER STATE & LOGIC
+    // ==========================================
     let builderConfig = {
       classId: '', paper: 'A4', orientation: 'portrait', sortBy: 'name', groupBy: 'mixed',
       showHeader: false, repeatHeader: false, customTitle: '', activeTab: 'home',
       columns: [
         { id: 'col_sno', field: 'SNO', title: 'S.No', width: 'auto' },
         { id: 'col_name', field: 'name', title: 'Student Name', width: 'auto' },
-        { id: 'col_adm', field: 'adm', title: 'Adm No', width: 'auto' },
-        { id: 'col_c1', field: 'CUSTOM', title: 'New Column', width: '120px' }
+        { id: 'col_c1', field: 'CUSTOM', title: 'Custom Sp.', width: '150px' },
+        { id: 'col_c2', field: 'CUSTOM', title: 'Custom Sp.', width: '150px' },
+        { id: 'col_c3', field: 'CUSTOM', title: 'Custom Sp.', width: '150px' }
       ]
     };
 
@@ -789,21 +694,12 @@
     };
 
     document.getElementById('official-detail-close')?.addEventListener('click', closeOfficialDetailModal);
-    document.getElementById('official-detail-modal')?.addEventListener('click', (event) => {
-      if (event.target === event.currentTarget) closeOfficialDetailModal();
-    });
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') closeOfficialDetailModal();
-    });
+    document.getElementById('official-detail-modal')?.addEventListener('click', (event) => { if (event.target === event.currentTarget) closeOfficialDetailModal(); });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeOfficialDetailModal(); });
 
     document.querySelectorAll('.tab-link').forEach((btn) => btn.addEventListener('click', (event) => { event.preventDefault(); setTab(btn.dataset.tab); }));
-    mobileToggle?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      setMobileMenuState(!navMenu.classList.contains('active'));
-    });
-    document.addEventListener('click', (e) => {
-      if (!navMenu?.contains(e.target) && !mobileToggle?.contains(e.target)) setMobileMenuState(false);
-    });
+    mobileToggle?.addEventListener('click', (e) => { e.stopPropagation(); setMobileMenuState(!navMenu.classList.contains('active')); });
+    document.addEventListener('click', (e) => { if (!navMenu?.contains(e.target) && !mobileToggle?.contains(e.target)) setMobileMenuState(false); });
 
     const summaryStats = () => {
       const totalStudents = allStudents.length;
@@ -1098,6 +994,19 @@
         </div>`;
     };
 
+    const availableDataFields = [
+      { id: 'SNO', label: 'Serial No. (Auto)' },
+      { id: 'name', label: 'Student Name' },
+      { id: 'adm', label: 'Admission No.' },
+      { id: 'class', label: 'Class' },
+      { id: 'gender', label: 'Gender' },
+      { id: 'mobile', label: 'Mobile No.' },
+      { id: 'father', label: 'Father Name' },
+      { id: 'uid', label: 'UID / Roll No.' },
+      { id: 'address', label: 'Address' },
+      { id: 'CUSTOM', label: 'Custom/Blank Space' }
+    ];
+
     const renderExportTab = () => {
       const classOptions = [...new Set(allStudents.map(getStudentClass))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
       let studentRows = builderConfig.classId ? allStudents.filter(s => getStudentClass(s) === builderConfig.classId) : [];
@@ -1135,16 +1044,16 @@
       ).join('');
 
       const colHeadersHtml = builderConfig.columns.map((col, cIndex) => {
-        return `<th class="builder-th group" style="width: ${col.width || 'auto'}">
+        return `<th class="builder-th group config-row-th" style="width: ${col.width || 'auto'}">
           <div class="col-resizer" data-col-index="${cIndex}"></div>
           <div class="no-print mb-1 flex items-center justify-between gap-1">
-            <select class="builder-col-select w-full" data-col-index="${cIndex}">
+            <select class="grid-select" data-col-index="${cIndex}">
               ${availableDataFields.map(f => `<option value="${f.id}" ${f.id === col.field ? 'selected' : ''}>${f.label}</option>`).join('')}
             </select>
-            <button class="text-red-500 hover:bg-red-100 px-1.5 py-0.5 rounded delete-col-btn opacity-0 group-hover:opacity-100 transition-opacity" data-col-index="${cIndex}" title="Remove Column"><i class="fas fa-times"></i></button>
+            <button class="text-red-500 hover:bg-red-100 px-1 py-0.5 rounded delete-col-btn opacity-0 group-hover:opacity-100 transition-opacity" data-col-index="${cIndex}" title="Remove Column"><i class="fas fa-times"></i></button>
           </div>
           <div class="no-print flex gap-1 items-center">
-            <input type="text" class="builder-col-title-input w-full" value="${escapeHtml(col.title)}" placeholder="Heading..." data-col-index="${cIndex}">
+            <input type="text" class="grid-input" value="${escapeHtml(col.title)}" placeholder="Heading..." data-col-index="${cIndex}">
           </div>
           <div class="print-only-heading">${escapeHtml(col.title)}</div>
         </th>`;
@@ -1160,7 +1069,7 @@
               let cellValue = '';
               if (col.field === 'SNO') cellValue = student ? startIndex + rIndex + 1 : '';
               else if (col.field !== 'CUSTOM' && student) cellValue = valueToDisplay(student[col.field]);
-              return `<td class="builder-cell" contenteditable="true" data-row="${startIndex + rIndex}" data-col="${cIndex}">${escapeHtml(String(cellValue))}</td>`;
+              return `<td class="excel-cell builder-cell" contenteditable="true" data-row="${startIndex + rIndex}" data-col="${cIndex}">${escapeHtml(String(cellValue))}</td>`;
             }).join('')}</tr>`;
           }).join('');
       };
@@ -1199,82 +1108,91 @@
               </div>
               <div class="toolbar-group">
                 <button id="fmt-size-minus" class="excel-btn text-[10px]" title="Decrease Font Size"><i class="fas fa-minus"></i></button>
-                <input type="number" id="fmt-size-input" class="excel-input w-12 text-center" value="13" />
+                <input type="number" id="fmt-size-input" class="excel-input w-12 text-center font-bold" value="13" />
                 <button id="fmt-size-plus" class="excel-btn text-[10px]" title="Increase Font Size"><i class="fas fa-plus"></i></button>
               </div>
               <div class="toolbar-divider"></div>
-              <div class="toolbar-group relative" title="Text Color">
-                 <div class="excel-color-indicator" style="background:#0f172a"></div><i class="fas fa-font"></i>
-                 <input type="color" id="fmt-color" class="excel-color-picker" value="#0f172a">
-              </div>
-              <div class="toolbar-group relative" title="Fill Color">
-                 <div class="excel-color-indicator" style="background:#ffffff"></div><i class="fas fa-fill-drip"></i>
-                 <input type="color" id="fmt-bg" class="excel-color-picker" value="#ffffff">
+              <div class="toolbar-group">
+                 <div class="excel-color-picker-wrap" title="Text Color">
+                     <i class="fas fa-font"></i>
+                     <div class="excel-color-indicator bg-slate-900"></div>
+                     <input type="color" id="fmt-color" class="excel-color-input" value="#0f172a">
+                 </div>
+                 <div class="excel-color-picker-wrap" title="Fill Color">
+                     <i class="fas fa-fill-drip"></i>
+                     <div class="excel-color-indicator bg-white"></div>
+                     <input type="color" id="fmt-bg" class="excel-color-input" value="#ffffff">
+                 </div>
               </div>
               <div class="toolbar-divider"></div>
               <div class="toolbar-group">
-                <button id="btn-add-col" class="excel-btn text-indigo-700" title="Add Column"><i class="fas fa-plus"></i> Col</button>
-                <button id="btn-add-row" class="excel-btn text-indigo-700" title="Add Row"><i class="fas fa-plus"></i> Row</button>
+                <button id="btn-add-col" class="excel-btn w-auto px-2 text-indigo-700 font-bold" title="Add Column"><i class="fas fa-plus mr-1"></i> Col</button>
+                <button id="btn-add-row" class="excel-btn w-auto px-2 text-indigo-700 font-bold" title="Add Row"><i class="fas fa-plus mr-1"></i> Row</button>
               </div>
           </div>
       `;
 
       const ribbonData = `
           <div class="excel-toolbar">
-              <div class="toolbar-group flex-col items-start gap-1">
-                <span class="text-[9px] font-bold text-slate-500 uppercase">Data Source</span>
-                <select id="builder-class" class="excel-input w-32">
-                  <option value="">-- Blank Table --</option>
-                  ${classOptions.map((className) => `<option value="${escapeHtml(className)}" ${builderConfig.classId === className ? 'selected' : ''}>Class ${escapeHtml(className)}</option>`).join('')}
-                </select>
-              </div>
-              <div class="toolbar-divider"></div>
-              <div class="toolbar-group flex-col items-start gap-1">
-                <span class="text-[9px] font-bold text-slate-500 uppercase">Sort & Group</span>
-                <div class="flex gap-2">
-                    <select id="builder-sort" class="excel-input w-24">
+              <div class="excel-app-filters bg-transparent border-0 p-0">
+                  <div class="excel-filter-item">
+                    <span class="excel-filter-label">Data Source</span>
+                    <select id="builder-class" class="excel-select w-32">
+                      <option value="">-- Blank Table --</option>
+                      ${classOptions.map((className) => `<option value="${escapeHtml(className)}" ${builderConfig.classId === className ? 'selected' : ''}>Class ${escapeHtml(className)}</option>`).join('')}
+                    </select>
+                  </div>
+                  <div class="toolbar-divider"></div>
+                  <div class="excel-filter-item">
+                    <span class="excel-filter-label">Sort By</span>
+                    <select id="builder-sort" class="excel-select w-24">
                       <option value="name" ${builderConfig.sortBy === 'name' ? 'selected' : ''}>Name A-Z</option>
                       <option value="adm" ${builderConfig.sortBy === 'adm' ? 'selected' : ''}>Adm No</option>
                     </select>
-                    <select id="builder-group" class="excel-input w-28">
+                  </div>
+                  <div class="excel-filter-item">
+                    <span class="excel-filter-label">Group By</span>
+                    <select id="builder-group" class="excel-select w-28">
                       <option value="mixed" ${builderConfig.groupBy === 'mixed' ? 'selected' : ''}>Mixed</option>
                       <option value="grouped" ${builderConfig.groupBy === 'grouped' ? 'selected' : ''}>Boys First</option>
                       <option value="separate" ${builderConfig.groupBy === 'separate' ? 'selected' : ''}>Page Break</option>
                     </select>
-                </div>
-              </div>
-              <div class="toolbar-divider"></div>
-              <div class="toolbar-group flex-col items-start gap-1">
-                <span class="text-[9px] font-bold text-slate-500 uppercase">Page Layout</span>
-                <div class="flex gap-2">
-                    <select id="builder-paper" class="excel-input w-20">
-                      <option value="A4" ${builderConfig.paper === 'A4' ? 'selected' : ''}>A4</option>
-                      <option value="Legal" ${builderConfig.paper === 'Legal' ? 'selected' : ''}>Legal</option>
-                    </select>
-                    <select id="builder-orient" class="excel-input w-24">
-                      <option value="portrait" ${builderConfig.orientation === 'portrait' ? 'selected' : ''}>Portrait</option>
-                      <option value="landscape" ${builderConfig.orientation === 'landscape' ? 'selected' : ''}>Landscape</option>
-                    </select>
-                </div>
+                  </div>
               </div>
           </div>
       `;
 
       const ribbonLayout = `
           <div class="excel-toolbar">
-             <div class="toolbar-group flex-col items-start gap-1">
-                <span class="text-[9px] font-bold text-slate-500 uppercase">Custom Heading</span>
-                <input type="text" id="builder-custom-title" value="${escapeHtml(builderConfig.customTitle)}" class="excel-input w-48" placeholder="e.g. Term 1 Attendance">
-             </div>
-             <div class="toolbar-divider"></div>
-             <div class="toolbar-group flex-col items-start gap-1">
-                 <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
-                    <input type="checkbox" id="builder-show-header" ${builderConfig.showHeader ? 'checked' : ''} class="w-3.5 h-3.5 text-indigo-600 rounded"> Show Official Header
-                 </label>
-                 <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer ${!builderConfig.showHeader ? 'opacity-50 pointer-events-none' : ''}">
-                    <input type="checkbox" id="builder-repeat-header" ${builderConfig.repeatHeader ? 'checked' : ''} class="w-3.5 h-3.5 text-indigo-600 rounded"> Repeat on Every Page
-                 </label>
-             </div>
+              <div class="excel-app-filters bg-transparent border-0 p-0">
+                  <div class="excel-filter-item">
+                    <span class="excel-filter-label">Page Setup</span>
+                    <div class="flex gap-2">
+                        <select id="builder-paper" class="excel-select w-20">
+                          <option value="A4" ${builderConfig.paper === 'A4' ? 'selected' : ''}>A4</option>
+                          <option value="Legal" ${builderConfig.paper === 'Legal' ? 'selected' : ''}>Legal</option>
+                        </select>
+                        <select id="builder-orient" class="excel-select w-24">
+                          <option value="portrait" ${builderConfig.orientation === 'portrait' ? 'selected' : ''}>Portrait</option>
+                          <option value="landscape" ${builderConfig.orientation === 'landscape' ? 'selected' : ''}>Landscape</option>
+                        </select>
+                    </div>
+                  </div>
+                  <div class="toolbar-divider"></div>
+                  <div class="excel-filter-item">
+                    <span class="excel-filter-label">Custom Heading</span>
+                    <input type="text" id="builder-custom-title" value="${escapeHtml(builderConfig.customTitle)}" class="excel-select w-48" placeholder="e.g. Term 1 Attendance">
+                 </div>
+                 <div class="toolbar-divider"></div>
+                 <div class="excel-filter-item justify-center gap-2 mt-2">
+                     <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                        <input type="checkbox" id="builder-show-header" ${builderConfig.showHeader ? 'checked' : ''} class="w-3.5 h-3.5 text-indigo-600 rounded"> Show Official Header
+                     </label>
+                     <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer ${!builderConfig.showHeader ? 'opacity-50 pointer-events-none' : ''}">
+                        <input type="checkbox" id="builder-repeat-header" ${builderConfig.repeatHeader ? 'checked' : ''} class="w-3.5 h-3.5 text-indigo-600 rounded"> Repeat on Every Page
+                     </label>
+                 </div>
+              </div>
           </div>
       `;
 
@@ -1283,11 +1201,11 @@
             <div class="excel-tabs">
                 <button class="excel-tab ${builderConfig.activeTab === 'home' ? 'active' : ''}" data-ribbon="home">Home</button>
                 <button class="excel-tab ${builderConfig.activeTab === 'data' ? 'active' : ''}" data-ribbon="data">Data</button>
-                <button class="excel-tab ${builderConfig.activeTab === 'layout' ? 'active' : ''}" data-ribbon="layout">Layout</button>
+                <button class="excel-tab ${builderConfig.activeTab === 'layout' ? 'active' : ''}" data-ribbon="layout">Page Layout</button>
                 <div class="flex-grow"></div>
                 <div class="flex gap-2 items-center pr-4">
-                    <button id="btn-export-print" class="excel-primary-btn bg-slate-800 hover:bg-slate-700 text-white"><i class="fas fa-print"></i> PDF/Print</button>
-                    <button id="btn-export-excel" class="excel-primary-btn bg-emerald-700 hover:bg-emerald-600 text-white"><i class="fas fa-file-excel"></i> Download</button>
+                    <button id="btn-export-print" class="premium-export-btn btn-pdf-red"><i class="fas fa-file-pdf"></i> PDF / Print</button>
+                    <button id="btn-export-excel" class="premium-export-btn btn-excel-green"><i class="fas fa-file-excel"></i> Export Excel</button>
                 </div>
             </div>
             
@@ -1297,24 +1215,24 @@
                 <div id="ribbon-layout" class="ribbon-panel ${builderConfig.activeTab === 'layout' ? 'active' : ''}">${ribbonLayout}</div>
             </div>
             
-            <div class="excel-formula-bar">
-                <div id="active-cell-id" class="formula-cell-id">A1</div>
+            <div class="formula-bar">
+                <div id="active-cell-id" class="formula-name-box">A1</div>
                 <div class="formula-divider"></div>
-                <div class="formula-icon italic font-serif text-slate-400">fx</div>
-                <input type="text" id="formula-input" class="formula-input-field" placeholder="Select a cell or type here..." />
+                <div class="formula-icon">fx</div>
+                <input type="text" id="formula-input" class="formula-input" placeholder="Select a cell..." />
             </div>
         </div>
 
-        <div class="excel-workspace flex-grow overflow-auto relative bg-[#e1dfdd] spreadsheet-container">
-          <div id="print-canvas" class="print-canvas shadow-xl bg-white transition-all mx-auto my-4" data-paper="${builderConfig.paper}" data-orient="${builderConfig.orientation}">
-            <table id="builder-table" class="builder-table">
+        <div class="excel-workspace spreadsheet-container">
+          <div id="print-canvas" class="print-canvas" data-paper="${builderConfig.paper}" data-orient="${builderConfig.orientation}">
+            <table id="builder-table" class="excel-table">
               ${headerHtml}
               <thead>
                 <tr class="no-print">
-                   <th class="select-all-btn w-10 border-slate-300" title="Select All"></th>
+                   <th class="select-all-corner w-10 border-slate-300" title="Select All"></th>
                    ${excelColHeaders}
                 </tr>
-                <tr>
+                <tr class="config-row">
                    <th class="no-print row-header bg-slate-200 border-slate-300"></th>
                    ${colHeadersHtml}
                 </tr>
@@ -1390,7 +1308,7 @@
         const tr = document.createElement('tr');
         const nextRowIdx = document.querySelectorAll('.row-header').length;
         tr.innerHTML = `<td class="no-print row-header" data-row="${nextRowIdx}">${nextRowIdx + 1}</td>` + 
-                       Array.from({ length: colsCount }).map((_, cIndex) => `<td class="builder-cell" contenteditable="true" data-row="${nextRowIdx}" data-col="${cIndex}"></td>`).join('');
+                       Array.from({ length: colsCount }).map((_, cIndex) => `<td class="excel-cell builder-cell" contenteditable="true" data-row="${nextRowIdx}" data-col="${cIndex}"></td>`).join('');
         targetTbody.appendChild(tr);
         attachTableFormatListeners();
       });
@@ -1444,11 +1362,11 @@
       document.getElementById('fmt-italic')?.addEventListener('click', () => applyFormat('fontStyle', toggleStyle('fontStyle', 'italic', 'normal')));
       
       document.getElementById('fmt-color')?.addEventListener('input', (e) => {
-          e.target.previousElementSibling.previousElementSibling.style.background = e.target.value;
+          e.target.previousElementSibling.style.background = e.target.value;
           applyFormat('color', e.target.value);
       });
       document.getElementById('fmt-bg')?.addEventListener('input', (e) => {
-          e.target.previousElementSibling.previousElementSibling.style.background = e.target.value;
+          e.target.previousElementSibling.style.background = e.target.value;
           applyFormat('backgroundColor', e.target.value);
       });
       
@@ -1470,7 +1388,7 @@
       document.getElementById('fmt-redo')?.addEventListener('click', redoBuilder);
 
       document.getElementById('btn-export-print')?.addEventListener('click', () => {
-        document.querySelectorAll('.builder-cell, .col-header, .row-header, .select-all-btn').forEach(c => c.classList.remove('selected'));
+        document.querySelectorAll('.builder-cell, .col-header, .row-header, .select-all-corner').forEach(c => c.classList.remove('selected'));
         document.body.classList.add('is-printing');
         window.print();
         setTimeout(() => document.body.classList.remove('is-printing'), 500);
@@ -1539,7 +1457,7 @@
             return { row: parseInt(td.dataset.row), col: parseInt(td.dataset.col) };
         };
 
-        const clearSelection = () => document.querySelectorAll('.builder-cell, .col-header, .row-header, .select-all-btn').forEach(c => c.classList.remove('selected'));
+        const clearSelection = () => document.querySelectorAll('.builder-cell, .col-header, .row-header, .select-all-corner').forEach(c => c.classList.remove('selected'));
 
         table.addEventListener('mousedown', (e) => {
             if (e.target.classList.contains('col-resizer')) return; 
@@ -1560,7 +1478,7 @@
                 return;
             }
             
-            const selectAll = e.target.closest('.select-all-btn');
+            const selectAll = e.target.closest('.select-all-corner');
             if (selectAll) {
                 clearSelection();
                 selectAll.classList.add('selected');
@@ -1631,6 +1549,7 @@
 
         document.addEventListener('paste', (e) => {
             if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+            if (builderConfig.activeTab !== 'home' && builderConfig.activeTab !== 'data' && builderConfig.activeTab !== 'layout') return;
             
             const activeCell = document.querySelector('.builder-cell.selected') || document.activeElement.closest('td.builder-cell');
             if (activeCell) {
@@ -1643,10 +1562,25 @@
                 const startC = parseInt(activeCell.dataset.col);
                 
                 rowsData.forEach((rowData, i) => {
-                    rowData.forEach((val, j) => {
-                        const td = document.querySelector(`.builder-cell[data-row="${startR + i}"][data-col="${startC + j}"]`);
-                        if (td) td.textContent = val;
-                    });
+                    let tr = document.querySelector(`.builder-cell[data-row="${startR + i}"]`)?.parentElement;
+                    if (!tr) {
+                        const targetTbody = document.querySelector('#builder-table tbody:last-child');
+                        if(targetTbody) {
+                            tr = document.createElement('tr');
+                            const nextRowIdx = startR + i;
+                            tr.innerHTML = `<td class="no-print row-header" data-row="${nextRowIdx}">${nextRowIdx + 1}</td>` + 
+                                           Array.from({ length: builderConfig.columns.length }).map((_, cIndex) => `<td class="excel-cell builder-cell" contenteditable="true" data-row="${nextRowIdx}" data-col="${cIndex}"></td>`).join('');
+                            targetTbody.appendChild(tr);
+                            attachTableFormatListeners();
+                        }
+                    }
+                    
+                    if(tr) {
+                        rowData.forEach((val, j) => {
+                            const td = tr.querySelector(`.builder-cell[data-col="${startC + j}"]`);
+                            if (td) td.textContent = val;
+                        });
+                    }
                 });
             }
         });

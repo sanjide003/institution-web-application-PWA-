@@ -13,7 +13,7 @@
   
   <style>
     /* ==========================================
-       GLOBAL CSS & DASHBOARD STYLES
+       GLOBAL CSS x& DASHBOARD STYLES
        ========================================== */
     :root { 
         --background-light: #f3f4f6; 
@@ -29,13 +29,14 @@
         --header-height: 70px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-    html, body { scroll-behavior: smooth !important; height: 100%; overflow: hidden;}
-    body { background-color: var(--background-light); color: var(--text-light); }
+    html { scroll-behavior: smooth !important; }
+    body { overflow-x: hidden; background-color: var(--background-light); color: var(--text-light); }
     body.modal-scroll-lock { overflow: hidden !important; overscroll-behavior: none; }
     a { text-decoration: none; color: inherit; transition: 0.2s; }
     ul { list-style: none; }
     img { display: block; max-width: 100%; }
     .hidden { display: none !important; }
+    .page-content { content-visibility: auto; contain-intrinsic-size: 1px 800px; }
 
     .card { background-color: var(--card-light); border: 1px solid var(--border-light); }
     .btn-primary { background-color: var(--accent); color: #ffffff; transition: 0.2s; cursor: pointer; border: none; }
@@ -51,8 +52,8 @@
     input, select, textarea { background-color: #ffffff; border-color: #d1d5db; color: #1f2937; transition: border 0.2s; outline: none; }
     input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
 
-    header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: relative; z-index: 1000; border: 1px solid #f1f5f9; height: var(--header-height); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border-radius: 16px; margin: 15px auto; width: calc(100% - 30px); max-width: 1200px; flex-shrink: 0;}
-    @media (max-width: 768px) { header { margin: 10px; width: calc(100% - 20px); border-radius: 12px; } }
+    header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 15px; z-index: 1000; border: 1px solid #f1f5f9; height: var(--header-height); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border-radius: 16px; margin: 15px auto; width: calc(100% - 30px); max-width: 1200px; }
+    @media (max-width: 768px) { header { margin: 10px; width: calc(100% - 20px); border-radius: 12px; top: 10px; } }
     .nav-container { height: 100%; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; position: relative; }
     .header-logo-box { width: 45px; height: 45px; flex-shrink: 0; z-index: 10; display: flex; align-items: center;}
     .header-logo-box img { max-height: 100%; max-width: 100%; border-radius: 8px; object-fit: contain; opacity: 0; transition: opacity 0.5s ease; }
@@ -130,12 +131,11 @@
     .detail-value{font-size:12px;color:#0f172a;font-weight:600;word-break:break-word}
 
     /* ==========================================
-       EXCEL SPREADSHEET UI STYLES (NEW)
+       EXCEL SPREADSHEET UI STYLES
        ========================================== */
 
-    .excel-container { display: flex; flex-direction: column; width: 100%; height: 100%; background: #f3f2f1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+    .excel-container { display: flex; flex-direction: column; height: 100%; background: #f3f2f1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
     
-    /* Top Ribbon Area */
     .excel-ribbon-wrapper { background: #f3f2f1; border-bottom: 1px solid #c8c6c4; padding-top: 4px; z-index: 40; position: relative;}
     .excel-tabs { display: flex; gap: 4px; padding: 0 10px; border-bottom: 1px solid #c8c6c4;}
     .excel-tab { padding: 4px 16px; font-size: 13px; color: #323130; cursor: pointer; border: 1px solid transparent; border-bottom: none; border-radius: 4px 4px 0 0; position: relative; bottom: -1px; transition: 0.1s; background: transparent;}
@@ -162,52 +162,47 @@
     .excel-btn-small:hover { background: #f3f2f1; border-color: #c8c6c4;}
     .excel-btn-small:active { background: #e1dfdd; transform: scale(0.95);}
 
-    .excel-input-ribbon { border: 1px solid #8a8886; border-radius: 2px; padding: 2px 6px; font-size: 12px; height: 26px; outline: none; color: #323130; background: #fff;}
+    .excel-input-ribbon { border: 1px solid #8a8886; border-radius: 2px; padding: 2px 6px; font-size: 12px; height: 26px; outline: none; color: #323130;}
     .excel-input-ribbon:focus { border-color: #107c41; box-shadow: 0 0 0 1px #107c41; }
 
-    /* Premium Export Buttons */
     .premium-export-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 600; color: #fff; cursor: pointer; transition: 0.2s; border: none; }
     .btn-excel-green { background: #107c41;}
     .btn-excel-green:hover { background: #185c37; }
     .btn-pdf-red { background: #d83b01; }
     .btn-pdf-red:hover { background: #a4262c; }
 
-    /* Formula Bar */
     .formula-bar { display: flex; align-items: center; background: #fff; border-bottom: 1px solid #c8c6c4; padding: 4px 10px; gap: 10px;}
     .formula-name-box { width: 60px; font-size: 13px; text-align: center; color: #323130; font-family: monospace; font-weight: bold;}
     .formula-divider { width: 1px; height: 18px; background: #c8c6c4; }
     .formula-icon { color: #605e5c; font-style: italic; font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 14px;}
     .formula-input { flex-grow: 1; border: none; outline: none; font-size: 13px; color: #000; padding: 2px 5px;}
 
-    /* Workspace & Canvas */
-    .excel-workspace { flex-grow: 1; overflow: auto; padding: 20px; position: relative; background: #e1dfdd;}
+    .excel-workspace { flex-grow: 1; overflow: auto; padding: 15px; position: relative; background: #e1dfdd;}
     .excel-workspace::-webkit-scrollbar { width: 12px; height: 12px; }
     .excel-workspace::-webkit-scrollbar-track { background: #f3f2f1; }
     .excel-workspace::-webkit-scrollbar-thumb { background: #c8c6c4; border: 2px solid #f3f2f1; border-radius: 6px; }
     .excel-workspace::-webkit-scrollbar-thumb:hover { background: #a19f9d; }
 
-    /* Strict Print Canvas */
-    .print-canvas { background: #fff; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: visible; border-right: 2px dashed #ef4444; min-height: 600px;}
-    .print-canvas[data-orient="portrait"] { width: 210mm; min-height: 297mm;}
-    .print-canvas[data-orient="landscape"] { width: 297mm; min-height: 210mm;}
+    .print-canvas { background: #fff; margin: 0 auto; min-height: 600px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: visible; border-right: 2px dashed #ef4444;}
+    .print-canvas[data-paper="A4"][data-orient="portrait"] { width: 210mm; }
+    .print-canvas[data-paper="A4"][data-orient="landscape"] { width: 297mm; }
+    .print-canvas[data-paper="Legal"][data-orient="portrait"] { width: 8.5in; }
+    .print-canvas[data-paper="Legal"][data-orient="landscape"] { width: 14in; }
 
     .excel-table { border-collapse: collapse; min-width: 100%; table-layout: auto;}
     .excel-table th, .excel-table td { border: 1px solid #d4d4d4; padding: 4px; font-size: 13px; color: #000; background: #fff; vertical-align: bottom;}
     
-    /* Native Headers */
     .col-header, .row-header, .select-all-corner { background-color: #e6e6e6 !important; color: #333 !important; text-align: center !important; font-size: 12px !important; font-weight: normal !important; user-select: none; cursor: pointer; padding: 2px !important;}
     .col-header:hover, .row-header:hover, .select-all-corner:hover { background-color: #d4d4d4 !important; }
     .col-header.selected, .row-header.selected, .select-all-corner.selected { background-color: #cacaca !important; color: #107c41 !important; font-weight: bold !important; border-bottom: 2px solid #107c41 !important;}
     .row-header.selected { border-bottom: 1px solid #d4d4d4 !important; border-right: 2px solid #107c41 !important;}
 
-    /* Cells */
     .excel-cell { outline: none; transition: 0.1s; white-space: nowrap; overflow: hidden; position: relative;}
     .excel-cell.selected { background-color: #e5f3eb !important; }
     .excel-cell.selected::after { content: ''; position: absolute; inset: -1px; border: 2px solid #107c41; z-index: 10; pointer-events: none; }
     .excel-cell:focus { z-index: 12; }
     .excel-cell:focus::after { content: ''; position: absolute; inset: -1px; border: 2px solid #107c41; z-index: 12; pointer-events: none; }
 
-    /* Config Rows inside grid */
     .config-row th { background: #f8fafc; padding: 4px; border-bottom: none;}
     .grid-select { width: 100%; border: 1px solid #c8c6c4; padding: 2px; font-size: 11px; outline: none; color: #333; border-radius: 2px;}
     .grid-select:focus { border-color: #107c41;}
@@ -219,7 +214,6 @@
     .col-resizer:hover { background: rgba(16, 124, 65, 0.5); }
     .builder-th { position: relative; }
 
-    /* Print settings */
     .print-only-heading { display: none; }
     .builder-print-header { display: none; }
     .builder-print-header.repeat-header { display: table-header-group; }
@@ -232,22 +226,19 @@
         body.is-printing { background: #fff; margin: 0; padding: 0; }
         body.is-printing * { visibility: hidden; }
         body.is-printing #print-canvas, body.is-printing #print-canvas * { visibility: visible; }
-        body.is-printing #print-canvas { position: absolute; left: 0; top: 0; width: 100% !important; max-width: none !important; margin: 0; padding: 0 !important; border: none; box-shadow: none; overflow: visible; }
+        body.is-printing #print-canvas { position: absolute; left: 0; top: 0; width: 100% !important; max-width: none !important; margin: 0; padding: 0; border: none; box-shadow: none; overflow: visible; }
         body.is-printing .no-print { display: none !important; }
         body.is-printing .print-only-heading { display: block !important; font-size: 13px; font-weight: bold; text-align: center; padding: 4px; border-bottom: 1px solid #000;}
         body.is-printing .builder-print-header { display: table-header-group !important; }
         body.is-printing .excel-cell { white-space: normal; word-break: break-word;}
         .page-break-before { page-break-before: always; break-before: page; }
+        @page { margin: 1cm; }
     }
   </style>
-
-  <!-- Print Margin Injector -->
-  <style id="dynamic-print-margin"></style>
 </head>
 
 <body class="antialiased text-gray-800 collection-shell">
   
-  <!-- LOGIN SCREEN -->
   <div id="official-login-screen" class="min-h-screen flex items-center justify-center px-4">
     <div class="w-full max-w-md">
       <div class="modal-box" style="display:block; position:static; width:100%; max-width:none;">
@@ -267,8 +258,7 @@
     </div>
   </div>
 
-  <!-- MAIN APP PORTAL -->
-  <div id="official-app" class="hidden h-screen flex flex-col w-full">
+  <div id="official-app" class="hidden h-screen flex flex-col">
     <header class="no-print shrink-0">
       <div class="nav-container">
         <div class="header-logo-box">
@@ -298,16 +288,17 @@
       </div>
     </header>
 
-    <!-- PERFECT LAYOUT STRUCTURE: Direct flex children -->
-    <main id="app" class="flex-grow flex flex-col overflow-hidden relative w-full bg-[#f3f2f1]">
-      <section id="official-tab-dashboard" class="official-tab flex-1 overflow-y-auto w-full p-4 bg-[var(--background-light)]"></section>
-      <section id="official-tab-students" class="official-tab hidden flex-1 overflow-y-auto w-full p-4 bg-[var(--background-light)]"></section>
-      <section id="official-tab-summary" class="official-tab hidden flex-1 overflow-y-auto w-full p-4 bg-[var(--background-light)]"></section>
-      <section id="official-tab-staff" class="official-tab hidden flex-1 overflow-y-auto w-full p-4 bg-[var(--background-light)]"></section>
-      <section id="official-tab-home" class="official-tab hidden flex-1 overflow-y-auto w-full p-4 bg-[var(--background-light)]"></section>
+    <main id="app" class="flex-grow flex flex-col overflow-hidden relative">
+      <div id="page-content" class="h-full overflow-y-auto">
+        <section id="official-tab-dashboard" class="official-tab page-content p-4"></section>
+        <section id="official-tab-students" class="official-tab page-content hidden p-4"></section>
+        <section id="official-tab-summary" class="official-tab page-content hidden p-4"></section>
+        <section id="official-tab-staff" class="official-tab page-content hidden p-4"></section>
+        <section id="official-tab-home" class="official-tab page-content hidden p-4"></section>
+      </div>
       
       <!-- Excel Interface Container -->
-      <section id="official-tab-export" class="official-tab hidden w-full h-full flex-col bg-[#f3f2f1]"></section>
+      <section id="official-tab-export" class="official-tab hidden h-full flex-col bg-[#f3f2f1]"></section>
     </main>
 
     <div id="official-detail-modal" class="fixed inset-0 z-[1000] hidden items-center justify-center bg-slate-950/60 p-3 no-print" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="official-detail-title">
@@ -458,8 +449,8 @@
     // EXCEL SPREADSHEET BUILDER CONFIG
     // ==========================================
     let builderConfig = {
-      classId: '', paper: 'A4', orientation: 'portrait', margin: '20px', sortBy: 'name', groupBy: 'mixed',
-      showHeader: false, repeatHeader: false, customTitle: '', activeTab: 'home', manualRowCount: 0,
+      classId: '', paper: 'A4', orientation: 'portrait', sortBy: 'name', groupBy: 'mixed',
+      showHeader: false, repeatHeader: false, customTitle: '', activeTab: 'home',
       columns: [
         { id: 'col_sno', field: 'SNO', title: 'S.No', width: 'auto' },
         { id: 'col_name', field: 'name', title: 'Student Name', width: 'auto' },
@@ -471,39 +462,6 @@
 
     let undoStack = [];
     let redoStack = [];
-    let isExcelUIBuilt = false;
-
-    // --- State Management ---
-    const getTableState = () => {
-        const state = {};
-        document.querySelectorAll('#builder-table tbody tr').forEach(tr => {
-            if(!tr.querySelector('.builder-cell')) return;
-            const id = tr.dataset.studentId || `MANUAL_${tr.dataset.index}`;
-            state[id] = {};
-            tr.querySelectorAll('.builder-cell').forEach(cell => {
-                const c = cell.dataset.col;
-                state[id][c] = { text: cell.innerHTML, style: cell.getAttribute('style') };
-            });
-        });
-        return state;
-    };
-
-    const applyTableState = (state, mappingFunc = (c)=>c) => {
-        document.querySelectorAll('#builder-table tbody tr').forEach(tr => {
-            if(!tr.querySelector('.builder-cell')) return;
-            const id = tr.dataset.studentId || `MANUAL_${tr.dataset.index}`;
-            if(state[id]) {
-                tr.querySelectorAll('.builder-cell').forEach(cell => {
-                    const c = parseInt(cell.dataset.col);
-                    const origC = mappingFunc(c);
-                    if(state[id][origC] && origC !== -1) {
-                        cell.innerHTML = state[id][origC].text;
-                        if(state[id][origC].style) cell.setAttribute('style', state[id][origC].style);
-                    }
-                });
-            }
-        });
-    };
 
     const saveBuilderState = () => {
         const table = document.getElementById('builder-table');
@@ -532,46 +490,6 @@
             attachTableFormatListeners();
             rebindAllColumnListeners();
         }
-    };
-
-    // targeted table refresh that won't kill Ribbon
-    const refreshTableUI = (action = null, param = null) => {
-        saveBuilderState();
-        const state = getTableState();
-        
-        if (action === 'ADD_COL') {
-            builderConfig.columns.splice(param, 0, { id: `col_${Date.now()}`, field: 'CUSTOM', title: 'Custom Sp.', width: '150px' });
-        } else if (action === 'DEL_COL') {
-            builderConfig.columns.splice(param, 1);
-        } else if (action === 'CHANGE_FIELD') {
-            const { colIdx, fieldId } = param;
-            builderConfig.columns[colIdx].field = fieldId;
-            if(fieldId !== 'CUSTOM') {
-                builderConfig.columns[colIdx].title = availableDataFields.find(f => f.id === fieldId)?.label || 'Column';
-                builderConfig.columns[colIdx].width = 'auto';
-            } else {
-                builderConfig.columns[colIdx].width = '150px';
-            }
-        } else if (action === 'ADD_ROW') {
-            builderConfig.manualRowCount += 1;
-        }
-
-        const canvas = document.getElementById('print-canvas');
-        if(canvas) {
-            canvas.innerHTML = getTableHtml();
-            canvas.dataset.paper = builderConfig.paper;
-            canvas.dataset.orient = builderConfig.orientation;
-            canvas.style.padding = builderConfig.margin;
-        }
-        
-        let mapFunc = (c) => c;
-        if (action === 'DEL_COL') mapFunc = (c) => c >= param ? c + 1 : c;
-        else if (action === 'ADD_COL') mapFunc = (c) => c < param ? c : (c === param ? -1 : c - 1);
-        else if (action === 'CHANGE_FIELD') mapFunc = (c) => c === param.colIdx ? -1 : c;
-        
-        applyTableState(state, mapFunc);
-        rebindAllColumnListeners();
-        setupExcelEngine();
     };
 
     const resolveInstitutionName = (conf = {}) => String(conf.appName || conf.institutionName || conf.institution || conf.schoolName || conf.school || conf.name || '').trim();
@@ -646,16 +564,16 @@
     const setTab = (tab = 'dashboard') => {
       const requested = document.getElementById(`official-tab-${tab}`) ? tab : 'dashboard';
       const target = document.getElementById(`official-tab-${requested}`) ? requested : 'students';
-      document.querySelectorAll('.official-tab').forEach((el) => {
-          el.classList.add('hidden');
-          el.classList.remove('flex', 'block');
-      });
+      document.querySelectorAll('.official-tab').forEach((el) => el.classList.add('hidden'));
       
       const targetEl = document.getElementById(`official-tab-${target}`);
       if(targetEl) {
           targetEl.classList.remove('hidden');
-          if (target === 'export') targetEl.classList.add('flex'); 
-          else targetEl.classList.add('block');
+          if (target === 'export') {
+              targetEl.classList.add('flex'); 
+          } else {
+              document.getElementById('official-tab-export')?.classList.remove('flex');
+          }
       }
 
       document.querySelectorAll('.tab-link').forEach((btn) => {
@@ -668,6 +586,7 @@
       
       if (target === 'export') {
           renderExportTab();
+          setupExcelEngine();
       }
     };
 
@@ -993,324 +912,329 @@
         </div>`;
     };
 
-    // ==========================================
-    // SPREADSHEET ENGINE
-    // ==========================================
-    const getTableHtml = () => {
-        const classOptions = [...new Set(allStudents.map(getStudentClass))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-        let studentRows = builderConfig.classId ? allStudents.filter(s => getStudentClass(s) === builderConfig.classId) : [];
+    const availableDataFields = [
+      { id: 'SNO', label: 'Serial No. (Auto)' },
+      { id: 'name', label: 'Student Name' },
+      { id: 'adm', label: 'Admission No.' },
+      { id: 'class', label: 'Class' },
+      { id: 'gender', label: 'Gender' },
+      { id: 'mobile', label: 'Mobile No.' },
+      { id: 'father', label: 'Father Name' },
+      { id: 'uid', label: 'UID / Roll No.' },
+      { id: 'address', label: 'Address' },
+      { id: 'CUSTOM', label: 'Custom/Blank Space' }
+    ];
+
+    // Targeted DOM update for columns to preserve user edits
+    const populateColumnData = (colIndex) => {
+        const colConfig = builderConfig.columns[colIndex];
+        const fieldId = colConfig.field;
         
-        if (builderConfig.sortBy === 'name') {
-            studentRows.sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
-        } else if (builderConfig.sortBy === 'adm') {
-            studentRows.sort((a, b) => String(a.adm || '').localeCompare(String(b.adm || ''), undefined, { numeric: true }));
-        }
-  
-        const instName = resolveInstitutionName(institutionConfig);
-        const instSub = institutionConfig.place || institutionConfig.subtitle || 'Institution Portal';
-        const instReg = institutionConfig.regNo ? `Reg No: ${institutionConfig.regNo}` : '';
-        
-        const colSpanPrint = builderConfig.columns.length + 1; 
-        
-        const headerHtml = builderConfig.showHeader ? `
-          <thead class="${builderConfig.repeatHeader ? 'builder-print-header repeat-header' : 'builder-print-header'}">
-             <tr>
-               <th colspan="${colSpanPrint}" class="print-header-th bg-white border-0 !p-0">
-                 <div class="print-header-content">
-                    <h1 class="print-inst-name">${escapeHtml(instName)}</h1>
-                    <h2 class="print-inst-sub">${escapeHtml(instSub)}</h2>
-                    ${instReg ? `<h3 class="print-inst-reg">${escapeHtml(instReg)}</h3>` : ''}
-                    ${builderConfig.customTitle ? `<h4 class="print-custom-title">${escapeHtml(builderConfig.customTitle)}</h4>` : ''}
-                 </div>
-               </th>
-             </tr>
-          </thead>
-        ` : '';
-  
-        const excelColHeaders = builderConfig.columns.map((col, i) => 
-          `<th class="no-print col-header" data-col="${i}" title="Select Column ${String.fromCharCode(65 + i)}">${String.fromCharCode(65 + i)}</th>`
-        ).join('');
-  
-        const colHeadersHtml = builderConfig.columns.map((col, cIndex) => {
-          return `<th class="builder-th group config-row-th" style="width: ${col.width || 'auto'}">
-            <div class="col-resizer" data-col-index="${cIndex}"></div>
-            <div class="no-print mb-1 flex items-center justify-between gap-1">
-              <select class="grid-select builder-col-select" data-col-index="${cIndex}">
-                ${availableDataFields.map(f => `<option value="${f.id}" ${f.id === col.field ? 'selected' : ''}>${f.label}</option>`).join('')}
-              </select>
-            </div>
-            <div class="no-print flex gap-1 items-center">
-              <input type="text" class="grid-input builder-col-title-input" value="${escapeHtml(col.title)}" placeholder="Heading..." data-col-index="${cIndex}">
-            </div>
-            <div class="print-only-heading">${escapeHtml(col.title)}</div>
-          </th>`;
-        }).join('');
-  
-        const renderTbodyRows = (students, startIndex = 0) => {
-            const rowCount = Math.max(15, students.length); 
-            return Array.from({ length: rowCount }).map((_, rIndex) => {
-              const student = students[rIndex] || null;
-              return `<tr data-student-id="${student ? escapeHtml(student.id) : ''}" data-index="${startIndex + rIndex}">
-                <td class="no-print row-header" data-row="${startIndex + rIndex}">${startIndex + rIndex + 1}</td>
-                ${builderConfig.columns.map((col, cIndex) => {
-                let cellValue = '';
-                if (col.field === 'SNO') cellValue = student ? startIndex + rIndex + 1 : '';
-                else if (col.field !== 'CUSTOM' && student) cellValue = valueToDisplay(student[col.field]);
-                return `<td class="excel-cell builder-cell" contenteditable="true" data-row="${startIndex + rIndex}" data-col="${cIndex}">${escapeHtml(String(cellValue))}</td>`;
-              }).join('')}</tr>`;
-            }).join('');
-        };
-  
-        let bodyHtml = '';
-        if (!builderConfig.classId || builderConfig.groupBy === 'mixed') {
-            bodyHtml = `<tbody>${renderTbodyRows(studentRows)}</tbody>`;
-        } else {
-            const boys = studentRows.filter(s => normalizeText(s.gender) === 'male');
-            const girls = studentRows.filter(s => normalizeText(s.gender) === 'female');
+        document.querySelectorAll('#builder-table tr[data-index]').forEach(tr => {
+            const studentId = tr.dataset.studentId;
+            const rowIndex = parseInt(tr.dataset.index);
+            const cell = tr.querySelector(`.builder-cell[data-col="${colIndex}"]`);
+            if (!cell) return;
             
-            if (builderConfig.groupBy === 'grouped') {
-                bodyHtml = `<tbody>${renderTbodyRows([...boys, ...girls])}</tbody>`;
-            } else if (builderConfig.groupBy === 'separate') {
-                bodyHtml = `<tbody>${renderTbodyRows(boys)}</tbody>
-                            <tbody class="page-break-before">
-                              <tr>
-                                  <td class="no-print row-header">-</td>
-                                  <td colspan="${builderConfig.columns.length}" class="no-print bg-slate-100 text-center text-xs py-2 text-slate-500 font-bold border-dashed border-y border-slate-300">--- PAGE BREAK (Girls List) ---</td>
-                              </tr>
-                              ${renderTbodyRows(girls, boys.length)}
-                            </tbody>`;
+            if (fieldId === 'CUSTOM') {
+                cell.textContent = '';
+            } else if (fieldId === 'SNO') {
+                cell.textContent = studentId ? rowIndex + 1 : '';
+            } else {
+                const student = allStudents.find(s => s.id === studentId);
+                cell.textContent = student ? valueToDisplay(student[fieldId]) : '';
             }
-        }
-
-        // manual rows
-        let manualRowsHtml = '';
-        const currentDataLength = Math.max(15, studentRows.length);
-        for(let i=0; i<builderConfig.manualRowCount; i++) {
-            const rIndex = currentDataLength + i;
-            manualRowsHtml += `<tr data-student-id="" data-index="${rIndex}">
-               <td class="no-print row-header" data-row="${rIndex}">${rIndex + 1}</td>
-               ${builderConfig.columns.map((col, cIndex) => `<td class="excel-cell builder-cell" contenteditable="true" data-row="${rIndex}" data-col="${cIndex}"></td>`).join('')}
-            </tr>`;
-        }
-        if(manualRowsHtml) bodyHtml += `<tbody>${manualRowsHtml}</tbody>`;
-  
-        return `
-            ${headerHtml}
-            <thead>
-              <tr class="no-print">
-                 <th class="select-all-corner w-10 border-slate-300" title="Select All"></th>
-                 ${excelColHeaders}
-              </tr>
-              <tr class="config-row">
-                 <th class="no-print row-header bg-slate-200 border-slate-300"></th>
-                 ${colHeadersHtml}
-              </tr>
-            </thead>
-            ${bodyHtml}
-        `;
+        });
     };
-
-    const buildExcelUIHtml = () => {
-        const classOptions = [...new Set(allStudents.map(getStudentClass))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-        const ribbonHome = `
-          <div id="ribbon-home" class="ribbon-panel ${builderConfig.activeTab === 'home' ? 'active' : ''}">
-             <div class="ribbon-group">
-                 <div class="ribbon-row h-full">
-                     <button id="fmt-undo" class="excel-btn-ribbon" title="Undo"><i class="fas fa-undo"></i><span>Undo</span></button>
-                     <button id="fmt-redo" class="excel-btn-ribbon" title="Redo"><i class="fas fa-redo"></i><span>Redo</span></button>
-                 </div>
-                 <span class="ribbon-label">History</span>
-             </div>
-             <div class="ribbon-group">
-                 <div class="ribbon-row mb-1">
-                     <select class="excel-input-ribbon w-28"><option>Calibri</option><option>Inter</option></select>
-                     <div class="flex border border-gray-400 rounded overflow-hidden h-[24px]">
-                         <button id="fmt-size-minus" class="px-2 bg-white hover:bg-slate-100 border-r border-gray-400 text-[#323130]"><i class="fas fa-minus text-[10px]"></i></button>
-                         <input type="number" id="fmt-size-input" class="w-10 text-center outline-none font-bold text-xs text-[#323130]" value="13" />
-                         <button id="fmt-size-plus" class="px-2 bg-white hover:bg-slate-100 border-l border-gray-400 text-[#323130]"><i class="fas fa-plus text-[10px]"></i></button>
-                     </div>
-                 </div>
-                 <div class="ribbon-row">
-                     <button id="fmt-bold" class="excel-btn-small font-serif font-bold text-[14px]">B</button>
-                     <button id="fmt-italic" class="excel-btn-small font-serif italic text-[14px]">I</button>
-                     <div class="w-px h-4 bg-slate-300 mx-2"></div>
-                     <div class="relative flex items-center justify-center excel-btn-small cursor-pointer mr-1" title="Fill Color">
-                         <i class="fas fa-fill-drip text-xs"></i>
-                         <div class="absolute bottom-0.5 left-1 right-1 h-[3px] bg-white border border-gray-300 pointer-events-none indicator-bg"></div>
-                         <input type="color" id="fmt-bg" class="opacity-0 absolute inset-0 cursor-pointer" value="#ffffff">
-                     </div>
-                     <div class="relative flex items-center justify-center excel-btn-small cursor-pointer" title="Text Color">
-                         <i class="fas fa-font text-xs"></i>
-                         <div class="absolute bottom-0.5 left-1 right-1 h-[3px] bg-slate-900 pointer-events-none indicator-color"></div>
-                         <input type="color" id="fmt-color" class="opacity-0 absolute inset-0 cursor-pointer" value="#0f172a">
-                     </div>
-                 </div>
-                 <span class="ribbon-label">Font</span>
-             </div>
-             <div class="ribbon-group">
-                 <div class="ribbon-row h-full">
-                     <button id="btn-insert-col" class="excel-btn-ribbon text-emerald-700" title="Insert Selected Column"><i class="fas fa-plus"></i><span>Insert Col</span></button>
-                     <button id="btn-delete-col" class="excel-btn-ribbon text-red-600" title="Delete Selected Column"><i class="fas fa-minus"></i><span>Delete Col</span></button>
-                     <div class="w-px h-8 bg-slate-300 mx-1"></div>
-                     <button id="btn-insert-row" class="excel-btn-ribbon text-emerald-700" title="Insert Selected Row"><i class="fas fa-plus"></i><span>Insert Row</span></button>
-                     <button id="btn-delete-row" class="excel-btn-ribbon text-red-600" title="Delete Selected Row"><i class="fas fa-minus"></i><span>Delete Row</span></button>
-                 </div>
-                 <span class="ribbon-label">Cells</span>
-             </div>
-          </div>
-        `;
-  
-        const ribbonData = `
-          <div id="ribbon-data" class="ribbon-panel ${builderConfig.activeTab === 'data' ? 'active' : ''}">
-              <div class="ribbon-group">
-                 <div class="ribbon-row h-full items-center gap-2">
-                     <div class="flex flex-col">
-                         <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Source Class</label>
-                         <select id="builder-class" class="excel-input-ribbon w-32">
-                           <option value="">-- Blank Table --</option>
-                           ${classOptions.map((className) => `<option value="${escapeHtml(className)}" ${builderConfig.classId === className ? 'selected' : ''}>Class ${escapeHtml(className)}</option>`).join('')}
-                         </select>
-                     </div>
-                 </div>
-                 <span class="ribbon-label">Data Source</span>
-              </div>
-              <div class="ribbon-group">
-                 <div class="ribbon-row h-full items-center gap-2">
-                     <div class="flex flex-col">
-                         <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Sort By</label>
-                         <select id="builder-sort" class="excel-input-ribbon w-24">
-                            <option value="name" ${builderConfig.sortBy === 'name' ? 'selected' : ''}>Name A-Z</option>
-                            <option value="adm" ${builderConfig.sortBy === 'adm' ? 'selected' : ''}>Adm No</option>
-                         </select>
-                     </div>
-                     <div class="flex flex-col">
-                         <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Group By</label>
-                         <select id="builder-group" class="excel-input-ribbon w-28">
-                            <option value="mixed" ${builderConfig.groupBy === 'mixed' ? 'selected' : ''}>Mixed (ആൺ & പെൺ)</option>
-                            <option value="grouped" ${builderConfig.groupBy === 'grouped' ? 'selected' : ''}>Boys First</option>
-                            <option value="separate" ${builderConfig.groupBy === 'separate' ? 'selected' : ''}>Separate Pages</option>
-                         </select>
-                     </div>
-                 </div>
-                 <span class="ribbon-label">Sort & Filter</span>
-              </div>
-          </div>
-        `;
-  
-        const ribbonLayout = `
-          <div id="ribbon-layout" class="ribbon-panel ${builderConfig.activeTab === 'layout' ? 'active' : ''}">
-              <div class="ribbon-group">
-                  <div class="ribbon-row h-full gap-2 items-center">
-                     <div class="flex flex-col">
-                         <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Size</label>
-                         <select disabled class="excel-input-ribbon w-20 bg-slate-100 text-slate-500 cursor-not-allowed">
-                            <option>A4 (Standard)</option>
-                         </select>
-                     </div>
-                     <div class="flex flex-col">
-                         <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Orientation</label>
-                         <select id="builder-orient" class="excel-input-ribbon w-24">
-                            <option value="portrait" ${builderConfig.orientation === 'portrait' ? 'selected' : ''}>Portrait</option>
-                            <option value="landscape" ${builderConfig.orientation === 'landscape' ? 'selected' : ''}>Landscape</option>
-                         </select>
-                     </div>
-                     <div class="flex flex-col">
-                         <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Margins</label>
-                         <select id="builder-margin" class="excel-input-ribbon w-24">
-                            <option value="20px" ${builderConfig.margin === '20px' ? 'selected' : ''}>Normal (20px)</option>
-                            <option value="10px" ${builderConfig.margin === '10px' ? 'selected' : ''}>Narrow (10px)</option>
-                            <option value="40px" ${builderConfig.margin === '40px' ? 'selected' : ''}>Wide (40px)</option>
-                            <option value="0px" ${builderConfig.margin === '0px' ? 'selected' : ''}>None (0px)</option>
-                         </select>
-                     </div>
-                  </div>
-                  <span class="ribbon-label">Page Setup</span>
-              </div>
-              <div class="ribbon-group">
-                  <div class="ribbon-row h-full gap-2 items-center">
-                     <div class="flex flex-col">
-                         <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Report Title</label>
-                         <input type="text" id="builder-custom-title" value="${escapeHtml(builderConfig.customTitle)}" class="excel-input-ribbon w-48" placeholder="e.g. Term 1 Attendance">
-                     </div>
-                  </div>
-                  <span class="ribbon-label">Titles</span>
-              </div>
-              <div class="ribbon-group">
-                  <div class="flex flex-col gap-1 mt-1 justify-center h-full">
-                       <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
-                          <input type="checkbox" id="builder-show-header" ${builderConfig.showHeader ? 'checked' : ''} class="w-3.5 h-3.5 text-emerald-600 rounded"> Show Header
-                       </label>
-                       <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer ${!builderConfig.showHeader ? 'opacity-50 pointer-events-none' : ''}">
-                          <input type="checkbox" id="builder-repeat-header" ${builderConfig.repeatHeader ? 'checked' : ''} class="w-3.5 h-3.5 text-emerald-600 rounded"> Repeat all pages
-                       </label>
-                  </div>
-                  <span class="ribbon-label">Print Options</span>
-              </div>
-          </div>
-        `;
-        
-        return `
-          <div class="excel-ui-header no-print">
-              <div class="excel-tabs">
-                  <button class="excel-tab ${builderConfig.activeTab === 'home' ? 'active' : ''}" data-ribbon="home">Home</button>
-                  <button class="excel-tab ${builderConfig.activeTab === 'data' ? 'active' : ''}" data-ribbon="data">Data</button>
-                  <button class="excel-tab ${builderConfig.activeTab === 'layout' ? 'active' : ''}" data-ribbon="layout">Page Layout</button>
-                  <div class="flex-grow"></div>
-                  <div class="flex gap-2 items-center pr-4 mb-1">
-                      <button id="btn-export-print" class="premium-export-btn btn-pdf-red"><i class="fas fa-file-pdf"></i> Print / PDF</button>
-                      <button id="btn-export-excel" class="premium-export-btn btn-excel-green"><i class="fas fa-file-excel"></i> Export</button>
-                  </div>
-              </div>
-              
-              <div class="excel-ribbon-container">
-                  ${ribbonHome}
-                  ${ribbonData}
-                  ${ribbonLayout}
-              </div>
-              
-              <div class="formula-bar">
-                  <div id="active-cell-id" class="formula-name-box">A1</div>
-                  <div class="formula-divider"></div>
-                  <div class="formula-icon">fx</div>
-                  <input type="text" id="formula-input" class="formula-input" placeholder="Select a cell to edit..." />
-              </div>
-          </div>
-  
-          <div class="excel-workspace spreadsheet-container">
-            <div id="print-canvas" class="print-canvas" data-paper="${builderConfig.paper}" data-orient="${builderConfig.orientation}" style="padding: ${builderConfig.margin};">
-              <table id="builder-table" class="excel-table">
-                  ${getTableHtml()}
-              </table>
-            </div>
-          </div>
-        `;
-    }
 
     const renderExportTab = () => {
-        if(!isExcelUIBuilt) {
-            document.getElementById('official-tab-export').innerHTML = buildExcelUIHtml();
-            isExcelUIBuilt = true;
-            attachBuilderListeners(); // once
-        }
-        updatePrintStyles();
-    };
+      const classOptions = [...new Set(allStudents.map(getStudentClass))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+      let studentRows = builderConfig.classId ? allStudents.filter(s => getStudentClass(s) === builderConfig.classId) : [];
+      
+      if (builderConfig.sortBy === 'name') {
+          studentRows.sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
+      } else if (builderConfig.sortBy === 'adm') {
+          studentRows.sort((a, b) => String(a.adm || '').localeCompare(String(b.adm || ''), undefined, { numeric: true }));
+      }
 
-    const updatePrintStyles = () => {
-        let styleTag = document.getElementById('dynamic-print-margin');
-        if(!styleTag) {
-            styleTag = document.createElement('style');
-            styleTag.id = 'dynamic-print-margin';
-            document.head.appendChild(styleTag);
-        }
-        styleTag.innerHTML = `@media print { @page { size: A4 ${builderConfig.orientation}; margin: ${builderConfig.margin}; } }`;
+      const instName = resolveInstitutionName(institutionConfig);
+      const instSub = institutionConfig.place || institutionConfig.subtitle || 'Institution Portal';
+      const instReg = institutionConfig.regNo ? `Reg No: ${institutionConfig.regNo}` : '';
+      
+      const colSpanPrint = builderConfig.columns.length; 
+      
+      const headerHtml = builderConfig.showHeader ? `
+        <thead class="${builderConfig.repeatHeader ? 'builder-print-header repeat-header' : 'builder-print-header'}">
+           <tr>
+             <th colspan="${colSpanPrint + 1}" class="print-header-th bg-white border-0 !p-0">
+               <div class="print-header-content">
+                  <h1 class="print-inst-name">${escapeHtml(instName)}</h1>
+                  <h2 class="print-inst-sub">${escapeHtml(instSub)}</h2>
+                  ${instReg ? `<h3 class="print-inst-reg">${escapeHtml(instReg)}</h3>` : ''}
+                  ${builderConfig.customTitle ? `<h4 class="print-custom-title">${escapeHtml(builderConfig.customTitle)}</h4>` : ''}
+               </div>
+             </th>
+           </tr>
+        </thead>
+      ` : '';
+
+      const excelColHeaders = builderConfig.columns.map((col, i) => 
+        `<th class="no-print col-header" data-col="${i}" title="Select Column ${String.fromCharCode(65 + i)}">${String.fromCharCode(65 + i)}</th>`
+      ).join('');
+
+      const colHeadersHtml = builderConfig.columns.map((col, cIndex) => {
+        return `<th class="builder-th group config-row-th" style="width: ${col.width || 'auto'}">
+          <div class="col-resizer" data-col-index="${cIndex}"></div>
+          <div class="no-print mb-1 flex items-center justify-between gap-1">
+            <select class="grid-select builder-col-select" data-col-index="${cIndex}">
+              ${availableDataFields.map(f => `<option value="${f.id}" ${f.id === col.field ? 'selected' : ''}>${f.label}</option>`).join('')}
+            </select>
+            <button class="text-red-500 hover:bg-red-100 px-1 py-0.5 rounded delete-col-btn opacity-0 group-hover:opacity-100 transition-opacity" data-col-index="${cIndex}" title="Remove Column"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="no-print flex gap-1 items-center">
+            <input type="text" class="grid-input builder-col-title-input" value="${escapeHtml(col.title)}" placeholder="Heading..." data-col-index="${cIndex}">
+          </div>
+          <div class="print-only-heading">${escapeHtml(col.title)}</div>
+        </th>`;
+      }).join('');
+
+      const renderTbodyRows = (students, startIndex = 0) => {
+          const rowCount = Math.max(15, students.length); 
+          return Array.from({ length: rowCount }).map((_, rIndex) => {
+            const student = students[rIndex] || null;
+            return `<tr data-student-id="${student ? escapeHtml(student.id) : ''}" data-index="${startIndex + rIndex}">
+              <td class="no-print row-header" data-row="${startIndex + rIndex}">${startIndex + rIndex + 1}</td>
+              ${builderConfig.columns.map((col, cIndex) => {
+              let cellValue = '';
+              if (col.field === 'SNO') cellValue = student ? startIndex + rIndex + 1 : '';
+              else if (col.field !== 'CUSTOM' && student) cellValue = valueToDisplay(student[col.field]);
+              return `<td class="excel-cell builder-cell" contenteditable="true" data-row="${startIndex + rIndex}" data-col="${cIndex}">${escapeHtml(String(cellValue))}</td>`;
+            }).join('')}</tr>`;
+          }).join('');
+      };
+
+      let bodyHtml = '';
+      if (!builderConfig.classId || builderConfig.groupBy === 'mixed') {
+          bodyHtml = `<tbody>${renderTbodyRows(studentRows)}</tbody>`;
+      } else {
+          const boys = studentRows.filter(s => normalizeText(s.gender) === 'male');
+          const girls = studentRows.filter(s => normalizeText(s.gender) === 'female');
+          
+          if (builderConfig.groupBy === 'grouped') {
+              bodyHtml = `<tbody>${renderTbodyRows([...boys, ...girls])}</tbody>`;
+          } else if (builderConfig.groupBy === 'separate') {
+              bodyHtml = `<tbody>${renderTbodyRows(boys)}</tbody>
+                          <tbody class="page-break-before">
+                            <tr>
+                                <td class="no-print row-header">-</td>
+                                <td colspan="${builderConfig.columns.length}" class="no-print bg-slate-100 text-center text-xs py-2 text-slate-500 font-bold border-dashed border-y border-slate-300">--- PAGE BREAK (Girls List) ---</td>
+                            </tr>
+                            ${renderTbodyRows(girls, boys.length)}
+                          </tbody>`;
+          }
+      }
+
+      const ribbonHome = `
+        <div id="ribbon-home" class="ribbon-panel ${builderConfig.activeTab === 'home' ? 'active' : ''}">
+           <div class="ribbon-group">
+               <div class="ribbon-row h-full">
+                   <button id="fmt-undo" class="excel-btn-ribbon" title="Undo"><i class="fas fa-undo"></i><span>Undo</span></button>
+                   <button id="fmt-redo" class="excel-btn-ribbon" title="Redo"><i class="fas fa-redo"></i><span>Redo</span></button>
+               </div>
+               <span class="ribbon-label">History</span>
+           </div>
+           
+           <div class="ribbon-group">
+               <div class="ribbon-row mb-1">
+                   <select class="excel-input-ribbon w-28"><option>Calibri</option><option>Inter</option></select>
+                   <div class="flex border border-gray-400 rounded overflow-hidden h-[24px]">
+                       <button id="fmt-size-minus" class="px-2 bg-white hover:bg-slate-100 border-r border-gray-400 text-[#323130]"><i class="fas fa-minus text-[10px]"></i></button>
+                       <input type="number" id="fmt-size-input" class="w-10 text-center outline-none font-bold text-xs text-[#323130]" value="13" />
+                       <button id="fmt-size-plus" class="px-2 bg-white hover:bg-slate-100 border-l border-gray-400 text-[#323130]"><i class="fas fa-plus text-[10px]"></i></button>
+                   </div>
+               </div>
+               <div class="ribbon-row">
+                   <button id="fmt-bold" class="excel-btn-small font-serif font-bold text-[14px]">B</button>
+                   <button id="fmt-italic" class="excel-btn-small font-serif italic text-[14px]">I</button>
+                   <div class="w-px h-4 bg-slate-300 mx-2"></div>
+                   <div class="relative flex items-center justify-center excel-btn-small cursor-pointer mr-1" title="Fill Color">
+                       <i class="fas fa-fill-drip text-xs"></i>
+                       <div class="absolute bottom-0.5 left-1 right-1 h-[3px] bg-white border border-gray-300 pointer-events-none indicator-bg"></div>
+                       <input type="color" id="fmt-bg" class="opacity-0 absolute inset-0 cursor-pointer" value="#ffffff">
+                   </div>
+                   <div class="relative flex items-center justify-center excel-btn-small cursor-pointer" title="Text Color">
+                       <i class="fas fa-font text-xs"></i>
+                       <div class="absolute bottom-0.5 left-1 right-1 h-[3px] bg-slate-900 pointer-events-none indicator-color"></div>
+                       <input type="color" id="fmt-color" class="opacity-0 absolute inset-0 cursor-pointer" value="#0f172a">
+                   </div>
+               </div>
+               <span class="ribbon-label">Font</span>
+           </div>
+           
+           <div class="ribbon-group">
+               <div class="ribbon-row h-full">
+                   <button id="btn-add-col" class="excel-btn-ribbon text-emerald-700" title="Insert Column"><i class="fas fa-columns"></i><span>Add Col</span></button>
+                   <button id="btn-add-row" class="excel-btn-ribbon text-emerald-700" title="Insert Row"><i class="fas fa-table-rows"></i><span>Add Row</span></button>
+               </div>
+               <span class="ribbon-label">Cells</span>
+           </div>
+        </div>
+      `;
+
+      const ribbonData = `
+        <div id="ribbon-data" class="ribbon-panel ${builderConfig.activeTab === 'data' ? 'active' : ''}">
+            <div class="ribbon-group">
+               <div class="ribbon-row h-full items-center gap-2">
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Source Class</label>
+                       <select id="builder-class" class="excel-input-ribbon w-32">
+                         <option value="">-- Blank Table --</option>
+                         ${classOptions.map((className) => `<option value="${escapeHtml(className)}" ${builderConfig.classId === className ? 'selected' : ''}>Class ${escapeHtml(className)}</option>`).join('')}
+                       </select>
+                   </div>
+               </div>
+               <span class="ribbon-label">Data Source</span>
+            </div>
+            <div class="ribbon-group">
+               <div class="ribbon-row h-full items-center gap-2">
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Sort By</label>
+                       <select id="builder-sort" class="excel-input-ribbon w-24">
+                          <option value="name" ${builderConfig.sortBy === 'name' ? 'selected' : ''}>Name A-Z</option>
+                          <option value="adm" ${builderConfig.sortBy === 'adm' ? 'selected' : ''}>Adm No</option>
+                       </select>
+                   </div>
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Group By</label>
+                       <select id="builder-group" class="excel-input-ribbon w-28">
+                          <option value="mixed" ${builderConfig.groupBy === 'mixed' ? 'selected' : ''}>Mixed</option>
+                          <option value="grouped" ${builderConfig.groupBy === 'grouped' ? 'selected' : ''}>Boys First</option>
+                          <option value="separate" ${builderConfig.groupBy === 'separate' ? 'selected' : ''}>Page Break</option>
+                       </select>
+                   </div>
+               </div>
+               <span class="ribbon-label">Sort & Filter</span>
+            </div>
+        </div>
+      `;
+
+      const ribbonLayout = `
+        <div id="ribbon-layout" class="ribbon-panel ${builderConfig.activeTab === 'layout' ? 'active' : ''}">
+            <div class="ribbon-group">
+                <div class="ribbon-row h-full gap-2 items-center">
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Size</label>
+                       <select id="builder-paper" class="excel-input-ribbon w-20">
+                          <option value="A4" ${builderConfig.paper === 'A4' ? 'selected' : ''}>A4</option>
+                          <option value="Legal" ${builderConfig.paper === 'Legal' ? 'selected' : ''}>Legal</option>
+                       </select>
+                   </div>
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Orientation</label>
+                       <select id="builder-orient" class="excel-input-ribbon w-24">
+                          <option value="portrait" ${builderConfig.orientation === 'portrait' ? 'selected' : ''}>Portrait</option>
+                          <option value="landscape" ${builderConfig.orientation === 'landscape' ? 'selected' : ''}>Landscape</option>
+                       </select>
+                   </div>
+                </div>
+                <span class="ribbon-label">Page Setup</span>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-row h-full gap-2 items-center">
+                   <div class="flex flex-col">
+                       <label class="text-[10px] font-semibold text-slate-600 mb-0.5">Report Title</label>
+                       <input type="text" id="builder-custom-title" value="${escapeHtml(builderConfig.customTitle)}" class="excel-input-ribbon w-48" placeholder="e.g. Term 1 Attendance">
+                   </div>
+                </div>
+                <span class="ribbon-label">Titles</span>
+            </div>
+            <div class="ribbon-group">
+                <div class="flex flex-col gap-1 mt-1 justify-center h-full">
+                     <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+                        <input type="checkbox" id="builder-show-header" ${builderConfig.showHeader ? 'checked' : ''} class="w-3.5 h-3.5 text-emerald-600 rounded"> Show Header
+                     </label>
+                     <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer ${!builderConfig.showHeader ? 'opacity-50 pointer-events-none' : ''}">
+                        <input type="checkbox" id="builder-repeat-header" ${builderConfig.repeatHeader ? 'checked' : ''} class="w-3.5 h-3.5 text-emerald-600 rounded"> Repeat all pages
+                     </label>
+                </div>
+                <span class="ribbon-label">Print Options</span>
+            </div>
+        </div>
+      `;
+
+      document.getElementById('official-tab-export').innerHTML = `
+        <div class="excel-ui-header no-print">
+            <div class="excel-tabs">
+                <button class="excel-tab ${builderConfig.activeTab === 'home' ? 'active' : ''}" data-ribbon="home">Home</button>
+                <button class="excel-tab ${builderConfig.activeTab === 'data' ? 'active' : ''}" data-ribbon="data">Data</button>
+                <button class="excel-tab ${builderConfig.activeTab === 'layout' ? 'active' : ''}" data-ribbon="layout">Page Layout</button>
+                <div class="flex-grow"></div>
+                <div class="flex gap-2 items-center pr-4 mb-1">
+                    <button id="btn-export-print" class="premium-export-btn btn-pdf-red"><i class="fas fa-file-pdf"></i> Print / PDF</button>
+                    <button id="btn-export-excel" class="premium-export-btn btn-excel-green"><i class="fas fa-file-excel"></i> Export</button>
+                </div>
+            </div>
+            
+            <div class="excel-ribbon-container">
+                ${ribbonHome}
+                ${ribbonData}
+                ${ribbonLayout}
+            </div>
+            
+            <div class="formula-bar">
+                <div id="active-cell-id" class="formula-name-box">A1</div>
+                <div class="formula-divider"></div>
+                <div class="formula-icon">fx</div>
+                <input type="text" id="formula-input" class="formula-input" placeholder="Select a cell to edit..." />
+            </div>
+        </div>
+
+        <div class="excel-workspace spreadsheet-container">
+          <div id="print-canvas" class="print-canvas" data-paper="${builderConfig.paper}" data-orient="${builderConfig.orientation}">
+            <table id="builder-table" class="excel-table">
+              ${headerHtml}
+              <thead>
+                <tr class="no-print">
+                   <th class="select-all-corner w-10 border-slate-300" title="Select All"></th>
+                   ${excelColHeaders}
+                </tr>
+                <tr class="config-row">
+                   <th class="no-print row-header bg-slate-200 border-slate-300"></th>
+                   ${colHeadersHtml}
+                </tr>
+              </thead>
+              ${bodyHtml}
+            </table>
+          </div>
+        </div>
+      `;
+
+      attachBuilderListeners();
     };
 
     const bindColumnListeners = (thElement) => {
         const sel = thElement.querySelector('.builder-col-select');
         sel?.addEventListener('change', (e) => {
+            saveBuilderState();
             const idx = parseInt(e.target.dataset.colIndex);
             const fieldId = e.target.value;
-            refreshTableUI('CHANGE_FIELD', { colIdx: idx, fieldId });
+            builderConfig.columns[idx].field = fieldId;
+            const fieldLabel = availableDataFields.find(f => f.id === fieldId)?.label || 'Column';
+            
+            const th = e.target.closest('th');
+            if(fieldId !== 'CUSTOM') {
+                builderConfig.columns[idx].title = fieldLabel;
+                builderConfig.columns[idx].width = 'auto';
+                th.style.width = 'auto';
+                const input = th.querySelector('.builder-col-title-input');
+                if(input) input.value = fieldLabel;
+                const printHeading = th.querySelector('.print-only-heading');
+                if(printHeading) printHeading.textContent = fieldLabel;
+            } else {
+                builderConfig.columns[idx].width = '150px';
+                th.style.width = '150px';
+            }
+            populateColumnData(idx);
         });
 
         const titleInput = thElement.querySelector('.builder-col-title-input');
@@ -1319,6 +1243,19 @@
             builderConfig.columns[idx].title = e.target.value;
             const heading = e.target.closest('th').querySelector('.print-only-heading');
             if(heading) heading.textContent = e.target.value;
+        });
+
+        const delBtn = thElement.querySelector('.delete-col-btn');
+        delBtn?.addEventListener('click', (e) => {
+            const idx = parseInt(e.currentTarget.dataset.colIndex);
+            if(builderConfig.columns.length > 1) {
+                saveBuilderState();
+                builderConfig.columns.splice(idx, 1);
+                renderExportTab();
+                setupExcelEngine();
+            } else {
+                alert("At least one column is required.");
+            }
         });
     };
 
@@ -1336,13 +1273,14 @@
           document.getElementById(`ribbon-${targetId}`).classList.add('active');
       }));
 
-      document.getElementById('builder-class')?.addEventListener('change', (e) => { builderConfig.classId = e.target.value; refreshTableUI(); });
-      document.getElementById('builder-sort')?.addEventListener('change', (e) => { builderConfig.sortBy = e.target.value; refreshTableUI(); });
-      document.getElementById('builder-group')?.addEventListener('change', (e) => { builderConfig.groupBy = e.target.value; refreshTableUI(); });
-      document.getElementById('builder-margin')?.addEventListener('change', (e) => { builderConfig.margin = e.target.value; refreshTableUI(); updatePrintStyles(); });
-      document.getElementById('builder-orient')?.addEventListener('change', (e) => { builderConfig.orientation = e.target.value; refreshTableUI(); updatePrintStyles(); });
-      document.getElementById('builder-show-header')?.addEventListener('change', (e) => { builderConfig.showHeader = e.target.checked; refreshTableUI(); });
-      document.getElementById('builder-repeat-header')?.addEventListener('change', (e) => { builderConfig.repeatHeader = e.target.checked; refreshTableUI(); });
+      // Dataset changes require full re-render
+      document.getElementById('builder-class')?.addEventListener('change', (e) => { builderConfig.classId = e.target.value; renderExportTab(); setupExcelEngine(); });
+      document.getElementById('builder-sort')?.addEventListener('change', (e) => { builderConfig.sortBy = e.target.value; renderExportTab(); setupExcelEngine();});
+      document.getElementById('builder-group')?.addEventListener('change', (e) => { builderConfig.groupBy = e.target.value; renderExportTab(); setupExcelEngine();});
+      document.getElementById('builder-paper')?.addEventListener('change', (e) => { builderConfig.paper = e.target.value; updateCanvasStyle(); });
+      document.getElementById('builder-orient')?.addEventListener('change', (e) => { builderConfig.orientation = e.target.value; updateCanvasStyle(); });
+      document.getElementById('builder-show-header')?.addEventListener('change', (e) => { builderConfig.showHeader = e.target.checked; renderExportTab(); setupExcelEngine();});
+      document.getElementById('builder-repeat-header')?.addEventListener('change', (e) => { builderConfig.repeatHeader = e.target.checked; renderExportTab(); setupExcelEngine();});
       
       document.getElementById('builder-custom-title')?.addEventListener('input', (e) => { 
           builderConfig.customTitle = e.target.value; 
@@ -1350,43 +1288,75 @@
           if(el) el.textContent = e.target.value;
       });
 
-      document.getElementById('btn-insert-col')?.addEventListener('click', () => {
-        const selectedTh = document.querySelector('.col-header.selected');
-        let insertIdx = builderConfig.columns.length;
-        if(selectedTh) insertIdx = parseInt(selectedTh.dataset.col);
-        refreshTableUI('ADD_COL', insertIdx);
-      });
+      rebindAllColumnListeners();
 
-      document.getElementById('btn-delete-col')?.addEventListener('click', () => {
-        const selectedTh = document.querySelector('.col-header.selected');
-        if(!selectedTh) { alert("Please click a column letter (A, B, C...) to select and delete it."); return; }
-        if(builderConfig.columns.length <= 1) { alert("Cannot delete all columns."); return; }
-        refreshTableUI('DEL_COL', parseInt(selectedTh.dataset.col));
-      });
-
-      document.getElementById('btn-insert-row')?.addEventListener('click', () => {
-        refreshTableUI('ADD_ROW');
-      });
-
-      document.getElementById('btn-delete-row')?.addEventListener('click', () => {
-        const selectedRows = Array.from(new Set(Array.from(document.querySelectorAll('.builder-cell.selected, .row-header.selected')).map(el => el.closest('tr'))));
-        if(selectedRows.length === 0) { alert("Please select a row to delete."); return; }
+      // Targeted DOM update for columns (No full re-render)
+      document.getElementById('btn-add-col')?.addEventListener('click', () => {
         saveBuilderState();
-        selectedRows.forEach(tr => {
-            if(tr.dataset.studentId === "") builderConfig.manualRowCount = Math.max(0, builderConfig.manualRowCount - 1);
-            tr.remove();
+        const newColIdx = builderConfig.columns.length;
+        const newCol = { id: `col_${Date.now()}`, field: 'CUSTOM', title: 'New Column', width: '150px' };
+        builderConfig.columns.push(newCol);
+
+        const printHeaderTh = document.querySelector('.print-header-th');
+        if (printHeaderTh) printHeaderTh.colSpan = builderConfig.columns.length + 1;
+        
+        document.querySelectorAll('.page-break-before td[colspan]').forEach(td => td.colSpan = builderConfig.columns.length + 1);
+
+        const excelHeaderRow = document.querySelector('#builder-table thead tr:first-child');
+        const newExcelTh = document.createElement('th');
+        newExcelTh.className = "no-print col-header";
+        newExcelTh.dataset.col = newColIdx;
+        newExcelTh.title = `Select Column ${String.fromCharCode(65 + newColIdx)}`;
+        newExcelTh.textContent = String.fromCharCode(65 + newColIdx);
+        excelHeaderRow.appendChild(newExcelTh);
+
+        const configRow = document.querySelector('#builder-table thead tr.config-row');
+        const newConfigTh = document.createElement('th');
+        newConfigTh.className = "builder-th group config-row-th";
+        newConfigTh.style.width = newCol.width;
+        newConfigTh.innerHTML = `
+          <div class="col-resizer" data-col-index="${newColIdx}"></div>
+          <div class="no-print mb-1 flex items-center justify-between gap-1">
+            <select class="grid-select builder-col-select" data-col-index="${newColIdx}">
+              ${availableDataFields.map(f => `<option value="${f.id}" ${f.id === newCol.field ? 'selected' : ''}>${f.label}</option>`).join('')}
+            </select>
+            <button class="text-red-500 hover:bg-red-100 px-1 py-0.5 rounded delete-col-btn opacity-0 group-hover:opacity-100 transition-opacity" data-col-index="${newColIdx}" title="Remove Column"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="no-print flex gap-1 items-center">
+            <input type="text" class="grid-input builder-col-title-input" value="${escapeHtml(newCol.title)}" placeholder="Heading..." data-col-index="${newColIdx}">
+          </div>
+          <div class="print-only-heading">${escapeHtml(newCol.title)}</div>
+        `;
+        configRow.appendChild(newConfigTh);
+
+        document.querySelectorAll('#builder-table tr[data-index]').forEach(tr => {
+            const rIndex = tr.dataset.index;
+            const td = document.createElement('td');
+            td.className = "excel-cell builder-cell";
+            td.contentEditable = "true";
+            td.dataset.row = rIndex;
+            td.dataset.col = newColIdx;
+            tr.appendChild(td);
         });
-        let rIdx = 0;
-        document.querySelectorAll('#builder-table tbody tr').forEach(row => {
-            const rowHead = row.querySelector('.row-header');
-            if(rowHead && rowHead.textContent !== '-') {
-                rowHead.textContent = rIdx + 1;
-                rowHead.dataset.row = rIdx;
-                row.dataset.index = rIdx;
-                row.querySelectorAll('.builder-cell').forEach(c => c.dataset.row = rIdx);
-                rIdx++;
-            }
-        });
+
+        bindColumnListeners(newConfigTh);
+        attachTableFormatListeners();
+      });
+
+      document.getElementById('btn-add-row')?.addEventListener('click', () => {
+        saveBuilderState();
+        const tbodys = document.querySelectorAll('#builder-table tbody');
+        if(tbodys.length === 0) return;
+        const targetTbody = tbodys[tbodys.length - 1]; 
+        const colsCount = builderConfig.columns.length;
+        const tr = document.createElement('tr');
+        const nextRowIdx = document.querySelectorAll('.row-header').length;
+        tr.dataset.index = nextRowIdx;
+        tr.dataset.studentId = ""; 
+        tr.innerHTML = `<td class="no-print row-header" data-row="${nextRowIdx}">${nextRowIdx + 1}</td>` + 
+                       Array.from({ length: colsCount }).map((_, cIndex) => `<td class="excel-cell builder-cell" contenteditable="true" data-row="${nextRowIdx}" data-col="${cIndex}"></td>`).join('');
+        targetTbody.appendChild(tr);
+        attachTableFormatListeners();
       });
 
       const applyFormat = (styleProp, valueFn) => {
@@ -1450,20 +1420,27 @@
       });
     };
 
+    const updateCanvasStyle = () => {
+      const canvas = document.getElementById('print-canvas');
+      if(canvas) {
+        canvas.dataset.paper = builderConfig.paper;
+        canvas.dataset.orient = builderConfig.orientation;
+      }
+    };
+
     const attachTableFormatListeners = () => {
         const fInput = document.getElementById('formula-input');
         if(!fInput) return;
         document.querySelectorAll('.builder-cell').forEach(cell => {
+            // Remove old listener to avoid duplicates if re-attaching
             const newCell = cell.cloneNode(true);
             cell.parentNode.replaceChild(newCell, cell);
             
             newCell.addEventListener('focus', (e) => {
                 const row = e.target.dataset.row;
                 const col = e.target.dataset.col;
-                if(row !== undefined && col !== undefined) {
-                    const colLetter = String.fromCharCode(65 + parseInt(col));
-                    document.getElementById('active-cell-id').textContent = `${colLetter}${parseInt(row)+1}`;
-                }
+                const colLetter = String.fromCharCode(65 + parseInt(col));
+                document.getElementById('active-cell-id').textContent = `${colLetter}${parseInt(row)+1}`;
                 fInput.value = e.target.innerText;
             });
             newCell.addEventListener('input', (e) => {
@@ -1471,6 +1448,7 @@
             });
         });
         
+        // Ensure formula input only has one listener
         const newFInput = fInput.cloneNode(true);
         fInput.parentNode.replaceChild(newFInput, fInput);
         newFInput.addEventListener('input', (e) => {
@@ -1562,7 +1540,7 @@
         table.addEventListener('mouseover', (e) => {
             if (isSelecting) {
                 const td = e.target.closest('td.builder-cell');
-                if (td && startCell && td.dataset.row !== undefined && td.dataset.col !== undefined) {
+                if (td) {
                     const endCell = getCellCoords(td);
                     const minR = Math.min(startCell.row, endCell.row);
                     const maxR = Math.max(startCell.row, endCell.row);
@@ -1570,14 +1548,12 @@
                     const maxC = Math.max(startCell.col, endCell.col);
                     
                     document.querySelectorAll('.builder-cell').forEach(cell => {
-                        if(cell.dataset.row !== undefined && cell.dataset.col !== undefined){
-                            const r = parseInt(cell.dataset.row);
-                            const c = parseInt(cell.dataset.col);
-                            if (r >= minR && r <= maxR && c >= minC && c <= maxC) {
-                                cell.classList.add('selected');
-                            } else {
-                                cell.classList.remove('selected');
-                            }
+                        const r = parseInt(cell.dataset.row);
+                        const c = parseInt(cell.dataset.col);
+                        if (r >= minR && r <= maxR && c >= minC && c <= maxC) {
+                            cell.classList.add('selected');
+                        } else {
+                            cell.classList.remove('selected');
                         }
                     });
                 }
@@ -1635,6 +1611,7 @@
                             tr = document.createElement('tr');
                             const nextRowIdx = startR + i;
                             tr.dataset.index = nextRowIdx;
+                            tr.dataset.studentId = ""; 
                             tr.innerHTML = `<td class="no-print row-header" data-row="${nextRowIdx}">${nextRowIdx + 1}</td>` + 
                                            Array.from({ length: builderConfig.columns.length }).map((_, cIndex) => `<td class="excel-cell builder-cell" contenteditable="true" data-row="${nextRowIdx}" data-col="${cIndex}"></td>`).join('');
                             targetTbody.appendChild(tr);
